@@ -2,33 +2,57 @@ import api from './api';
 import { API_ENDPOINTS } from '../utils/constants';
 
 export const authService = {
-    // User registration
-    register: async (userData) => {
-        const response = await api.post(API_ENDPOINTS.USER_REGISTER, userData);
+    // Register new user
+    register: async (data) => {
+        const response = await api.post(API_ENDPOINTS.AUTH_REGISTER, data);
         return response.data;
     },
 
-    // User login
-    login: async (credentials) => {
-        const response = await api.post(API_ENDPOINTS.USER_LOGIN, credentials);
+    // Login user
+    login: async (data) => {
+        const response = await api.post(API_ENDPOINTS.AUTH_LOGIN, {
+            emailOrPhone: data.emailOrPhone || data.email,
+            password: data.password,
+        });
         return response.data;
     },
 
-    // Admin login
-    adminLogin: async (credentials) => {
-        const response = await api.post(API_ENDPOINTS.ADMIN_LOGIN, credentials);
+    // Logout user
+    logout: async () => {
+        const response = await api.post(API_ENDPOINTS.AUTH_LOGOUT);
         return response.data;
     },
 
-    // Get user profile
-    getProfile: async () => {
-        const response = await api.get(API_ENDPOINTS.USER_PROFILE);
+    // Get current user profile
+    getMe: async () => {
+        const response = await api.get(API_ENDPOINTS.AUTH_ME);
         return response.data;
     },
 
-    // Update user profile
+    // Change password
+    changePassword: async (oldPassword, newPassword) => {
+        const response = await api.post(API_ENDPOINTS.AUTH_CHANGE_PASSWORD, {
+            oldPassword,
+            newPassword,
+        });
+        return response.data;
+    },
+
+    // Refresh token (handled by axios interceptor, but can be called manually)
+    refreshToken: async (refreshToken) => {
+        const response = await api.post(API_ENDPOINTS.AUTH_REFRESH_TOKEN, {
+            refreshToken,
+        });
+        return response.data;
+    },
+
+    //Legacy methods for backward compatibility
     updateProfile: async (userData) => {
-        const response = await api.put(API_ENDPOINTS.USER_UPDATE, userData);
-        return response.data;
+        // Can be implemented later if needed
+        return authService.getMe();
+    },
+
+    getProfile: async () => {
+        return authService.getMe();
     },
 };

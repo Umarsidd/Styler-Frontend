@@ -35,22 +35,17 @@ const Login = ({ isRegisterMode = false }) => {
         setLoading(true);
         try {
             const response = await authService.login({
-                email: values.email,
+                emailOrPhone: values.email,
                 password: values.password,
             });
 
-            authLogin({
-                token: response.token,
-                refreshToken: response.refreshToken,
-                email: values.email,
-                userType: USER_TYPES.USER,
-                name: response.username || values.email,
-            });
-
-            success('Login successful! Welcome back.');
-            setTimeout(() => navigate('/profile'), 500);
+            if (response.success && response.data) {
+                authLogin(response.data);
+                success('Login successful! Welcome back.');
+                setTimeout(() => navigate('/dashboard'), 500);
+            }
         } catch (err) {
-            showError(err.response?.data?.message || 'Login failed. Please try again.');
+            showError(err.response?.data?.error?.message || 'Login failed. Please try again.');
         } finally {
             setLoading(false);
         }
@@ -64,24 +59,19 @@ const Login = ({ isRegisterMode = false }) => {
                 email: values.email,
                 password: values.password,
                 phone: values.phone,
+                role: 'customer', // Default role
             });
 
-            if (response.token) {
-                authLogin({
-                    token: response.token,
-                    refreshToken: response.refreshToken,
-                    email: values.email,
-                    userType: USER_TYPES.USER,
-                    name: values.name,
-                });
+            if (response.success && response.data && response.data.tokens) {
+                authLogin(response.data);
                 success('Account created successfully! Welcome aboard.');
-                setTimeout(() => navigate('/profile'), 500);
+                setTimeout(() => navigate('/dashboard'), 500);
             } else {
                 setActiveTab('login');
                 success('Registration successful! Please login.');
             }
         } catch (err) {
-            showError(err.response?.data?.message || 'Registration failed. Please try again.');
+            showError(err.response?.data?.error?.message || 'Registration failed. Please try again.');
         } finally {
             setLoading(false);
         }

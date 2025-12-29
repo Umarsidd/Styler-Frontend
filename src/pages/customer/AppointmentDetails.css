@@ -1,0 +1,160 @@
+.appointment-details-page {
+    min-height: 100vh;
+    background: #f9fafb;
+    padding: 40px 24px;
+}
+
+.details-header {
+    max-width: 900px;
+    margin: 0 auto 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.details-header h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0 0 8px 0;
+}
+
+.appointment-id {
+    font-size: 14px;
+    color: #6b7280;
+    margin: 0;
+}
+
+.status-tag {
+    font-size: 14px;
+    padding: 4px 12px;
+    border-radius: 6px;
+}
+
+.details-container {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.details-card {
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.details-card .ant-card-head-title {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.salon-name {
+    font-weight: 600;
+    color: #1f2937;
+}
+
+/* Services */
+.service-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 16px 0;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.service-item:last-of-type {
+    border-bottom: none;
+}
+
+.service-item h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0 0 4px 0;
+}
+
+.service-item p {
+    font-size: 14px;
+    color: #6b7280;
+    margin: 0;
+}
+
+.service-price {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.service-price span {
+    font-size: 13px;
+    color: #6b7280;
+}
+
+.service-price strong {
+    font-size: 18px;
+    color: #667eea;
+}
+
+.service-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 18px;
+    padding-top: 16px;
+}
+
+.total-amount {
+    font-size: 24px;
+    color: #667eea;
+}
+
+/* Payment */
+.payment-action {
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid #f3f4f6;
+}
+
+/* Actions Card */
+.actions-card .ant-card-body {
+    padding: 24px;
+}
+
+.loading-container,
+.error-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 60vh;
+    gap: 20px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .appointment-details-page {
+        padding: 20px 16px;
+    }
+
+    .details-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .details-header h1 {
+        font-size: 24px;
+    }
+
+    .service-item {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .service-price {
+        text-align: left;
+    }
+}

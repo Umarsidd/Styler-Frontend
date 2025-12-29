@@ -1,10 +1,9 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from './context/AuthContext';
+import { AuthProvider } from './context/AuthContext';
 import { ToastProvider } from './context/ToastContext';
 import { RBACProvider } from './context/RBACContext';
 import Navbar from './components/common/Navbar';
 import Footer from './components/common/Footer';
-import Loader from './components/common/Loader';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 
 // Pages
@@ -20,6 +19,21 @@ import AdminLogin from './pages/admin/AdminLogin';
 import Dashboard from './pages/admin/Dashboard';
 import { Users, Stylers, Services as AdminServices, Appointments } from './pages/admin/AdminPages';
 
+// Salon Pages
+import SalonList from './pages/salons/SalonList';
+import SalonDetails from './pages/salons/SalonDetails';
+
+// Booking Pages
+import BookingFlow from './pages/booking/BookingFlow';
+
+// Payment Pages
+import PaymentSuccess from './pages/payment/PaymentSuccess';
+import PaymentFailed from './pages/payment/PaymentFailed';
+
+// Customer Pages
+import CustomerDashboard from './pages/customer/Dashboard';
+import MyAppointments from './pages/customer/MyAppointments';
+import AppointmentDetails from './pages/customer/AppointmentDetails';
 
 // Layout Component
 const Layout = ({ children, showFooter = true, showNavbar = true }) => {
@@ -42,6 +56,50 @@ function AppContent() {
         <Route path="/login" element={<Layout showFooter={false}><Login /></Layout>} />
         <Route path="/register" element={<Layout showFooter={false}><Login isRegisterMode={true} /></Layout>} />
         <Route path="/services" element={<Layout><Services /></Layout>} />
+
+        {/* Salon Discovery Routes */}
+        <Route path="/salons" element={<Layout><SalonList /></Layout>} />
+        <Route path="/salons/:id" element={<Layout><SalonDetails /></Layout>} />
+
+        {/* Booking Route - Protected for customers */}
+        <Route
+          path="/booking/:salonId"
+          element={
+            <ProtectedRoute role="customer">
+              <Layout><BookingFlow /></Layout>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Payment Routes */}
+        <Route path="/payment/success" element={<Layout><PaymentSuccess /></Layout>} />
+        <Route path="/payment/failed" element={<Layout><PaymentFailed /></Layout>} />
+
+        {/* Customer Dashboard Routes */}
+        <Route
+          path="/customer/dashboard"
+          element={
+            <ProtectedRoute role="customer">
+              <Layout><CustomerDashboard /></Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/customer/appointments"
+          element={
+            <ProtectedRoute role="customer">
+              <Layout><MyAppointments /></Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/customer/appointments/:id"
+          element={
+            <ProtectedRoute role="customer">
+              <Layout><AppointmentDetails /></Layout>
+            </ProtectedRoute>
+          }
+        />
 
         {/* Protected User Routes */}
         <Route

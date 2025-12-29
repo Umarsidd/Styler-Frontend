@@ -1,101 +1,101 @@
-import { createContext, useContext, useState, useEffect } from 'react';
-import { STORAGE_KEYS, USER_TYPES } from '../utils/constants';
+import { createContext, useContext, useEffect, useState } from 'react';
+import { useAuthStore } from '../stores/authStore';
+import { authService } from '../services/authService';
+import { UserRole } from '../types';
 
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
+    const authStore = useAuthStore();
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Check if user is logged in on mount
-        const token = localStorage.getItem(STORAGE_KEYS.TOKEN);
-        const email = localStorage.getItem(STORAGE_KEYS.EMAIL);
-        const userType = localStorage.getItem(STORAGE_KEYS.USER_TYPE);
-        const userName = localStorage.getItem(STORAGE_KEYS.USER_NAME);
-        const profilePicture = localStorage.getItem('profilePicture');
+        // Check if user is already authenticated on mount
+        const initAuth = async () => {
+            if (authStore.isAuthenticated()) {
+                try {
+                    // Verify token is still valid by fetching user profile
+                    const response = await authService.getMe();
+                    if (response.success && response.data) {
+                        authStore.updateUser(response.data);
+                    }
+                } catch (error) {
+                    // Token invalid, clear auth
+                    authStore.clearAuth();
+                }
+            }
+            setLoading(false);
+        };
 
-        if (token && email) {
-            setUser({
-                email,
-                userType: userType || USER_TYPES.USER,
-                userName: userName || email,
-                profilePicture: profilePicture || null,
-            });
-        }
-        setLoading(false);
+        initAuth();
     }, []);
 
-    const login = (userData) => {
-        const { token, refreshToken, email, userType = USER_TYPES.USER, name, username, profilePicture } = userData;
+    const login = async (userData) => {
+        const { user, tokens } = userData.data || userData;
 
-        // Store all authentication data
-        if (token) {
-            localStorage.setItem(STORAGE_KEYS.TOKEN, token);
-        }
-        if (refreshToken) {
-            localStorage.setItem(STORAGE_KEYS.REFRESH_TOKEN, refreshToken);
-        }
-        if (email) {
-            localStorage.setItem(STORAGE_KEYS.EMAIL, email);
-        }
-        localStorage.setItem(STORAGE_KEYS.USER_TYPE, userType);
+        authStore.setAuth(
+            user,
+            tokens.accessToken,
+            tokens.refreshToken
+        );
+    };
 
-        const displayName = name || username || email;
-        if (displayName) {
-            localStorage.setItem(STORAGE_KEYS.USER_NAME, displayName);
+    const logout = async () => {
+        try {
+            await authService.logout();
+        } catch (error) {
+            console.error('Logout error:', error);
+        } finally {
+            authStore.clearAuth();
         }
-
-        if (profilePicture) {
-            localStorage.setItem('profilePicture', profilePicture);
-        }
-
-        setUser({
-            email,
-            userType,
-            userName: displayName,
-            profilePicture: profilePicture || null,
-        });
     };
 
     const updateProfile = (updates) => {
-        if (updates.profilePicture) {
-            localStorage.setItem('profilePicture', updates.profilePicture);
-        }
-
-        setUser(prev => ({
-            ...prev,
-            ...updates
-        }));
-    };
-
-    const logout = () => {
-        localStorage.removeItem(STORAGE_KEYS.TOKEN);
-        localStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN);
-        localStorage.removeItem(STORAGE_KEYS.EMAIL);
-        localStorage.removeItem(STORAGE_KEYS.USER_TYPE);
-        localStorage.removeItem(STORAGE_KEYS.USER_NAME);
-        localStorage.removeItem('profilePicture');
-        setUser(null);
-    };
-
-    const isAdmin = () => {
-        return user?.userType === USER_TYPES.ADMIN;
+        authStore.updateUser(updates);
     };
 
     const isAuthenticated = () => {
-        return !!user;
+        return authStore.isAuthenticated();
+    };
+
+    const hasRole = (roles) => {
+        if (!authStore.user) return false;
+
+        if (Array.isArray(roles)) {
+            return roles.includes(authStore.user.role);
+        }
+        return authStore.user.role === roles;
+    };
+
+    const isAdmin = () => {
+        return hasRole([UserRole.SUPER_ADMIN]);
+    };
+
+    const isSalonOwner = () => {
+        return hasRole([UserRole.SALON_OWNER, UserRole.SUPER_ADMIN]);
+    };
+
+    const isBarber = () => {
+        return hasRole([UserRole.BARBER]);
+    };
+
+    const isCustomer = () => {
+        return hasRole([UserRole.CUSTOMER]);
     };
 
     return (
         <AuthContext.Provider
             value={{
-                user,
+                user: authStore.user,
                 loading,
                 login,
                 logout,
                 isAdmin,
+                isSalonOwner,
+                isBarber,
+                isCustomer,
                 isAuthenticated,
+                hasRole,
                 updateProfile,
             }}
         >

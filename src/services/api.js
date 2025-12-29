@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { API_BASE_URL, STORAGE_KEYS } from '../utils/constants';
+import { API_BASE_URL } from '../utils/constants';
 
 // Create axios instance
 const api = axios.create({
@@ -24,12 +24,27 @@ const processQueue = (error, token = null) => {
     failedQueue = [];
 };
 
+// Function to get auth store (imported dynamically to avoid circular dependency)
+let getAuthStore;
+const initAuthStore = async () => {
+    if (!getAuthStore) {
+        const { useAuthStore } = await import('../stores/authStore');
+        getAuthStore = () => useAuthStore.getState();
+    }
+    return getAuthStore();
+};
+
 // Request interceptor - add token to every request
 api.interceptors.request.use(
-    (config) => {
-        const token = localStorage.getItem(STORAGE_KEYS.TOKEN);
-        if (token && token !== 'undefined' && token !== 'null') {
-            config.headers.Authorization = `Bearer ${token}`;
+    async (config) => {
+        try {
+            const authStore = await initAuthStore();
+            const token = authStore.accessToken;
+            if (token && token !== 'undefined' && token !== 'null') {
+                config.headers.Authorization = `Bearer ${token}`;
+            }
+        } catch (error) {
+            console.error('Failed to get auth token:', error);
         }
         return config;
     },
@@ -79,39 +94,41 @@ api.interceptors.response.use(
                     originalRequest._retry = true;
                     isRefreshing = true;
 
-                    const refreshToken = localStorage.getItem(STORAGE_KEYS.REFRESH_TOKEN);
+                    const authStore = await initAuthStore();
+                    const refreshToken = authStore.refreshToken;
 
                     if (!refreshToken) {
                         // No refresh token, redirect to login
-                        clearAuthData();
+                        authStore.clearAuth();
                         window.location.href = '/login';
                         return Promise.reject(error);
                     }
 
                     try {
                         // Request new access token
-                        const response = await axios.post(`${API_BASE_URL}/user/refresh-token`, {
+                        const response = await axios.post(`${API_BASE_URL}/auth/refresh-token`, {
                             refreshToken
                         });
 
-                        const { token, refreshToken: newRefreshToken } = response.data;
+                        const { accessToken, refreshToken: newRefreshToken } = response.data.data.tokens;
 
-                        // Update stored tokens
-                        localStorage.setItem(STORAGE_KEYS.TOKEN, token);
-                        if (newRefreshToken) {
-                            localStorage.setItem(STORAGE_KEYS.REFRESH_TOKEN, newRefreshToken);
-                        }
+                        // Update stored tokens in Zustand
+                        authStore.setAuth(
+                            response.data.data.user,
+                            accessToken,
+                            newRefreshToken || refreshToken
+                        );
 
                         // Update Authorization header
-                        api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-                        originalRequest.headers.Authorization = `Bearer ${token}`;
+                        api.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+                        originalRequest.headers.Authorization = `Bearer ${accessToken}`;
 
-                        processQueue(null, token);
+                        processQueue(null, accessToken);
 
                         return api(originalRequest);
                     } catch (refreshError) {
                         processQueue(refreshError, null);
-                        clearAuthData();
+                        authStore.clearAuth();
                         window.location.href = '/login';
                         return Promise.reject(refreshError);
                     } finally {
@@ -120,7 +137,8 @@ api.interceptors.response.use(
                 }
 
                 // Other 401 errors on protected routes - clear auth and redirect
-                clearAuthData();
+                const authStore = await initAuthStore();
+                authStore.clearAuth();
                 window.location.href = '/login';
             }
         }
@@ -128,14 +146,5 @@ api.interceptors.response.use(
         return Promise.reject(error);
     }
 );
-
-// Helper function to clear authentication data
-const clearAuthData = () => {
-    localStorage.removeItem(STORAGE_KEYS.TOKEN);
-    localStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN);
-    localStorage.removeItem(STORAGE_KEYS.EMAIL);
-    localStorage.removeItem(STORAGE_KEYS.USER_TYPE);
-    localStorage.removeItem(STORAGE_KEYS.USER_NAME);
-};
 
 export default api;
