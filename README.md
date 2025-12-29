@@ -183,11 +183,6 @@ Styler/
 5. Admin routes additionally check for admin role
 
 ## 👥 Authors
-
-- [@Shanukajain](https://github.com/shanukajain)
-- [@chandan1506](https://github.com/chandan1506)
-- [@SoumyaAdhya007](https://github.com/SoumyaAdhya007)
-- [@Chetan-bhagat](https://github.com/Chetan-bhagat)
 - [@ankitsingh711](https://github.com/ankitsingh711)
 
 ## 📝 License
