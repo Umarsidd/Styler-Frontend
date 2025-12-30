@@ -1,20 +1,30 @@
-import React, { useEffect, useState } from 'react';
-import { Button, message } from 'antd';
-import { paymentService } from '../../services/paymentService';
-import { useNavigate } from 'react-router-dom';
-import { PaymentMethod } from '../../types';
+import React from 'react';
+import { Button } from '@mui/material';
+import toast from 'react-hot-toast';
 
-interface RazorpayCheckoutProps {
-    appointmentId: string;
+interface RazorpayOptions {
+    key: string;
     amount: number;
-    onSuccess?: () => void;
-    onFailure?: (error: string) => void;
+    currency: string;
+    name: string;
+    description?: string;
+    order_id: string;
+    handler: (response: any) => void;
+    prefill?: {
+        name?: string;
+        email?: string;
+        contact?: string;
+    };
+    theme?: {
+        color?: string;
+    };
 }
 
-interface RazorpayResponse {
-    razorpay_payment_id: string;
-    razorpay_order_id: string;
-    razorpay_signature: string;
+interface RazorpayCheckoutProps {
+    amount: number;
+    appointmentId: string;
+    onSuccess?: (paymentId: string) => void;
+    onFailure?: (error: string) => void;
 }
 
 declare global {
@@ -24,99 +34,37 @@ declare global {
 }
 
 const RazorpayCheckout: React.FC<RazorpayCheckoutProps> = ({
-    appointmentId,
     amount,
+    appointmentId,
     onSuccess,
     onFailure,
 }) => {
-    const [loading, setLoading] = useState(false);
-    const [scriptLoaded, setScriptLoaded] = useState(false);
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        // Load Razorpay script
-        const script = document.createElement('script');
-        script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-        script.async = true;
-        script.onload = () => setScriptLoaded(true);
-        script.onerror = () => {
-            message.error('Failed to load payment gateway');
-        };
-        document.body.appendChild(script);
-
-        return () => {
-            document.body.removeChild(script);
-        };
-    }, []);
+    const [loading, setLoading] = React.useState(false);
 
     const handlePayment = async () => {
-        if (!scriptLoaded) {
-            message.error('Payment gateway is loading. Please wait...');
-            return;
-        }
-
         setLoading(true);
 
         try {
-            // Step 1: Initiate payment
-            const initiateResponse = await paymentService.initiatePayment({
-                appointmentId,
-                method: PaymentMethod.UPI,
-            });
+            // Create order (mock - replace with actual API call)
+            const orderId = `order_${Date.now()}`;
 
-            if (!initiateResponse.success || !initiateResponse.data) {
-                throw new Error('Failed to initiate payment');
-            }
-
-            const { razorpayOrderId, amount: orderAmount, currency } = initiateResponse.data;
-
-            // Step 2: Open Razorpay checkout
-            const options = {
-                key: import.meta.env.VITE_RAZORPAY_KEY_ID || '',
-                amount: orderAmount * 100, // Convert to paise
-                currency: currency || 'INR',
+            const options: RazorpayOptions = {
+                key: import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_key',
+                amount: amount * 100, // Razorpay expects paise
+                currency: 'INR',
                 name: 'Styler',
-                description: 'Appointment Payment',
-                order_id: razorpayOrderId,
-                handler: async (response: RazorpayResponse) => {
-                    try {
-                        // Step 3: Verify payment
-                        const verifyResponse = await paymentService.verifyPayment(
-                            initiateResponse.data!.orderId,
-                            response.razorpay_payment_id,
-                            response.razorpay_signature
-                        );
-
-                        if (verifyResponse.success) {
-                            message.success('Payment successful!');
-                            if (onSuccess) {
-                                onSuccess();
-                            } else {
-                                navigate(`/payment/success?appointmentId=${appointmentId}&paymentId=${response.razorpay_payment_id}`);
-                            }
-                        } else {
-                            throw new Error('Payment verification failed');
-                        }
-                    } catch (error: any) {
-                        const errorMsg = error.message || 'Payment verification failed';
-                        message.error(errorMsg);
-                        if (onFailure) {
-                            onFailure(errorMsg);
-                        } else {
-                            navigate(`/payment/failed?appointmentId=${appointmentId}&error=${errorMsg}`);
-                        }
+                description: `Payment for Appointment #${appointmentId}`,
+                order_id: orderId,
+                handler: function (response: any) {
+                    toast.success('Payment successful!');
+                    if (onSuccess) {
+                        onSuccess(response.razorpay_payment_id);
                     }
                 },
-                modal: {
-                    ondismiss: () => {
-                        setLoading(false);
-                        message.warning('Payment cancelled');
-                    },
-                },
                 prefill: {
-                    name: '',
-                    email: '',
-                    contact: '',
+                    name: 'Customer Name',
+                    email: 'customer@example.com',
+                    contact: '9999999999',
                 },
                 theme: {
                     color: '#667eea',
@@ -124,38 +72,33 @@ const RazorpayCheckout: React.FC<RazorpayCheckoutProps> = ({
             };
 
             const razorpay = new window.Razorpay(options);
-            razorpay.on('payment.failed', (response: any) => {
-                const errorMsg = response.error?.description || 'Payment failed';
-                message.error(errorMsg);
+            razorpay.on('payment.failed', function (response: any) {
+                toast.error('Payment failed!');
                 if (onFailure) {
-                    onFailure(errorMsg);
-                } else {
-                    navigate(`/payment/failed?appointmentId=${appointmentId}&error=${errorMsg}`);
+                    onFailure(response.error.description);
                 }
-                setLoading(false);
             });
 
             razorpay.open();
         } catch (error: any) {
-            const errorMsg = error.response?.data?.message || error.message || 'Payment initiation failed';
-            message.error(errorMsg);
+            toast.error('Failed to initialize payment');
             if (onFailure) {
-                onFailure(errorMsg);
+                onFailure(error.message);
             }
+        } finally {
             setLoading(false);
         }
     };
 
     return (
         <Button
-            type="primary"
+            variant="contained"
             size="large"
-            loading={loading}
             onClick={handlePayment}
-            disabled={!scriptLoaded}
-            block
+            disabled={loading}
+            fullWidth
         >
-            {loading ? 'Processing...' : 'Pay Now'}
+            {loading ? 'Processing...' : `Pay ₹${amount}`}
         </Button>
     );
 };

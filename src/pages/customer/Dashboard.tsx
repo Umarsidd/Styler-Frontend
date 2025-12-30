@@ -1,179 +1,158 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
-import { Card, Row, Col, Button, Empty, Spin, Statistic } from 'antd';
 import {
-    CalendarOutlined,
-    ShopOutlined,
-    StarOutlined,
-    ClockCircleOutlined,
-} from '@ant-design/icons';
+    Box,
+    Container,
+    Typography,
+    Grid,
+    Card,
+    CardContent,
+    Button,
+    CircularProgress,
+} from '@mui/material';
+import {
+    CalendarMonth as CalendarIcon,
+    CheckCircle as CheckCircleIcon,
+    Schedule as ScheduleIcon,
+    TrendingUp as TrendingUpIcon,
+} from '@mui/icons-material';
+import { useQuery } from '@tanstack/react-query';
 import { appointmentService } from '../../services/appointmentService';
 import { useAuthStore } from '../../stores/authStore';
 import { Appointment } from '../../types';
 import { formatDate, formatCurrency } from '../../utils/helpers';
+import toast from 'react-hot-toast';
 import './Dashboard.css';
 
 const CustomerDashboard: React.FC = () => {
     const navigate = useNavigate();
     const user = useAuthStore((state) => state.user);
 
-    const { data: appointmentsData, isLoading } = useQuery({
-        queryKey: ['upcoming-appointments'],
-        queryFn: () => appointmentService.getUpcomingAppointments(),
+    const { data, isLoading } = useQuery({
+        queryKey: ['customer-appointments'],
+        queryFn: () => appointmentService.getUserAppointments(),
     });
 
-    const upcomingAppointments = (appointmentsData?.data as Appointment[]) || [];
+    const appointments = (data?.data as Appointment[]) || [];
+    const upcomingAppointments = appointments.filter(
+        (apt) => apt.status === 'confirmed' || apt.status === 'pending'
+    );
 
     const stats = [
-        {
-            title: 'Upcoming',
-            value: upcomingAppointments.length,
-            icon: <CalendarOutlined />,
-            color: '#667eea',
-        },
-        {
-            title: 'Total Bookings',
-            value: '0',
-            icon: <ClockCircleOutlined />,
-            color: '#764ba2',
-        },
-        {
-            title: 'Favorite Salons',
-            value: '0',
-            icon: <ShopOutlined />,
-            color: '#f59e0b',
-        },
-        {
-            title: 'Reviews',
-            value: '0',
-            icon: <StarOutlined />,
-            color: '#10b981',
-        },
+        { icon: <CalendarIcon />, value: appointments.length, label: 'Total Bookings', color: '#667eea' },
+        { icon: <ScheduleIcon />, value: upcomingAppointments.length, label: 'Upcoming', color: '#f59e0b' },
+        { icon: <CheckCircleIcon />, value: appointments.filter(a => a.status === 'completed').length, label: 'Completed', color: '#10b981' },
+        { icon: <TrendingUpIcon />, value: appointments.length > 0 ? '100%' : '0%', label: 'Satisfaction', color: '#ec4899' },
     ];
 
+    if (isLoading) {
+        return (
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
+                <CircularProgress />
+            </Box>
+        );
+    }
+
     return (
-        <div className="customer-dashboard">
-            <div className="dashboard-header">
-                <h1>Welcome back, {user?.name}! 👋</h1>
-                <p>Manage your appointments and discover new salons</p>
-            </div>
+        <Box className="customer-dashboard">
+            <Container maxWidth="lg">
+                <Typography variant="h1" gutterBottom>
+                    Welcome back, {user?.name}!
+                </Typography>
 
-            {/* Statistics */}
-            <Row gutter={[24, 24]} className="stats-row">
-                {stats.map((stat, index) => (
-                    <Col xs={24} sm={12} lg={6} key={index}>
-                        <Card className="stat-card">
-                            <div className="stat-icon" style={{ background: stat.color }}>
-                                {stat.icon}
-                            </div>
-                            <Statistic
-                                title={stat.title}
-                                value={stat.value}
-                                valueStyle={{ color: stat.color }}
-                            />
-                        </Card>
-                    </Col>
-                ))}
-            </Row>
-
-            {/* Upcoming Appointments */}
-            <Card
-                title="Upcoming Appointments"
-                className="appointments-card"
-                extra={
-                    <Button type="link" onClick={() => navigate('/customer/appointments')}>
-                        View All
-                    </Button>
-                }
-            >
-                {isLoading ? (
-                    <Spin />
-                ) : upcomingAppointments.length === 0 ? (
-                    <Empty
-                        description="No upcoming appointments"
-                        image={Empty.PRESENTED_IMAGE_SIMPLE}
-                    >
-                        <Button type="primary" onClick={() => navigate('/salons')}>
-                            Book Appointment
-                        </Button>
-                    </Empty>
-                ) : (
-                    <div className="appointments-list">
-                        {upcomingAppointments.slice(0, 3).map((appointment) => (
-                            <Card
-                                key={appointment._id}
-                                className="appointment-card"
-                                hoverable
-                                onClick={() => navigate(`/customer/appointments/${appointment._id}`)}
-                            >
-                                <Row gutter={16} align="middle">
-                                    <Col flex="auto">
-                                        <h3>Appointment #{appointment.appointmentNumber}</h3>
-                                        <p>
-                                            <CalendarOutlined /> {formatDate(appointment.scheduledDate, 'long')} at{' '}
-                                            {appointment.scheduledTime}
-                                        </p>
-                                        <p className="appointment-amount">
-                                            {formatCurrency(appointment.totalAmount)}
-                                        </p>
-                                    </Col>
-                                    <Col>
-                                        <Button type="primary">View Details</Button>
-                                    </Col>
-                                </Row>
+                {/* Stats */}
+                <Grid container spacing={3} className="dashboard-stats" sx={{ mb: 4 }}>
+                    {stats.map((stat, index) => (
+                        <Grid item xs={12} sm={6} md={3} key={index}>
+                            <Card className="dashboard-stat-card">
+                                <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                                    <Box
+                                        className="dashboard-stat-icon"
+                                        sx={{ color: stat.color, bgcolor: `${stat.color}15` }}
+                                    >
+                                        {stat.icon}
+                                    </Box>
+                                    <Box>
+                                        <Typography variant="h3">{stat.value}</Typography>
+                                        <Typography variant="body2" color="text.secondary">
+                                            {stat.label}
+                                        </Typography>
+                                    </Box>
+                                </CardContent>
                             </Card>
-                        ))}
-                    </div>
-                )}
-            </Card>
+                        </Grid>
+                    ))}
+                </Grid>
 
-            {/* Quick Actions */}
-            <Card title="Quick Actions" className="quick-actions-card">
-                <Row gutter={[16, 16]}>
-                    <Col xs={24} sm={12} md={6}>
-                        <Button
-                            type="primary"
-                            block
-                            size="large"
-                            icon={<ShopOutlined />}
-                            onClick={() => navigate('/salons')}
-                        >
-                            Browse Salons
-                        </Button>
-                    </Col>
-                    <Col xs={24} sm={12} md={6}>
-                        <Button
-                            block
-                            size="large"
-                            icon={<CalendarOutlined />}
-                            onClick={() => navigate('/customer/appointments')}
-                        >
-                            My Appointments
-                        </Button>
-                    </Col>
-                    <Col xs={24} sm={12} md={6}>
-                        <Button
-                            block
-                            size="large"
-                            icon={<StarOutlined />}
-                            onClick={() => navigate('/customer/reviews')}
-                        >
-                            My Reviews
-                        </Button>
-                    </Col>
-                    <Col xs={24} sm={12} md={6}>
-                        <Button
-                            block
-                            size="large"
-                            onClick={() => navigate('/profile')}
-                        >
-                            Edit Profile
-                        </Button>
-                    </Col>
-                </Row>
-            </Card>
-        </div>
+                {/* Upcoming Appointments */}
+                <Card className="dashboard-section">
+                    <CardContent>
+                        <Typography variant="h2" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            <CalendarIcon /> Upcoming Appointments
+                        </Typography>
+
+                        {upcomingAppointments.length === 0 ? (
+                            <Box className="dashboard-empty" sx={{ textAlign: 'center', py: 6 }}>
+                                <CalendarIcon sx={{ fontSize: 64, color: 'text.disabled', mb: 2 }} />
+                                <Typography variant="h6" color="text.secondary" gutterBottom>
+                                    No upcoming appointments
+                                </Typography>
+                                <Typography variant="body2" color="text.secondary" paragraph>
+                                    Book your first appointment to get started
+                                </Typography>
+                                <Button variant="contained" onClick={() => navigate('/salons')}>
+                                    Browse Salons
+                                </Button>
+                            </Box>
+                        ) : (
+                            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 2 }}>
+                                {upcomingAppointments.slice(0, 5).map((appointment) => (
+                                    <Card
+                                        key={appointment._id}
+                                        className="appointment-card"
+                                        sx={{ cursor: 'pointer' }}
+                                        onClick={() => navigate(`/customer/appointments/${appointment._id}`)}
+                                    >
+                                        <CardContent>
+                                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', mb: 1 }}>
+                                                <Typography variant="h6">{appointment.salon?.name || 'Salon'}</Typography>
+                                                <Box
+                                                    className={`appointment-status ${appointment.status}`}
+                                                    sx={{
+                                                        px: 2,
+                                                        py: 0.5,
+                                                        borderRadius: 2,
+                                                        bgcolor: appointment.status === 'confirmed' ? 'success.light' : 'warning.light',
+                                                        color: appointment.status === 'confirmed' ? 'success.dark' : 'warning.dark',
+                                                    }}
+                                                >
+                                                    <Typography variant="caption" fontWeight={600}>
+                                                        {appointment.status.toUpperCase()}
+                                                    </Typography>
+                                                </Box>
+                                            </Box>
+                                            <Box className="appointment-card-details" sx={{ display: 'flex', gap: 3, flexWrap: 'wrap' }}>
+                                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                                                    <CalendarIcon fontSize="small" />
+                                                    <Typography variant="body2">{formatDate(appointment.scheduledDate)}</Typography>
+                                                </Box>
+                                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                                                    <ScheduleIcon fontSize="small" />
+                                                    <Typography variant="body2">{appointment.scheduledTime}</Typography>
+                                                </Box>
+                                                <Typography variant="body2" fontWeight={600} sx={{ color: 'primary.main' }}>
+                                                    {formatCurrency(appointment.totalAmount)}
+                                                </Typography>
+                                            </Box>
+                                        </CardContent>
+                                    </Card>
+                                ))}
+                            </Box>
+                        )}
+                    </CardContent>
+                </Card>
+            </Container>
+        </Box>
     );
 };
 

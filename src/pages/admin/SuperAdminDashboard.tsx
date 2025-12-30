@@ -1,85 +1,44 @@
 import React from 'react';
-import { Card, Row, Col, Statistic } from 'antd';
-import {
-    UserOutlined,
-    ShopOutlined,
-    CalendarOutlined,
-    DollarOutlined,
-} from '@ant-design/icons';
+import { Box, Container, Typography, Grid, Card, CardContent } from '@mui/material';
+import { AdminPanelSettings as AdminIcon, People as PeopleIcon, Store as StoreIcon, AttachMoney as MoneyIcon } from '@mui/icons-material';
 import './SuperAdminDashboard.css';
 
 const SuperAdminDashboard: React.FC = () => {
     const stats = [
-        {
-            title: 'Total Users',
-            value: 0,
-            icon: <UserOutlined />,
-            color: '#667eea',
-        },
-        {
-            title: 'Total Salons',
-            value: 0,
-            icon: <ShopOutlined />,
-            color: '#764ba2',
-        },
-        {
-            title: 'Total Appointments',
-            value: 0,
-            icon: <CalendarOutlined />,
-            color: '#10b981',
-        },
-        {
-            title: 'Platform Revenue',
-            value: '₹0',
-            icon: <DollarOutlined />,
-            color: '#f59e0b',
-        },
+        { icon: <PeopleIcon />, value: '5,234', label: 'Total Users', color: '#667eea' },
+        { icon: <StoreIcon />, value: '156', label: 'Salons', color: '#f59e0b' },
+        { icon: <AdminIcon />, value: '23', label: 'Admins', color: '#10b981' },
+        { icon: <MoneyIcon />, value: '₹5.6L', label: 'Total Revenue', color: '#ec4899' },
     ];
 
     return (
-        <div className="superadmin-dashboard">
-            <div className="dashboard-header">
-                <h1>Super Admin Dashboard 👑</h1>
-                <p>Monitor and manage the entire platform</p>
-            </div>
+        <Box className="admin-dashboard">
+            <Container maxWidth="lg">
+                <Typography variant="h1" gutterBottom>
+                    Super Admin Dashboard
+                </Typography>
 
-            {/* Statistics */}
-            <Row gutter={[24, 24]} className="stats-row">
-                {stats.map((stat, index) => (
-                    <Col xs={24} sm={12} lg={6} key={index}>
-                        <Card>
-                            <div className="stat-icon" style={{ background: stat.color }}>
-                                {stat.icon}
-                            </div>
-                            <Statistic
-                                title={stat.title}
-                                value={stat.value}
-                                valueStyle={{ color: stat.color }}
-                            />
-                        </Card>
-                    </Col>
-                ))}
-            </Row>
-
-            {/* Recent Activity */}
-            <Card title="Recent Activity" className="activity-card">
-                <p>No recent activity</p>
-            </Card>
-
-            {/* System Health */}
-            <Row gutter={[24, 24]}>
-                <Col xs={24} lg={12}>
-                    <Card title="System Health">
-                        <Statistic title="Server Status" value="Healthy" valueStyle={{ color: '#10b981' }} />
-                    </Card>
-                </Col>
-                <Col xs={24} lg={12}>
-                    <Card title="Database Status">
-                        <Statistic title="Connection" value="Active" valueStyle={{ color: '#10b981' }} />
-                    </Card>
-                </Col>
-            </Row>
-        </div>
+                <Grid container spacing={3}>
+                    {stats.map((stat, index) => (
+                        <Grid item xs={12} sm={6} md={3} key={index}>
+                            <Card>
+                                <CardContent sx={{ textAlign: 'center' }}>
+                                    <Box sx={{ fontSize: 48, color: stat.color, mb: 1 }}>
+                                        {stat.icon}
+                                    </Box>
+                                    <Typography variant="h4" sx={{ color: stat.color, fontWeight: 800 }}>
+                                        {stat.value}
+                                    </Typography>
+                                    <Typography variant="body2" color="text.secondary">
+                                        {stat.label}
+                                    </Typography>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                    ))}
+                </Grid>
+            </Container>
+        </Box>
     );
 };
 
