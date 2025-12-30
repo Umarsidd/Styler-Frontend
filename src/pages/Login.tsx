@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Form, Input, Button, Tabs, Typography, Card } from 'antd';
+import { Form, Input, Button, Tabs, Typography, Card, Radio } from 'antd';
 import {
     UserOutlined,
     MailOutlined,
@@ -9,29 +9,48 @@ import {
     LoginOutlined,
     UserAddOutlined,
     ScissorOutlined,
+    ShopOutlined,
+    CalendarOutlined,
 } from '@ant-design/icons';
 import { motion } from 'framer-motion';
 import { authService } from '../services/authService';
-import { useAuth } from '../context/AuthContext';
-import { useToast } from '../context/ToastContext';
-import { USER_TYPES } from '../utils/constants';
+import { useAuthStore } from '../stores/authStore';
+import toast from 'react-hot-toast';
+import { UserRole } from '../types';
 import './Login.css';
 
 const { Title, Text, Paragraph } = Typography;
 const MotionDiv = motion.div;
 
-const Login = ({ isRegisterMode = false }) => {
+interface LoginFormValues {
+    email: string;
+    password: string;
+}
+
+interface RegisterFormValues {
+    name: string;
+    email: string;
+    phone: string;
+    password: string;
+    confirmPassword: string;
+}
+
+interface LoginProps {
+    isRegisterMode?: boolean;
+}
+
+const Login: React.FC<LoginProps> = ({ isRegisterMode = false }) => {
     const [activeTab, setActiveTab] = useState(isRegisterMode ? 'signup' : 'login');
     const [loading, setLoading] = useState(false);
+    const [selectedRole, setSelectedRole] = useState<UserRole>(UserRole.CUSTOMER);
 
-    const [loginForm] = Form.useForm();
-    const [signupForm] = Form.useForm();
+    const [loginForm] = Form.useForm<LoginFormValues>();
+    const [signupForm] = Form.useForm<RegisterFormValues>();
 
     const navigate = useNavigate();
-    const { login: authLogin } = useAuth();
-    const { success, error: showError } = useToast();
+    const setAuth = useAuthStore((state) => state.setAuth);
 
-    const onLoginSubmit = async (values) => {
+    const onLoginSubmit = async (values: LoginFormValues) => {
         setLoading(true);
         try {
             const response = await authService.login({
@@ -40,18 +59,37 @@ const Login = ({ isRegisterMode = false }) => {
             });
 
             if (response.success && response.data) {
-                authLogin(response.data);
-                success('Login successful! Welcome back.');
-                setTimeout(() => navigate('/dashboard'), 500);
+                const { user, tokens } = response.data;
+                setAuth(user, tokens.accessToken, tokens.refreshToken);
+                toast.success('Login successful! Welcome back.');
+
+                // Redirect based on user role
+                switch (user.role) {
+                    case UserRole.BARBER:
+                        setTimeout(() => navigate('/barber/dashboard'), 500);
+                        break;
+                    case UserRole.SALON_OWNER:
+                        setTimeout(() => navigate('/salon-owner/dashboard'), 500);
+                        break;
+                    case UserRole.SUPER_ADMIN:
+                        setTimeout(() => navigate('/admin/superadmin'), 500);
+                        break;
+                    case UserRole.CUSTOMER:
+                    default:
+                        setTimeout(() => navigate('/customer/dashboard'), 500);
+                }
             }
-        } catch (err) {
-            showError(err.response?.data?.error?.message || 'Login failed. Please try again.');
+        } catch (err: any) {
+            const errorMessage = err.response?.data?.error?.message ||
+                err.response?.data?.message ||
+                'Login failed. Please try again.';
+            toast.error(errorMessage);
         } finally {
             setLoading(false);
         }
     };
 
-    const onSignupSubmit = async (values) => {
+    const onSignupSubmit = async (values: RegisterFormValues) => {
         setLoading(true);
         try {
             const response = await authService.register({
@@ -59,23 +97,60 @@ const Login = ({ isRegisterMode = false }) => {
                 email: values.email,
                 password: values.password,
                 phone: values.phone,
-                role: 'customer', // Default role
+                role: selectedRole,
             });
 
             if (response.success && response.data && response.data.tokens) {
-                authLogin(response.data);
-                success('Account created successfully! Welcome aboard.');
-                setTimeout(() => navigate('/dashboard'), 500);
+                const { user, tokens } = response.data;
+                setAuth(user, tokens.accessToken, tokens.refreshToken);
+                toast.success('Account created successfully! Welcome aboard.');
+
+                // Redirect based on selected role
+                switch (selectedRole) {
+                    case UserRole.BARBER:
+                        setTimeout(() => navigate('/barber/dashboard'), 500);
+                        break;
+                    case UserRole.SALON_OWNER:
+                        setTimeout(() => navigate('/salon-owner/dashboard'), 500);
+                        break;
+                    case UserRole.CUSTOMER:
+                    default:
+                        setTimeout(() => navigate('/customer/dashboard'), 500);
+                }
             } else {
                 setActiveTab('login');
-                success('Registration successful! Please login.');
+                toast.success('Registration successful! Please login.');
             }
-        } catch (err) {
-            showError(err.response?.data?.error?.message || 'Registration failed. Please try again.');
+        } catch (err: any) {
+            const errorMessage = err.response?.data?.error?.message ||
+                err.response?.data?.message ||
+                'Registration failed. Please try again.';
+            toast.error(errorMessage);
         } finally {
             setLoading(false);
         }
     };
+
+    const roleOptions = [
+        {
+            value: UserRole.CUSTOMER,
+            icon: <CalendarOutlined />,
+            label: 'Customer',
+            description: 'Book appointments and manage visits'
+        },
+        {
+            value: UserRole.BARBER,
+            icon: <ScissorOutlined />,
+            label: 'Barber / Stylist',
+            description: 'Manage schedule and appointments'
+        },
+        {
+            value: UserRole.SALON_OWNER,
+            icon: <ShopOutlined />,
+            label: 'Salon Owner',
+            description: 'Manage your salon and team'
+        }
+    ];
 
     const tabItems = [
         {
@@ -128,6 +203,31 @@ const Login = ({ isRegisterMode = false }) => {
             ),
             children: (
                 <Form form={signupForm} onFinish={onSignupSubmit} layout="vertical" size="large">
+                    {/* Role Selection */}
+                    <Form.Item label={<span className="role-selection-label">I am a:</span>}>
+                        <Radio.Group
+                            value={selectedRole}
+                            onChange={(e) => setSelectedRole(e.target.value)}
+                            className="role-radio-group"
+                        >
+                            {roleOptions.map(option => (
+                                <Radio.Button
+                                    key={option.value}
+                                    value={option.value}
+                                    className="role-radio-button"
+                                >
+                                    <div className="role-option-content">
+                                        <span className="role-icon">{option.icon}</span>
+                                        <div className="role-text">
+                                            <strong>{option.label}</strong>
+                                            <small>{option.description}</small>
+                                        </div>
+                                    </div>
+                                </Radio.Button>
+                            ))}
+                        </Radio.Group>
+                    </Form.Item>
+
                     <Form.Item
                         name="name"
                         rules={[{ required: true, message: 'Please enter your name' }]}

@@ -6,37 +6,49 @@ interface AuthState {
     user: User | null;
     accessToken: string | null;
     refreshToken: string | null;
+    isAuthenticated: boolean;
+
+    // Actions
     setAuth: (user: User, accessToken: string, refreshToken: string) => void;
-    updateUser: (user: Partial<User>) => void;
+    setTokens: (accessToken: string, refreshToken: string) => void;
     clearAuth: () => void;
-    isAuthenticated: () => boolean;
+    updateUser: (user: Partial<User>) => void;
 }
 
 export const useAuthStore = create<AuthState>()(
     persist(
-        (set, get) => ({
+        (set) => ({
             user: null,
             accessToken: null,
             refreshToken: null,
+            isAuthenticated: false,
 
-            setAuth: (user, accessToken, refreshToken) => {
-                set({ user, accessToken, refreshToken });
-            },
+            setAuth: (user, accessToken, refreshToken) =>
+                set({
+                    user,
+                    accessToken,
+                    refreshToken,
+                    isAuthenticated: true,
+                }),
 
-            updateUser: (updates) => {
+            setTokens: (accessToken, refreshToken) =>
+                set({
+                    accessToken,
+                    refreshToken,
+                }),
+
+            clearAuth: () =>
+                set({
+                    user: null,
+                    accessToken: null,
+                    refreshToken: null,
+                    isAuthenticated: false,
+                }),
+
+            updateUser: (updates) =>
                 set((state) => ({
                     user: state.user ? { ...state.user, ...updates } : null,
-                }));
-            },
-
-            clearAuth: () => {
-                set({ user: null, accessToken: null, refreshToken: null });
-            },
-
-            isAuthenticated: () => {
-                const state = get();
-                return !!(state.user && state.accessToken);
-            },
+                })),
         }),
         {
             name: 'styler-auth',

@@ -1,0 +1,17 @@
+.theme-toggle-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.theme-toggle-switch {
+    background-color: #667eea;
+}
+
+.theme-toggle-switch.ant-switch-checked {
+    background-color: #1f2937;
+}
+
+.theme-toggle-switch .anticon {
+    color: #fff;
+}

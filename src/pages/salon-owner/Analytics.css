@@ -1,0 +1,38 @@
+.analytics-page {
+    min-height: 100vh;
+    background: #f9fafb;
+    padding: 40px 24px;
+}
+
+.page-header {
+    max-width: 1400px;
+    margin: 0 auto 32px;
+}
+
+.page-header h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0;
+}
+
+.analytics-page .metrics-row,
+.chart-card {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.chart-card {
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+@media (max-width: 768px) {
+    .analytics-page {
+        padding: 20px 16px;
+    }
+
+    .page-header h1 {
+        font-size: 24px;
+    }
+}

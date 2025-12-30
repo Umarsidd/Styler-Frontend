@@ -38,7 +38,7 @@
     position: relative;
     z-index: 1;
     width: 100%;
-    max-width: 480px;
+    max-width: 520px;
 }
 
 .login-content {
@@ -126,6 +126,80 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
+}
+
+/* Role Selection */
+.role-selection-label {
+    color: rgba(255, 255, 255, 0.85) !important;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.role-radio-group {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.role-radio-button {
+    height: auto !important;
+    padding: 0 !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-radius: 8px !important;
+    transition: all 0.3s !important;
+}
+
+.role-radio-button:hover {
+    border-color: rgba(245, 158, 11, 0.5) !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+}
+
+.role-radio-button.ant-radio-button-wrapper-checked {
+    background: rgba(245, 158, 11, 0.15) !important;
+    border-color: #f59e0b !important;
+}
+
+.role-radio-button::before {
+    display: none !important;
+}
+
+.role-option-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+}
+
+.role-icon {
+    font-size: 24px;
+    color: #f59e0b;
+}
+
+.role-radio-button.ant-radio-button-wrapper-checked .role-icon {
+    color: #fbbf24;
+}
+
+.role-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    text-align: left;
+}
+
+.role-text strong {
+    color: white;
+    font-size: 14px;
+}
+
+.role-text small {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 12px;
+}
+
+.role-radio-button.ant-radio-button-wrapper-checked .role-text small {
+    color: rgba(255, 255, 255, 0.7);
 }
 
 /* Form Styling */
@@ -263,5 +337,13 @@
     .auth-tabs .ant-tabs-tab {
         padding: 10px 16px;
         font-size: 15px;
+    }
+
+    .role-option-content {
+        padding: 10px 12px;
+    }
+
+    .role-icon {
+        font-size: 20px;
     }
 }

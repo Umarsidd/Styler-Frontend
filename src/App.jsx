@@ -35,6 +35,18 @@ import CustomerDashboard from './pages/customer/Dashboard';
 import MyAppointments from './pages/customer/MyAppointments';
 import AppointmentDetails from './pages/customer/AppointmentDetails';
 
+// Barber Pages
+import BarberDashboard from './pages/barber/BarberDashboard';
+import AvailabilityManagement from './pages/barber/AvailabilityManagement';
+
+// Salon Owner Pages
+import SalonOwnerDashboard from './pages/salon-owner/SalonOwnerDashboard';
+import StaffManagement from './pages/salon-owner/StaffManagement';
+import Analytics from './pages/salon-owner/Analytics';
+
+// Admin Pages (additional)
+import SuperAdminDashboard from './pages/admin/SuperAdminDashboard';
+
 // Layout Component
 const Layout = ({ children, showFooter = true, showNavbar = true }) => {
   return (
@@ -101,6 +113,50 @@ function AppContent() {
           }
         />
 
+        {/* Barber Routes */}
+        <Route
+          path="/barber/dashboard"
+          element={
+            <ProtectedRoute role="barber">
+              <Layout><BarberDashboard /></Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/barber/availability"
+          element={
+            <ProtectedRoute role="barber">
+              <Layout><AvailabilityManagement /></Layout>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Salon Owner Routes */}
+        <Route
+          path="/salon-owner/dashboard"
+          element={
+            <ProtectedRoute role="salon_owner">
+              <Layout><SalonOwnerDashboard /></Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/salon-owner/staff"
+          element={
+            <ProtectedRoute role="salon_owner">
+              <Layout><StaffManagement /></Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/salon-owner/analytics"
+          element={
+            <ProtectedRoute role="salon_owner">
+              <Layout><Analytics /></Layout>
+            </ProtectedRoute>
+          }
+        />
+
         {/* Protected User Routes */}
         <Route
           path="/profile"
@@ -114,6 +170,16 @@ function AppContent() {
         />
 
         {/* Admin Routes */}
+        <Route
+          path="/admin/superadmin"
+          element={
+            <ProtectedRoute role="superadmin" redirectTo="/admin/login">
+              <Layout showFooter={false}>
+                <SuperAdminDashboard />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
         <Route path="/admin/login" element={<Layout showFooter={false} showNavbar={false}><AdminLogin /></Layout>} />
         <Route
           path="/admin/dashboard"
@@ -176,15 +242,19 @@ function AppContent() {
   );
 }
 
+import ErrorBoundary from './components/common/ErrorBoundary';
+
 function App() {
   return (
-    <AuthProvider>
-      <RBACProvider>
-        <ToastProvider>
-          <AppContent />
-        </ToastProvider>
-      </RBACProvider>
-    </AuthProvider>
+    <ErrorBoundary>
+      <AuthProvider>
+        <RBACProvider>
+          <ToastProvider>
+            <AppContent />
+          </ToastProvider>
+        </RBACProvider>
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }
 
