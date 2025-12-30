@@ -28,8 +28,8 @@ const Footer: React.FC = () => {
         <Box
             component="footer"
             sx={{
-                background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)',
-                color: '#e9ecef',
+                background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+                color: '#ffffff',
                 pt: 8,
                 pb: 4,
                 mt: 12,

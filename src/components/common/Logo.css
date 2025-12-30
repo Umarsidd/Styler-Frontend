@@ -61,16 +61,41 @@
 /* Image Logo Variant */
 .styler-logo-image {
     display: inline-flex;
-    transition: all 0.3s ease;
-}
-
-.styler-logo-image:hover {
-    transform: scale(1.05);
-    filter: brightness(1.1);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
 }
 
 .styler-logo-image img {
     display: block;
+    filter: brightness(0) saturate(100%) invert(42%) sepia(93%) saturate(3577%) hue-rotate(234deg) brightness(101%) contrast(92%);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Hover Animation */
+.styler-logo-image:hover {
+    transform: scale(1.08);
+}
+
+.styler-logo-image:hover img {
+    filter: brightness(0) saturate(100%) invert(42%) sepia(93%) saturate(3577%) hue-rotate(234deg) brightness(110%) contrast(100%);
+    animation: logo-pulse 0.6s ease-in-out;
+}
+
+@keyframes logo-pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+/* Active/Click Animation */
+.styler-logo-image:active img {
+    transform: scale(0.95);
 }
 
 /* No animation for reduced motion */
