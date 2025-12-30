@@ -22,7 +22,10 @@ import {
     Menu as MenuIcon,
     Person as PersonIcon,
     Logout as LogoutIcon,
-    Settings as SettingsIcon
+    Settings as SettingsIcon,
+    ContentCut as ContentCutIcon,
+    LocationOn as LocationOnIcon,
+    Info as InfoIcon,
 } from '@mui/icons-material';
 import { useAuthStore } from '../../stores/authStore';
 import Logo from './Logo';
@@ -56,9 +59,9 @@ const Navbar: React.FC = () => {
     };
 
     const navLinks = [
-        { label: 'Find Salons', path: '/salons' },
-        { label: 'Services', path: '/services' },
-        { label: 'About', path: '/about' },
+        { label: 'Find Salons', path: '/salons', icon: <LocationOnIcon sx={{ fontSize: 18, mr: 0.5 }} /> },
+        { label: 'Services', path: '/services', icon: <ContentCutIcon sx={{ fontSize: 18, mr: 0.5 }} /> },
+        { label: 'About', path: '/about', icon: <InfoIcon sx={{ fontSize: 18, mr: 0.5 }} /> },
     ];
 
     const drawer = (
@@ -103,6 +106,7 @@ const Navbar: React.FC = () => {
                                         component={Link}
                                         to={item.path}
                                         disableRipple
+                                        startIcon={item.icon}
                                         sx={{
                                             color: '#495057',
                                             fontWeight: 600,
