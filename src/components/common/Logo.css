@@ -58,7 +58,52 @@
     gap: 8px;
 }
 
-/* Image Logo Variant */
+/* Scissors Logo */
+.styler-logo-scissors {
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.styler-logo-scissors:hover {
+    transform: scale(1.05);
+    color: #4f46e5;
+}
+
+.styler-logo-scissors:hover .scissors-icon-rotate {
+    transform: rotate(0deg);
+    animation: scissorsCut 0.6s ease-in-out;
+}
+
+@keyframes scissorsCut {
+    0% {
+        transform: rotate(-45deg);
+    }
+
+    50% {
+        transform: rotate(45deg) scale(1.1);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
+.styler-logo-scissors:active {
+    transform: scale(0.98);
+}
+
+/* Purple Text Logo (No Background) */
+.styler-logo-text-purple {
+    cursor: pointer;
+    user-select: none;
+}
+
+.styler-logo-text-purple:active {
+    transform: scale(0.95) !important;
+}
+
+/* Image Logo Variant - DEPRECATED */
 .styler-logo-image {
     display: inline-flex;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);

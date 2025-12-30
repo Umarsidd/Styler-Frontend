@@ -23,22 +23,44 @@ const Logo: React.FC<LogoProps> = ({ variant = 'default', size = 'medium', click
         dark: '#212529',
     };
 
-    // Image variant - use uploaded logo
+    // Image variant - use CSS text with scissors icon
     if (variant === 'image') {
         const logoContent = (
-            <Box className="styler-logo-image" sx={{ display: 'inline-flex', alignItems: 'center' }}>
-                <img
-                    src="/images/styler-logo-text.png"
-                    alt="Styler"
-                    style={{
-                        height: sizeMap[size].imageHeight,
-                        width: 'auto',
-                        objectFit: 'contain'
+            <Box
+                className="styler-logo-scissors"
+                sx={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: 0.3,
+                    fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                    fontSize: sizeMap[size].fontSize,
+                    fontWeight: 900,
+                    letterSpacing: '-0.02em',
+                    color: '#6366f1',
+                }}
+            >
+                <span>STY</span>
+                <Box
+                    className="scissors-icon-rotate"
+                    sx={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        transform: 'rotate(-45deg)',
+                        transformOrigin: 'center',
+                        transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
                     }}
-                />
+                >
+                    <ScissorsIcon
+                        sx={{
+                            fontSize: sizeMap[size].iconSize,
+                            color: '#6366f1',
+                        }}
+                    />
+                </Box>
+                <span>LER</span>
             </Box>
         );
-
         if (clickable) {
             return (
                 <Link to="/" style={{ textDecoration: 'none', display: 'inline-flex' }}>
