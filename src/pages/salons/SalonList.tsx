@@ -56,7 +56,7 @@ const SalonList: React.FC = () => {
 
     const { data, isLoading } = useQuery({
         queryKey: ['salons', searchQuery, cityFilter],
-        queryFn: () => salonService.getSalons({ search: searchQuery, city: cityFilter }),
+        queryFn: () => salonService.searchSalons({ name: searchQuery, city: cityFilter }),
     });
 
     const salons = (data?.data as Salon[]) || [];

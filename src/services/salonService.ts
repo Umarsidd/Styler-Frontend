@@ -142,6 +142,49 @@ class SalonService {
     /**
      * Get salon analytics
      */
+    /**
+     * Add service to salon
+     */
+    async addService(salonId: string, serviceData: Partial<Service>): Promise<ApiResponse<Service>> {
+        const response = await api.post<ApiResponse<Service>>(`/salons/${salonId}/services`, serviceData);
+        return response.data;
+    }
+
+    /**
+     * Update service
+     */
+    async updateService(salonId: string, serviceId: string, serviceData: Partial<Service>): Promise<ApiResponse<Service>> {
+        const response = await api.put<ApiResponse<Service>>(`/salons/${salonId}/services/${serviceId}`, serviceData);
+        return response.data;
+    }
+
+    /**
+     * Remove service from salon
+     */
+    async removeService(salonId: string, serviceId: string): Promise<ApiResponse<void>> {
+        const response = await api.delete<ApiResponse<void>>(`/salons/${salonId}/services/${serviceId}`);
+        return response.data;
+    }
+
+    /**
+     * Update operating hours
+     */
+    async updateOperatingHours(salonId: string, operatingHours: any[]): Promise<ApiResponse<Salon>> {
+        const response = await api.put<ApiResponse<Salon>>(`/salons/${salonId}/operating-hours`, { operatingHours });
+        return response.data;
+    }
+
+    /**
+     * Get salon owner statistics
+     */
+    async getOwnerStats(): Promise<ApiResponse<any>> {
+        const response = await api.get<ApiResponse<any>>('/salons/stats/owner');
+        return response.data;
+    }
+
+    /**
+     * Get salon analytics
+     */
     async getAnalytics(): Promise<ApiResponse<any>> {
         const response = await api.get<ApiResponse<any>>('/salons/analytics');
         return response.data;

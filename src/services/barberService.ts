@@ -110,8 +110,8 @@ class BarberService {
     /**
      * Reject barber (salon owner)
      */
-    async rejectBarber(id: string): Promise<ApiResponse<Barber>> {
-        const response = await api.post<ApiResponse<Barber>>(`/barbers/${id}/reject`);
+    async rejectBarber(id: string, reason: string): Promise<ApiResponse<Barber>> {
+        const response = await api.post<ApiResponse<Barber>>(`/barbers/${id}/reject`, { reason });
         return response.data;
     }
 
