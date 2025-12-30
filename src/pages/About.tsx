@@ -27,10 +27,10 @@ const About: React.FC = () => {
     const timelineRef = useRef<HTMLDivElement>(null);
     const teamRef = useRef<HTMLDivElement>(null);
     const stats = [
-        { value: '20+', label: 'Salon Partners', icon: <PeopleIcon /> },
-        { value: '5K+', label: 'Happy Clients', icon: <StarIcon /> },
-        { value: '150+', label: 'Expert Stylists', icon: <TrophyIcon /> },
-        { value: '10K+', label: 'Appointments', icon: <CheckIcon /> },
+        { value: '20+', label: 'Salon Partners', icon: <PeopleIcon />, color: '#f59e0b' },
+        { value: '5K+', label: 'Happy Clients', icon: <StarIcon />, color: '#14b8a6' },
+        { value: '150+', label: 'Expert Stylists', icon: <TrophyIcon />, color: '#8b5cf6' },
+        { value: '10K+', label: 'Appointments', icon: <CheckIcon />, color: '#ec4899' },
     ];
 
     const values = [
@@ -117,14 +117,49 @@ const About: React.FC = () => {
                                 viewport={{ once: true }}
                                 className="stat-card-about"
                             >
-                                <CardContent sx={{ textAlign: 'center', p: 3 }}>
-                                    <Box sx={{ color: '#6366f1', fontSize: '2.5rem', mb: 1 }}>
+                                <CardContent sx={{ textAlign: 'center', p: 4 }}>
+                                    <Box
+                                        sx={{
+                                            width: 80,
+                                            height: 80,
+                                            margin: '0 auto 1.5rem',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            borderRadius: '20px',
+                                            background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(236, 72, 153, 0.1) 100%)',
+                                            position: 'relative',
+                                            transition: 'all 0.4s ease',
+                                            fontSize: '3.5rem',
+                                            color: stat.color,
+                                            '&::before': {
+                                                content: '""',
+                                                position: 'absolute',
+                                                inset: '-2px',
+                                                borderRadius: '20px',
+                                                padding: '2px',
+                                                background: `linear-gradient(135deg, ${stat.color}, #ec4899)`,
+                                                WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                                                WebkitMaskComposite: 'xor',
+                                                maskComposite: 'exclude',
+                                                opacity: 0,
+                                                transition: 'opacity 0.4s ease',
+                                            },
+                                            '.stat-card-about:hover &': {
+                                                transform: 'scale(1.1) rotate(5deg)',
+                                                background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(236, 72, 153, 0.15) 100%)',
+                                            },
+                                            '.stat-card-about:hover &::before': {
+                                                opacity: 1,
+                                            },
+                                        }}
+                                    >
                                         {stat.icon}
                                     </Box>
-                                    <Typography variant="h3" sx={{ fontWeight: 800, color: '#6366f1', mb: 0.5 }}>
+                                    <Typography variant="h3" sx={{ fontWeight: 800, color: stat.color, mb: 0.5 }}>
                                         {stat.value}
                                     </Typography>
-                                    <Typography variant="body2" color="text.secondary">
+                                    <Typography variant="body1" color="text.secondary" sx={{ fontWeight: 500 }}>
                                         {stat.label}
                                     </Typography>
                                 </CardContent>

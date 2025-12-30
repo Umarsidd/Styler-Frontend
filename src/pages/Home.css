@@ -53,17 +53,17 @@
     margin-top: -80px;
     position: relative;
     z-index: 10;
-    padding-bottom: 5rem;
+    padding-bottom: 4rem;
 }
 
 .stat-card {
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     border: 2px solid transparent;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(20px);
-    border-radius: 20px;
+    background: white;
+    border-radius: 24px;
     overflow: hidden;
     position: relative;
+    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.08);
 }
 
 .stat-card::before {
@@ -72,10 +72,11 @@
     top: 0;
     left: 0;
     right: 0;
-    height: 4px;
+    height: 6px;
     background: linear-gradient(90deg, #6366f1, #ec4899);
     transform: scaleX(0);
-    transition: transform 0.4s ease;
+    transform-origin: left;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .stat-card:hover::before {
@@ -84,13 +85,45 @@
 
 .stat-card:hover {
     transform: translateY(-12px);
-    box-shadow: 0 20px 40px rgba(99, 102, 241, 0.2);
-    border-color: rgba(99, 102, 241, 0.2);
+    box-shadow: 0 20px 48px rgba(99, 102, 241, 0.15);
+    border-color: rgba(99, 102, 241, 0.1);
 }
 
 .stat-icon {
-    font-size: 3rem;
-    margin-bottom: 1rem;
+    font-size: 3.5rem !important;
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(236, 72, 153, 0.1) 100%);
+    transition: all 0.4s ease;
+    position: relative;
+}
+
+.stat-icon::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 20px;
+    padding: 2px;
+    background: linear-gradient(135deg, #6366f1, #ec4899);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.stat-card:hover .stat-icon::before {
+    opacity: 1;
+}
+
+.stat-card:hover .stat-icon {
+    transform: scale(1.1) rotate(5deg);
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(236, 72, 153, 0.15) 100%);
     filter: drop-shadow(0 4px 12px rgba(99, 102, 241, 0.3));
 }
 

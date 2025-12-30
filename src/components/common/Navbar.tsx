@@ -156,11 +156,8 @@ const Navbar: React.FC = () => {
                                     </>
                                 ) : (
                                     <>
-                                        <Button onClick={() => navigate('/login')} sx={{ color: '#495057' }}>
-                                            Login
-                                        </Button>
                                         <Button variant="contained" onClick={() => navigate('/login')}>
-                                            Sign Up
+                                            Get Started
                                         </Button>
                                     </>
                                 )}
