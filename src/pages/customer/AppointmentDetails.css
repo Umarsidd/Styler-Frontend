@@ -1,160 +1,187 @@
+/* Appointment Details - Card Layout */
 .appointment-details-page {
     min-height: 100vh;
-    background: #f9fafb;
-    padding: 40px 24px;
+    padding: 2rem;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.03) 0%, rgba(118, 75, 162, 0.03) 100%);
 }
 
-.details-header {
-    max-width: 900px;
-    margin: 0 auto 32px;
+.appointment-details-loading {
+    min-height: 60vh;
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    flex-wrap: wrap;
-    gap: 16px;
+    align-items: center;
+    justify-content: center;
 }
 
-.details-header h1 {
-    font-size: 32px;
-    font-weight: 700;
-    color: #1f2937;
-    margin: 0 0 8px 0;
+.appointment-details-error {
+    min-height: 60vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
 }
 
-.appointment-id {
-    font-size: 14px;
-    color: #6b7280;
+/* Page Header */
+.page-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.page-header h1 {
+    font-size: clamp(1.75rem, 3vw, 2.25rem);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     margin: 0;
+    flex: 1;
 }
 
-.status-tag {
-    font-size: 14px;
-    padding: 4px 12px;
-    border-radius: 6px;
+.page-header .ant-btn {
+    height: 40px;
+    border-radius: 10px;
+    font-weight: 600;
 }
 
-.details-container {
+/* Details Card */
+.appointment-details-page>.ant-card {
     max-width: 900px;
     margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
+    border-radius: 20px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.08);
+    border: none;
 }
 
-.details-card {
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+.appointment-details-page .ant-card-body {
+    padding: 2.5rem;
 }
 
-.details-card .ant-card-head-title {
-    font-size: 18px;
+/* Descriptions Styling */
+.appointment-details-page .ant-descriptions-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #212529;
+    margin-bottom: 1.5rem;
+}
+
+.appointment-details-page .ant-descriptions-item-label {
     font-weight: 600;
+    color: #495057;
+    background: rgba(102, 126, 234, 0.05);
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
 }
 
-.salon-name {
+.appointment-details-page .ant-descriptions-item-content {
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    color: #212529;
+}
+
+/* Status Tag Styling */
+.appointment-details-page .ant-tag {
+    padding: 0.5rem 1.25rem;
+    border-radius: 20px;
     font-weight: 600;
-    color: #1f2937;
+    font-size: 0.9rem;
+    border: none;
 }
 
-/* Services */
-.service-item {
+/* Actions Section */
+.appointment-actions {
+    margin-top: 2.5rem;
+    padding-top: 2rem;
+    border-top: 2px solid rgba(0, 0, 0, 0.05);
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    padding: 16px 0;
-    border-bottom: 1px solid #f3f4f6;
-}
-
-.service-item:last-of-type {
-    border-bottom: none;
-}
-
-.service-item h4 {
-    font-size: 16px;
-    font-weight: 600;
-    color: #1f2937;
-    margin: 0 0 4px 0;
-}
-
-.service-item p {
-    font-size: 14px;
-    color: #6b7280;
-    margin: 0;
-}
-
-.service-price {
-    text-align: right;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.service-price span {
-    font-size: 13px;
-    color: #6b7280;
-}
-
-.service-price strong {
-    font-size: 18px;
-    color: #667eea;
-}
-
-.service-total {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 18px;
-    padding-top: 16px;
-}
-
-.total-amount {
-    font-size: 24px;
-    color: #667eea;
-}
-
-/* Payment */
-.payment-action {
-    margin-top: 24px;
-    padding-top: 24px;
-    border-top: 1px solid #f3f4f6;
-}
-
-/* Actions Card */
-.actions-card .ant-card-body {
-    padding: 24px;
-}
-
-.loading-container,
-.error-container {
-    display: flex;
-    flex-direction: column;
     justify-content: center;
-    align-items: center;
-    min-height: 60vh;
-    gap: 20px;
+    gap: 1rem;
+}
+
+.appointment-actions .ant-btn {
+    height: 48px;
+    padding: 0 2rem;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.appointment-actions .ant-btn-dangerous {
+    border: 2px solid #ef4444;
+}
+
+.appointment-actions .ant-btn-dangerous:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.3);
 }
 
 /* Responsive */
+@media (max-width: 1024px) {
+    .appointment-details-page {
+        padding: 1.5rem;
+    }
+
+    .appointment-details-page .ant-card-body {
+        padding: 2rem;
+    }
+}
+
 @media (max-width: 768px) {
     .appointment-details-page {
-        padding: 20px 16px;
+        padding: 1rem;
     }
 
-    .details-header {
+    .page-header {
         flex-direction: column;
         align-items: flex-start;
+        gap: 1rem;
     }
 
-    .details-header h1 {
-        font-size: 24px;
+    .page-header h1 {
+        font-size: 1.75rem;
     }
 
-    .service-item {
+    .appointment-details-page .ant-card-body {
+        padding: 1.5rem;
+    }
+
+    .appointment-details-page .ant-descriptions-item-label,
+    .appointment-details-page .ant-descriptions-item-content {
+        padding: 0.65rem 0.75rem;
+        font-size: 0.9rem;
+    }
+
+    .appointment-actions {
         flex-direction: column;
-        gap: 12px;
+        margin-top: 2rem;
+        padding-top: 1.5rem;
     }
 
-    .service-price {
-        text-align: left;
+    .appointment-actions .ant-btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .appointment-details-page {
+        padding: 0.75rem;
+    }
+
+    .appointment-details-page .ant-card {
+        border-radius: 16px;
+    }
+
+    .appointment-details-page .ant-card-body {
+        padding: 1.25rem;
+    }
+
+    .page-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .appointment-details-page .ant-descriptions-title {
+        font-size: 1.25rem;
     }
 }

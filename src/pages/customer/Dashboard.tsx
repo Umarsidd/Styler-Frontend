@@ -8,10 +8,10 @@ import {
     StarOutlined,
     ClockCircleOutlined,
 } from '@ant-design/icons';
-import { appointmentService } from '../../../services/appointmentService';
-import { useAuthStore } from '../../../stores/authStore';
-import { Appointment } from '../../../types';
-import { formatDate, formatCurrency } from '../../../utils/helpers';
+import { appointmentService } from '../../services/appointmentService';
+import { useAuthStore } from '../../stores/authStore';
+import { Appointment } from '../../types';
+import { formatDate, formatCurrency } from '../../utils/helpers';
 import './Dashboard.css';
 
 const CustomerDashboard: React.FC = () => {

@@ -5,10 +5,10 @@ import { Table, Tag, Button, Select, DatePicker, Card, Empty } from 'antd';
 import { EyeOutlined, CalendarOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
 import dayjs, { Dayjs } from 'dayjs';
-import { appointmentService } from '../../../services/appointmentService';
-import { Appointment, AppointmentStatus } from '../../../types';
-import { AppointmentFilters } from '../../../services/appointmentService';
-import { formatDate, formatCurrency } from '../../../utils/helpers';
+import { appointmentService } from '../../services/appointmentService';
+import { Appointment, AppointmentStatus } from '../../types';
+import { AppointmentFilters } from '../../services/appointmentService';
+import { formatDate, formatCurrency } from '../../utils/helpers';
 import './MyAppointments.css';
 
 const { Option } = Select;

@@ -3,9 +3,9 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { Card, Descriptions, Tag, Button, Spin, Empty, Modal } from 'antd';
 import { ArrowLeftOutlined, CloseCircleOutlined } from '@ant-design/icons';
-import { appointmentService } from '../../../services/appointmentService';
-import { Appointment, AppointmentStatus } from '../../../types';
-import { formatDate, formatCurrency } from '../../../utils/helpers';
+import { appointmentService } from '../../services/appointmentService';
+import { Appointment, AppointmentStatus } from '../../types';
+import { formatDate, formatCurrency } from '../../utils/helpers';
 import toast from 'react-hot-toast';
 import './AppointmentDetails.css';
 

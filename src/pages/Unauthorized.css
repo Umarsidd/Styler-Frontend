@@ -1,0 +1,57 @@
+/* Unauthorized Page - Error Page */
+.unauthorized-page {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.unauthorized-page .ant-result {
+    padding: 3rem 2rem;
+}
+
+.unauthorized-page .ant-result-icon {
+    margin-bottom: 2rem;
+}
+
+.unauthorized-page .ant-result-title {
+    font-size: clamp(1.75rem, 3vw, 2.25rem);
+    color: #212529;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.unauthorized-page .ant-result-subtitle {
+    font-size: clamp(1rem, 2vw, 1.1rem);
+    color: #6c757d;
+    margin-bottom: 2rem;
+}
+
+.unauthorized-page .ant-btn-primary {
+    height: 48px;
+    padding: 0 2.5rem;
+    border-radius: 12px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    transition: all 0.3s ease;
+}
+
+.unauthorized-page .ant-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .unauthorized-page {
+        padding: 1.5rem;
+    }
+
+    .unauthorized-page .ant-result {
+        padding: 2rem 1rem;
+    }
+}
