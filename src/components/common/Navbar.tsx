@@ -25,6 +25,7 @@ import {
     Settings as SettingsIcon
 } from '@mui/icons-material';
 import { useAuthStore } from '../../stores/authStore';
+import Logo from './Logo';
 import './Navbar.css';
 
 const Navbar: React.FC = () => {
@@ -62,9 +63,9 @@ const Navbar: React.FC = () => {
 
     const drawer = (
         <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center', pt: 2 }}>
-            <Typography variant="h6" sx={{ my: 2, fontWeight: 800, background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-                Styler
-            </Typography>
+            <Box sx={{ my: 2 }}>
+                <Logo size="medium" variant="default" clickable={false} />
+            </Box>
             <List>
                 {navLinks.map((item) => (
                     <ListItem key={item.path} disablePadding>
@@ -81,23 +82,7 @@ const Navbar: React.FC = () => {
         <>
             <AppBar position="sticky" sx={{ backgroundColor: 'rgba(255, 255, 255, 0.95)', backdropFilter: 'blur(10px)', boxShadow: '0 2px 20px rgba(0, 0, 0, 0.08)', borderBottom: '1px solid rgba(0, 0, 0, 0.05)' }}>
                 <Toolbar sx={{ maxWidth: 1400, width: '100%', mx: 'auto', px: { xs: 2, md: 3 } }}>
-                    <Typography
-                        variant="h5"
-                        component={Link}
-                        to="/"
-                        sx={{
-                            fontWeight: 800,
-                            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                            WebkitBackgroundClip: 'text',
-                            WebkitTextFillColor: 'transparent',
-                            textDecoration: 'none',
-                            mr: 4,
-                            '&:hover': { transform: 'scale(1.05)' },
-                            transition: 'transform 0.3s',
-                        }}
-                    >
-                        Styler
-                    </Typography>
+                    <Logo size="medium" variant="default" />
 
                     {isMobile ? (
                         <IconButton

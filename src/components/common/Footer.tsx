@@ -1,3 +1,4 @@
+```
 import React from 'react';
 import { Box, Container, Grid, Typography, Link as MuiLink, IconButton, Divider } from '@mui/material';
 import { Link } from 'react-router-dom';
@@ -7,6 +8,7 @@ import {
     Instagram as InstagramIcon,
     LinkedIn as LinkedInIcon,
 } from '@mui/icons-material';
+import Logo from './Logo';
 import './Footer.css';
 
 const Footer: React.FC = () => {
@@ -37,9 +39,9 @@ const Footer: React.FC = () => {
             <Container maxWidth="lg">
                 <Grid container spacing={4} sx={{ mb: 6 }}>
                     <Grid item xs={12} md={4}>
-                        <Typography variant="h5" sx={{ fontWeight: 700, color: '#ffffff', mb: 2 }}>
-                            Styler
-                        </Typography>
+                        <Box sx={{ mb: 2 }}>
+                            <Logo variant="light" size="medium" clickable={false} />
+                        </Box>
                         <Typography variant="body2" sx={{ color: '#adb5bd', lineHeight: 1.8, mb: 2 }}>
                             Your premium salon booking platform
                         </Typography>

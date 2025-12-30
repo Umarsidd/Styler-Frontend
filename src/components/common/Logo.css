@@ -1,0 +1,70 @@
+/* Styler Logo Component Styles */
+
+.styler-logo {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    user-select: none;
+}
+
+.styler-logo:hover {
+    transform: scale(1.05);
+}
+
+.styler-logo:hover .logo-scissor {
+    animation: scissorCut 0.6s ease-in-out;
+}
+
+/* Scissor Animation */
+@keyframes scissorBounce {
+
+    0%,
+    100% {
+        transform: rotate(-45deg) translateY(0);
+    }
+
+    50% {
+        transform: rotate(-45deg) translateY(-3px);
+    }
+}
+
+@keyframes scissorCut {
+
+    0%,
+    100% {
+        transform: rotate(-45deg);
+    }
+
+    25% {
+        transform: rotate(-25deg);
+    }
+
+    75% {
+        transform: rotate(-65deg);
+    }
+}
+
+/* Size Variants */
+.styler-logo-small {
+    gap: 4px;
+}
+
+.styler-logo-medium {
+    gap: 6px;
+}
+
+.styler-logo-large {
+    gap: 8px;
+}
+
+/* No animation for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .logo-scissor {
+        animation: none !important;
+    }
+
+    .styler-logo:hover .logo-scissor {
+        animation: none !important;
+    }
+}
