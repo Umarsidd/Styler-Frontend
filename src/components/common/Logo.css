@@ -67,8 +67,10 @@
 
 .styler-logo-image img {
     display: block;
-    filter: brightness(0) saturate(100%) invert(42%) sepia(93%) saturate(3577%) hue-rotate(234deg) brightness(101%) contrast(92%);
+    /* Remove any background, keep only purple text */
+    filter: brightness(0) saturate(100%) invert(38%) sepia(77%) saturate(2846%) hue-rotate(234deg) brightness(98%) contrast(93%);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    mix-blend-mode: normal;
 }
 
 /* Hover Animation */
@@ -77,7 +79,7 @@
 }
 
 .styler-logo-image:hover img {
-    filter: brightness(0) saturate(100%) invert(42%) sepia(93%) saturate(3577%) hue-rotate(234deg) brightness(110%) contrast(100%);
+    filter: brightness(0) saturate(100%) invert(38%) sepia(77%) saturate(2846%) hue-rotate(234deg) brightness(108%) contrast(95%);
     animation: logo-pulse 0.6s ease-in-out;
 }
 

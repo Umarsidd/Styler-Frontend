@@ -1,5 +1,8 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import Lenis from '@studio-freight/lenis';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { AuthProvider } from './context/AuthContext';
 import { ToastProvider } from './context/ToastContext';
 import { RBACProvider } from './context/RBACContext';
@@ -48,6 +51,9 @@ import Analytics from './pages/salon-owner/Analytics';
 // Admin Pages
 import SuperAdminDashboard from './pages/admin/SuperAdminDashboard';
 
+// Register GSAP plugins
+gsap.registerPlugin(ScrollTrigger);
+
 // Layout Component
 interface LayoutProps {
     children: ReactNode;
@@ -66,6 +72,41 @@ const Layout: React.FC<LayoutProps> = ({ children, showFooter = true, showNavbar
 };
 
 function AppContent() {
+    // Initialize smooth scrolling
+    useEffect(() => {
+        const lenis = new Lenis({
+            duration: 0.75,
+            easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            orientation: 'vertical',
+            gestureOrientation: 'vertical',
+            smoothWheel: true,
+            wheelMultiplier: 1,
+            smoothTouch: false,
+            touchMultiplier: 2,
+            infinite: false,
+        });
+
+        function raf(time: number) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+
+        requestAnimationFrame(raf);
+
+        // Connect Lenis with GSAP ScrollTrigger
+        lenis.on('scroll', ScrollTrigger.update);
+
+        gsap.ticker.add((time) => {
+            lenis.raf(time * 1000);
+        });
+
+        gsap.ticker.lagSmoothing(0);
+
+        return () => {
+            lenis.destroy();
+        };
+    }, []);
+
     return (
         <Router>
             <Routes>

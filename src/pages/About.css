@@ -1,157 +1,113 @@
-/* About Page - Modern Layout */
+/* Modern About Page Styles */
+
 .about-page {
     min-height: 100vh;
-    padding: 2rem 0;
+    background: #f8fafc;
 }
 
 /* Hero Section */
 .about-hero {
-    text-align: center;
-    padding: 4rem 2rem;
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
-    margin-bottom: 4rem;
-}
-
-.about-hero h1 {
-    font-size: clamp(2.5rem, 5vw, 3.5rem);
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: 1rem;
-}
-
-.about-hero p {
-    font-size: clamp(1.1rem, 2vw, 1.3rem);
-    color: #6c757d;
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-/* Content Section */
-.about-content {
-    max-width: 1200px;
-    margin: 0 auto 4rem;
-    padding: 0 2rem;
-}
-
-.about-content h2 {
-    font-size: clamp(1.75rem, 3vw, 2.25rem);
-    margin-bottom: 1rem;
-    color: #212529;
-}
-
-.about-content p {
-    font-size: 1.1rem;
-    line-height: 1.8;
-    color: #495057;
-    margin-bottom: 1.5rem;
-}
-
-/* Values Section */
-.values-section {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 4rem 2rem;
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.03) 0%, rgba(118, 75, 162, 0.03) 100%);
-}
-
-.values-section h2 {
-    text-align: center;
-    font-size: clamp(2rem, 4vw, 2.5rem);
-    margin-bottom: 3rem;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.value-card {
-    background: white;
-    border-radius: 16px;
-    padding: 2.5rem;
-    text-align: center;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s ease;
-    border: 2px solid transparent;
-    height: 100%;
-}
-
-.value-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 40px rgba(102, 126, 234, 0.15);
-    border-color: rgba(102, 126, 234, 0.2);
-}
-
-.value-icon {
-    font-size: 3rem;
-    color: #667eea;
-    margin-bottom: 1.5rem;
+    min-height: 450px;
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 5rem 2rem 8rem;
+    position: relative;
+    overflow: hidden;
 }
 
-.value-card h4 {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-    color: #212529;
+.about-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 30% 50%, rgba(236, 72, 153, 0.2) 0%, transparent 50%);
+    animation: pulse-slow 8s ease-in-out infinite;
 }
 
-.value-card p {
-    color: #6c757d;
-    font-size: 1rem;
-    line-height: 1.6;
-    margin: 0;
+/* Stat Cards */
+.stat-card-about {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border: 2px solid transparent;
 }
 
-/* Responsive */
+.stat-card-about:hover {
+    transform: translateY(-8px);
+    border-color: rgba(99, 102, 241, 0.3);
+    box-shadow: 0 20px 40px rgba(99, 102, 241, 0.2);
+}
+
+/* Value Cards */
+.value-card {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 2px solid transparent;
+}
+
+.value-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    border-color: rgba(99, 102, 241, 0.3);
+    box-shadow: 0 20px 40px rgba(99, 102, 241, 0.15);
+}
+
+/* Timeline */
+.timeline-container {
+    position: relative;
+    padding: 2rem 0;
+}
+
+.timeline-item {
+    position: relative;
+}
+
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: white;
+    border: 4px solid #6366f1;
+    z-index: 10;
+    display: none;
+}
+
+@media (min-width: 960px) {
+    .timeline-item::before {
+        display: block;
+    }
+}
+
+/* Team Cards */
+.team-card {
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.team-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(99, 102, 241, 0.3);
+    box-shadow: 0 20px 40px rgba(99, 102, 241, 0.15);
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
     .about-hero {
-        padding: 3rem 1.5rem;
-        margin-bottom: 3rem;
-    }
-
-    .about-content {
-        padding: 0 1.5rem;
-        margin-bottom: 3rem;
-    }
-
-    .values-section {
-        padding: 3rem 1.5rem;
-    }
-
-    .values-section h2 {
-        margin-bottom: 2rem;
-    }
-
-    .value-card {
-        padding: 2rem;
-    }
-
-    .value-icon {
-        font-size: 2.5rem;
+        min-height: 400px;
+        padding: 3rem 1rem 6rem;
     }
 }
 
 @media (max-width: 480px) {
     .about-hero {
-        padding: 2.5rem 1rem;
-    }
-
-    .about-content {
-        padding: 0 1rem;
-    }
-
-    .values-section {
-        padding: 2.5rem 1rem;
-    }
-
-    .value-card {
-        padding: 1.5rem;
-    }
-
-    .value-icon {
-        font-size: 2rem;
+        min-height: 350px;
+        padding: 2.5rem 1rem 5rem;
     }
 }

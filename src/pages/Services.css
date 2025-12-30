@@ -1,168 +1,106 @@
-/* Services Page - Grid Layout */
+/* Modern Services Page Styles */
+
 .services-page {
     min-height: 100vh;
-    padding: 2rem 0;
+    background: #f8fafc;
 }
 
 /* Hero Section */
 .services-hero {
-    text-align: center;
-    padding: 4rem 2rem;
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
-    margin-bottom: 4rem;
+    min-height: 450px;
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5rem 2rem;
+    position: relative;
+    overflow: hidden;
 }
 
-.services-hero h1 {
-    font-size: clamp(2.5rem, 5vw, 3.5rem);
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: 1rem;
+.services-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 70% 50%, rgba(236, 72, 153, 0.2) 0%, transparent 50%);
+    animation: pulse-slow 8s ease-in-out infinite;
 }
 
-.services-hero p {
-    font-size: clamp(1.1rem, 2vw, 1.3rem);
-    color: #6c757d;
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-/* Services Grid */
-.services-grid {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 0 2rem 4rem;
-}
-
-.service-card {
-    background: white;
-    border-radius: 20px;
-    padding: 2.5rem;
-    text-align: center;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+/* Service Detail Cards */
+.service-detail-card {
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     border: 2px solid transparent;
     cursor: pointer;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
 }
 
-.service-card:hover {
-    transform: translateY(-12px) scale(1.02);
-    box-shadow: 0 20px 60px rgba(102, 126, 234, 0.2);
-    border-color: rgba(102, 126, 234, 0.3);
+.service-detail-card:hover {
+    transform: translateY(-12px);
+    border-color: rgba(99, 102, 241, 0.3);
+    box-shadow: 0 20px 40px rgba(99, 102, 241, 0.2);
 }
 
-.services-hero {
-    min-height: 400px;
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%),
-        url('/images/mens-haircut.png') center/cover;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
+.service-icon-large {
+    transition: all 0.4s ease;
+}
+
+.service-detail-card:hover .service-icon-large {
+    transform: rotate(360deg) scale(1.1);
+}
+
+/* Package Cards */
+.package-card {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.package-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(99, 102, 241, 0.15);
+}
+
+/* Benefits Section */
+.benefit-item {
+    transition: all 0.3s ease;
+}
+
+.benefit-item:hover {
+    transform: scale(1.05);
+}
+
+/* CTA Section */
+.services-cta {
     padding: 6rem 2rem;
-    color: white;
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    position: relative;
+    overflow: hidden;
 }
 
-.services-hero h1 {
-    font-size: clamp(2.5rem, 5vw, 3.5rem);
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: 1rem;
+.services-cta::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 30% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
 }
 
-.services-hero p {
-    font-size: clamp(1.1rem, 2vw, 1.3rem);
-    color: #6c757d;
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-.service-icon {
-    font-size: 4rem;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.service-card h3 {
-    font-size: 1.75rem;
-    margin-bottom: 1rem;
-    color: #212529;
-    font-weight: 700;
-}
-
-.service-card p {
-    color: #6c757d;
-    font-size: 1.05rem;
-    line-height: 1.7;
-    margin-bottom: 1.5rem;
-    flex: 1;
-}
-
-.service-price {
-    font-size: 1.5rem;
-    font-weight: 700;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-top: auto;
-}
-
-/* Responsive */
+/* Responsive Design */
 @media (max-width: 768px) {
     .services-hero {
-        padding: 3rem 1.5rem;
-        margin-bottom: 3rem;
+        min-height: 400px;
+        padding: 3rem 1rem;
     }
 
-    .services-grid {
-        padding: 0 1.5rem 3rem;
-    }
-
-    .service-card {
-        padding: 2rem;
-    }
-
-    .service-icon {
-        font-size: 3rem;
-    }
-
-    .service-card h3 {
-        font-size: 1.5rem;
-    }
-
-    .service-price {
-        font-size: 1.25rem;
+    .services-cta {
+        padding: 4rem 1.5rem;
     }
 }
 
 @media (max-width: 480px) {
     .services-hero {
+        min-height: 350px;
         padding: 2.5rem 1rem;
-    }
-
-    .services-grid {
-        padding: 0 1rem 2.5rem;
-    }
-
-    .service-card {
-        padding: 1.5rem;
-    }
-
-    .service-icon {
-        font-size: 2.5rem;
     }
 }

@@ -28,7 +28,7 @@ const Logo: React.FC<LogoProps> = ({ variant = 'default', size = 'medium', click
         const logoContent = (
             <Box className="styler-logo-image" sx={{ display: 'inline-flex', alignItems: 'center' }}>
                 <img
-                    src="/images/styler-logo.png"
+                    src="/images/styler-logo-text.png"
                     alt="Styler"
                     style={{
                         height: sizeMap[size].imageHeight,
