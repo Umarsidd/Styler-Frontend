@@ -13,21 +13,13 @@ import {
 } from '@mui/icons-material';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { useGSAP } from '@gsap/react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './Services.css';
-
-gsap.registerPlugin(ScrollTrigger);
 
 const MotionBox = motion(Box);
 const MotionCard = motion(Card);
 
 const Services: React.FC = () => {
     const navigate = useNavigate();
-    const servicesRef = useRef<HTMLDivElement>(null);
-    const packagesRef = useRef<HTMLDivElement>(null);
-    const benefitsRef = useRef<HTMLDivElement>(null);
 
     const services = [
         {
@@ -99,53 +91,7 @@ const Services: React.FC = () => {
         },
     ];
 
-    // GSAP Animations
-    useGSAP(() => {
-        // Animate service cards
-        if (servicesRef.current) {
-            gsap.from(servicesRef.current.querySelectorAll('.service-detail-card'), {
-                y: 100,
-                opacity: 0,
-                stagger: 0.15,
-                duration: 0.8,
-                ease: 'power3.out',
-                scrollTrigger: {
-                    trigger: servicesRef.current,
-                    start: 'top 80%',
-                    toggleActions: 'play none none reverse',
-                },
-            });
-        }
-
-        // Animate packages
-        if (packagesRef.current) {
-            gsap.from(packagesRef.current.querySelectorAll('.package-card'), {
-                scale: 0.9,
-                opacity: 0,
-                stagger: 0.2,
-                duration: 0.7,
-                ease: 'back.out(1.7)',
-                scrollTrigger: {
-                    trigger: packagesRef.current,
-                    start: 'top 75%',
-                },
-            });
-        }
-
-        // Animate benefits
-        if (benefitsRef.current) {
-            gsap.from(benefitsRef.current.querySelectorAll('.benefit-item'), {
-                y: 50,
-                opacity: 0,
-                stagger: 0.1,
-                duration: 0.6,
-                scrollTrigger: {
-                    trigger: benefitsRef.current,
-                    start: 'top 80%',
-                },
-            });
-        }
-    }, []);
+    // Animations now handled by Framer Motion whileInView prop on individual components
 
     return (
         <Box className="services-page">
@@ -184,7 +130,7 @@ const Services: React.FC = () => {
             </Box>
 
             {/* Services Grid */}
-            <Container maxWidth="lg" sx={{ py: 8 }} ref={servicesRef}>
+            <Container maxWidth="lg" sx={{ py: 8 }}>
                 <Typography variant="h2" align="center" sx={{ mb: 2 }}>
                     Our Services
                 </Typography>
@@ -265,7 +211,7 @@ const Services: React.FC = () => {
             </Container>
 
             {/* Packages Section */}
-            <Box sx={{ bgcolor: '#f8fafc', py: 8 }} ref={packagesRef}>
+            <Box sx={{ bgcolor: '#f8fafc', py: 8 }}>
                 <Container maxWidth="lg">
                     <Typography variant="h2" align="center" sx={{ mb: 2 }}>
                         Value Packages
@@ -348,7 +294,7 @@ const Services: React.FC = () => {
             </Box>
 
             {/* Benefits Section */}
-            <Container maxWidth="lg" sx={{ py: 8 }} ref={benefitsRef}>
+            <Container maxWidth="lg" sx={{ py: 8 }}>
                 <Typography variant="h2" align="center" sx={{ mb: 6 }}>
                     Why Choose Us
                 </Typography>

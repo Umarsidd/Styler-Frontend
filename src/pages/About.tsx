@@ -11,12 +11,7 @@ import {
     Security as SecurityIcon,
 } from '@mui/icons-material';
 import { motion } from 'framer-motion';
-import { useGSAP } from '@gsap/react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './About.css';
-
-gsap.registerPlugin(ScrollTrigger);
 
 const MotionBox = motion(Box);
 const MotionCard = motion(Card);
@@ -106,7 +101,16 @@ const About: React.FC = () => {
             </Box>
 
             {/* Stats Section */}
-            <Container maxWidth="lg" sx={{ mt: -8, position: 'relative', zIndex: 10, mb: 8 }}>
+            <Container
+                maxWidth={false}
+                sx={{
+                    mt: -8,
+                    position: 'relative',
+                    zIndex: 10,
+                    mb: 8,
+                    px: { xs: 1, sm: 2, md: 3 }
+                }}
+            >
                 <Grid container spacing={3}>
                     {stats.map((stat, index) => (
                         <Grid item xs={6} md={3} key={index}>

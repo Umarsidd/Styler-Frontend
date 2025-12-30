@@ -51,8 +51,7 @@ import Analytics from './pages/salon-owner/Analytics';
 // Admin Pages
 import SuperAdminDashboard from './pages/admin/SuperAdminDashboard';
 
-// Register GSAP plugins
-gsap.registerPlugin(ScrollTrigger);
+// Lenis smooth scrolling (GSAP removed)
 
 // Layout Component
 interface LayoutProps {

@@ -13,6 +13,9 @@ import {
     AutoAwesome as SparklesIcon,
     EmojiEvents as TrophyIcon,
     Face as FaceIcon,
+    Spa as SpaIcon,
+    Security as SecurityIcon,
+    LocalOffer as OfferIcon,
 } from '@mui/icons-material';
 import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
@@ -82,6 +85,12 @@ const Home: React.FC = () => {
             price: '₹2000',
             image: '/images/womens-styling.png',
         },
+        {
+            icon: <SpaIcon />,
+            title: 'Spa & Facial',
+            price: '₹1500',
+            image: '/images/spa-facial.png',
+        },
     ];
 
     const testimonials = [
@@ -148,6 +157,7 @@ const Home: React.FC = () => {
                                 px: 4,
                                 py: 1.5,
                                 fontSize: '1.1rem',
+                                fontWeight: 600,
                                 color: 'white',
                                 borderColor: 'white',
                                 '&:hover': { borderColor: 'white', bgcolor: 'rgba(255,255,255,0.1)' },
@@ -157,11 +167,11 @@ const Home: React.FC = () => {
                         </Button>
                     </Box>
                 </MotionBox>
-            </Box>
+            </Box >
 
             {/* Stats Section */}
-            <Container maxWidth="lg" className="stats-section">
-                <Grid container spacing={3}>
+            < Container maxWidth={false} className="stats-section" disableGutters >
+                <Grid container spacing={2} sx={{ px: 1 }}>
                     {stats.map((stat, index) => (
                         <Grid item xs={12} sm={6} md={3} key={index}>
                             <MotionCard
@@ -187,10 +197,10 @@ const Home: React.FC = () => {
                         </Grid>
                     ))}
                 </Grid>
-            </Container>
+            </Container >
 
             {/* Features Section */}
-            <Box className="features-section">
+            < Box className="features-section" >
                 <Container maxWidth="lg">
                     <Typography variant="h2" align="center" sx={{ mb: 2 }}>
                         Why Choose Styler?
@@ -225,10 +235,10 @@ const Home: React.FC = () => {
                         ))}
                     </Grid>
                 </Container>
-            </Box>
+            </Box >
 
             {/* Services Showcase */}
-            <Box className="services-showcase">
+            < Box className="services-showcase" >
                 <Container maxWidth="lg">
                     <Typography variant="h2" align="center" sx={{ mb: 2 }}>
                         Our Popular Services
@@ -273,10 +283,10 @@ const Home: React.FC = () => {
                         ))}
                     </Grid>
                 </Container>
-            </Box>
+            </Box >
 
             {/* How It Works */}
-            <Box className="how-it-works">
+            < Box className="how-it-works" >
                 <Container maxWidth="lg">
                     <Typography variant="h2" align="center" sx={{ mb: 6 }}>
                         How It Works
@@ -304,10 +314,10 @@ const Home: React.FC = () => {
                         ))}
                     </Grid>
                 </Container>
-            </Box>
+            </Box >
 
             {/* Testimonials */}
-            <Box className="testimonials-section">
+            < Box className="testimonials-section" >
                 <Container maxWidth="lg">
                     <Typography variant="h2" align="center" sx={{ mb: 2 }}>
                         What Our Clients Say
@@ -351,10 +361,10 @@ const Home: React.FC = () => {
                         ))}
                     </Grid>
                 </Container>
-            </Box>
+            </Box >
 
             {/* CTA Section */}
-            <Box className="cta-section">
+            < Box className="cta-section" >
                 <Container maxWidth="md" sx={{ textAlign: 'center' }}>
                     <TrophyIcon sx={{ fontSize: 60, color: 'white', mb: 2 }} />
                     <Typography variant="h2" sx={{ mb: 3, color: 'white' }}>
@@ -372,7 +382,7 @@ const Home: React.FC = () => {
                             py: 1.5,
                             fontSize: '1.1rem',
                             bgcolor: 'white',
-                            color: 'primary.main',
+                            color: '#6366f1',
                             '&:hover': { bgcolor: 'rgba(255,255,255,0.9)' },
                         }}
                         endIcon={<ArrowForwardIcon />}
@@ -380,8 +390,8 @@ const Home: React.FC = () => {
                         {user ? 'Browse Salons' : 'Get Started'}
                     </Button>
                 </Container>
-            </Box>
-        </Box>
+            </Box >
+        </Box >
     );
 };
 

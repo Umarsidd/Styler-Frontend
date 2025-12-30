@@ -37,6 +37,8 @@
     box-shadow: 0 8px 24px rgba(99, 102, 241, 0.08);
     position: relative;
     overflow: visible;
+    width: 320px;
+    margin-left: 60px;
 }
 
 .stat-card-about::before {

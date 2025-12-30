@@ -32,7 +32,7 @@ const Navbar: React.FC = () => {
     const navigate = useNavigate();
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-    const { user, isAuthenticated, logout } = useAuthStore();
+    const { user, isAuthenticated, clearAuth } = useAuthStore();
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -46,7 +46,7 @@ const Navbar: React.FC = () => {
     };
 
     const handleLogout = () => {
-        logout();
+        clearAuth();
         handleClose();
         navigate('/login');
     };
@@ -102,10 +102,12 @@ const Navbar: React.FC = () => {
                                         key={item.path}
                                         component={Link}
                                         to={item.path}
+                                        disableRipple
                                         sx={{
                                             color: '#495057',
                                             fontWeight: 600,
                                             position: 'relative',
+                                            textTransform: 'none',
                                             '&::after': {
                                                 content: '""',
                                                 position: 'absolute',
@@ -119,7 +121,14 @@ const Navbar: React.FC = () => {
                                             '&:hover': {
                                                 backgroundColor: 'transparent',
                                                 color: '#667eea',
+                                                border: 'none',
+                                                outline: 'none',
+                                                boxShadow: 'none',
                                                 '&::after': { width: '100%' },
+                                            },
+                                            '&:focus': {
+                                                outline: 'none',
+                                                boxShadow: 'none',
                                             },
                                         }}
                                     >
@@ -142,15 +151,80 @@ const Navbar: React.FC = () => {
                                             onClose={handleClose}
                                             transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                                             anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                                            PaperProps={{
+                                                elevation: 3,
+                                                sx: {
+                                                    mt: 1.5,
+                                                    minWidth: 220,
+                                                    borderRadius: 2,
+                                                    overflow: 'visible',
+                                                    filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.15))',
+                                                    '&:before': {
+                                                        content: '""',
+                                                        display: 'block',
+                                                        position: 'absolute',
+                                                        top: 0,
+                                                        right: 14,
+                                                        width: 10,
+                                                        height: 10,
+                                                        bgcolor: 'background.paper',
+                                                        transform: 'translateY(-50%) rotate(45deg)',
+                                                        zIndex: 0,
+                                                    },
+                                                },
+                                            }}
                                         >
-                                            <MenuItem onClick={() => { navigate('/profile'); handleClose(); }}>
-                                                <PersonIcon sx={{ mr: 1 }} fontSize="small" /> Profile
+                                            <Box sx={{ px: 2, py: 1.5, borderBottom: '1px solid', borderColor: 'divider' }}>
+                                                <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'text.primary' }}>
+                                                    {user?.name || 'User'}
+                                                </Typography>
+                                                <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                                                    {user?.email || ''}
+                                                </Typography>
+                                            </Box>
+                                            <MenuItem
+                                                onClick={() => { navigate('/profile'); handleClose(); }}
+                                                sx={{
+                                                    py: 1.5,
+                                                    px: 2,
+                                                    '&:hover': {
+                                                        bgcolor: 'primary.lighter',
+                                                        '& .MuiSvgIcon-root': { color: 'primary.main' },
+                                                    },
+                                                }}
+                                            >
+                                                <PersonIcon sx={{ mr: 1.5, fontSize: 20, color: 'text.secondary' }} />
+                                                <Typography variant="body2">Profile</Typography>
                                             </MenuItem>
-                                            <MenuItem onClick={() => { navigate('/settings'); handleClose(); }}>
-                                                <SettingsIcon sx={{ mr: 1 }} fontSize="small" /> Settings
+                                            <MenuItem
+                                                onClick={() => { navigate('/settings'); handleClose(); }}
+                                                sx={{
+                                                    py: 1.5,
+                                                    px: 2,
+                                                    '&:hover': {
+                                                        bgcolor: 'primary.lighter',
+                                                        '& .MuiSvgIcon-root': { color: 'primary.main' },
+                                                    },
+                                                }}
+                                            >
+                                                <SettingsIcon sx={{ mr: 1.5, fontSize: 20, color: 'text.secondary' }} />
+                                                <Typography variant="body2">Settings</Typography>
                                             </MenuItem>
-                                            <MenuItem onClick={handleLogout} sx={{ color: 'error.main' }}>
-                                                <LogoutIcon sx={{ mr: 1 }} fontSize="small" /> Logout
+                                            <Box sx={{ borderTop: '1px solid', borderColor: 'divider', mt: 0.5 }} />
+                                            <MenuItem
+                                                onClick={handleLogout}
+                                                sx={{
+                                                    py: 1.5,
+                                                    px: 2,
+                                                    color: 'error.main',
+                                                    '&:hover': {
+                                                        bgcolor: 'error.lighter',
+                                                        '& .MuiSvgIcon-root': { color: 'error.dark' },
+                                                    },
+                                                }}
+                                            >
+                                                <LogoutIcon sx={{ mr: 1.5, fontSize: 20 }} />
+                                                <Typography variant="body2">Logout</Typography>
                                             </MenuItem>
                                         </Menu>
                                     </>

@@ -209,7 +209,7 @@ const Login: React.FC<LoginProps> = ({ isRegisterMode = false }) => {
                             <Tab icon={<PersonAddIcon />} label="Sign Up" iconPosition="start" />
                         </Tabs>
 
-                        <CardContent sx={{ p: 0, pt: 3 }}>
+                        <CardContent sx={{ p: 0, pt: 3, px: { xs: 2, sm: 3 } }}>
                             {/* Login Tab */}
                             {activeTab === 0 && (
                                 <Box component="form" onSubmit={handleLoginSubmit} className="login-form">
