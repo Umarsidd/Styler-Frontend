@@ -1,8 +1,28 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { Card, Descriptions, Tag, Button, Spin, Empty, Modal } from 'antd';
-import { ArrowLeftOutlined, CloseCircleOutlined } from '@ant-design/icons';
+import {
+    Box,
+    Container,
+    Typography,
+    Button,
+    CircularProgress,
+    Card,
+    CardContent,
+    Grid,
+    Chip,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
+} from '@mui/material';
+import {
+    ArrowBack as ArrowBackIcon,
+    Cancel as CancelIcon,
+    CalendarMonth as CalendarIcon,
+    Schedule as ScheduleIcon,
+    AttachMoney as MoneyIcon,
+} from '@mui/icons-material';
 import { appointmentService } from '../../services/appointmentService';
 import { Appointment, AppointmentStatus } from '../../types';
 import { formatDate, formatCurrency } from '../../utils/helpers';
@@ -12,6 +32,7 @@ import './AppointmentDetails.css';
 const AppointmentDetails: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
+    const [cancelDialogOpen, setCancelDialogOpen] = React.useState(false);
 
     const { data, isLoading, refetch } = useQuery({
         queryKey: ['appointment', id],
@@ -23,6 +44,7 @@ const AppointmentDetails: React.FC = () => {
         mutationFn: (appointmentId: string) => appointmentService.cancelAppointment(appointmentId),
         onSuccess: () => {
             toast.success('Appointment cancelled successfully');
+            setCancelDialogOpen(false);
             refetch();
         },
         onError: (error: any) => {
@@ -32,114 +54,137 @@ const AppointmentDetails: React.FC = () => {
 
     const appointment = data?.data as Appointment | undefined;
 
-    const handleCancel = () => {
-        Modal.confirm({
-            title: 'Cancel Appointment',
-            content: 'Are you sure you want to cancel this appointment?',
-            okText: 'Yes, Cancel',
-            okType: 'danger',
-            onOk: () => {
-                if (id) {
-                    cancelMutation.mutate(id);
-                }
-            },
-        });
-    };
-
-    const getStatusColor = (status: AppointmentStatus): string => {
-        const colorMap: Record<AppointmentStatus, string> = {
-            pending: 'orange',
-            confirmed: 'blue',
-            in_progress: 'cyan',
-            completed: 'green',
-            cancelled: 'red',
-            no_show: 'volcano',
+    const getStatusColor = (status: AppointmentStatus): 'success' | 'warning' | 'error' | 'info' | 'default' => {
+        const colorMap: Record<AppointmentStatus, 'success' | 'warning' | 'error' | 'info' | 'default'> = {
+            pending: 'warning',
+            confirmed: 'info',
+            in_progress: 'info',
+            completed: 'success',
+            cancelled: 'error',
+            no_show: 'error',
         };
         return colorMap[status] || 'default';
     };
 
     if (isLoading) {
         return (
-            <div className="appointment-details-loading">
-                <Spin size="large" tip="Loading appointment details..." />
-            </div>
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
+                <CircularProgress />
+            </Box>
         );
     }
 
     if (!appointment) {
         return (
-            <div className="appointment-details-error">
-                <Empty description="Appointment not found" />
-                <Button type="primary" onClick={() => navigate('/customer/appointments')}>
-                    Back to Appointments
-                </Button>
-            </div>
+            <Container>
+                <Box sx={{ textAlign: 'center', py: 8 }}>
+                    <Typography variant="h5" gutterBottom>Appointment not found</Typography>
+                    <Button variant="contained" onClick={() => navigate('/customer/appointments')} sx={{ mt: 2 }}>
+                        Back to Appointments
+                    </Button>
+                </Box>
+            </Container>
         );
     }
 
     const canCancel = appointment.status === 'pending' || appointment.status === 'confirmed';
 
     return (
-        <div className="appointment-details-page">
-            <div className="page-header">
-                <Button
-                    icon={<ArrowLeftOutlined />}
-                    onClick={() => navigate('/customer/appointments')}
-                >
-                    Back
-                </Button>
-                <h1>Appointment Details</h1>
-            </div>
+        <Box className="appointment-details-page">
+            <Container maxWidth="md">
+                <Box className="page-header" sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
+                    <Button startIcon={<ArrowBackIcon />} onClick={() => navigate('/customer/appointments')}>
+                        Back
+                    </Button>
+                    <Typography variant="h1" sx={{ flex: 1 }}>Appointment Details</Typography>
+                </Box>
 
-            <Card>
-                <Descriptions title="Appointment Information" bordered column={1}>
-                    <Descriptions.Item label="Appointment Number">
-                        <strong>{appointment.appointmentNumber}</strong>
-                    </Descriptions.Item>
-                    <Descriptions.Item label="Status">
-                        <Tag color={getStatusColor(appointment.status)}>
-                            {appointment.status.replace('_', ' ').toUpperCase()}
-                        </Tag>
-                    </Descriptions.Item>
-                    <Descriptions.Item label="Date">
-                        {formatDate(appointment.scheduledDate, 'long')}
-                    </Descriptions.Item>
-                    <Descriptions.Item label="Time">
-                        {appointment.scheduledTime}
-                    </Descriptions.Item>
-                    <Descriptions.Item label="Services">
-                        {appointment.services.length} service(s) selected
-                    </Descriptions.Item>
-                    <Descriptions.Item label="Total Amount">
-                        <strong style={{ fontSize: '18px', color: '#667eea' }}>
-                            {formatCurrency(appointment.totalAmount)}
-                        </strong>
-                    </Descriptions.Item>
-                    {appointment.notes && (
-                        <Descriptions.Item label="Notes">
-                            {appointment.notes}
-                        </Descriptions.Item>
-                    )}
-                    <Descriptions.Item label="Created At">
-                        {formatDate(appointment.createdAt, 'long')}
-                    </Descriptions.Item>
-                </Descriptions>
+                <Card>
+                    <CardContent sx={{ p: 4 }}>
+                        <Grid container spacing={3}>
+                            <Grid item xs={12}>
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                                    <Typography variant="h5">#{appointment.appointmentNumber}</Typography>
+                                    <Chip
+                                        label={appointment.status.replace('_', ' ').toUpperCase()}
+                                        color={getStatusColor(appointment.status)}
+                                    />
+                                </Box>
+                            </Grid>
 
-                {canCancel && (
-                    <div className="appointment-actions">
+                            <Grid item xs={12} sm={6}>
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+                                    <CalendarIcon color="action" />
+                                    <Box>
+                                        <Typography variant="caption" color="text.secondary">Date</Typography>
+                                        <Typography variant="body1">{formatDate(appointment.scheduledDate, 'long')}</Typography>
+                                    </Box>
+                                </Box>
+                            </Grid>
+
+                            <Grid item xs={12} sm={6}>
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+                                    <ScheduleIcon color="action" />
+                                    <Box>
+                                        <Typography variant="caption" color="text.secondary">Time</Typography>
+                                        <Typography variant="body1">{appointment.scheduledTime}</Typography>
+                                    </Box>
+                                </Box>
+                            </Grid>
+
+                            <Grid item xs={12}>
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+                                    <MoneyIcon color="action" />
+                                    <Box>
+                                        <Typography variant="caption" color="text.secondary">Total Amount</Typography>
+                                        <Typography variant="h5" color="primary">{formatCurrency(appointment.totalAmount)}</Typography>
+                                    </Box>
+                                </Box>
+                            </Grid>
+
+                            {appointment.notes && (
+                                <Grid item xs={12}>
+                                    <Typography variant="caption" color="text.secondary">Notes</Typography>
+                                    <Typography variant="body1">{appointment.notes}</Typography>
+                                </Grid>
+                            )}
+                        </Grid>
+
+                        {canCancel && (
+                            <Box sx={{ mt: 4, pt: 3, borderTop: '1px solid', borderColor: 'divider' }}>
+                                <Button
+                                    variant="contained"
+                                    color="error"
+                                    startIcon={<CancelIcon />}
+                                    onClick={() => setCancelDialogOpen(true)}
+                                    disabled={cancelMutation.isPending}
+                                >
+                                    Cancel Appointment
+                                </Button>
+                            </Box>
+                        )}
+                    </CardContent>
+                </Card>
+
+                <Dialog open={cancelDialogOpen} onClose={() => setCancelDialogOpen(false)}>
+                    <DialogTitle>Cancel Appointment</DialogTitle>
+                    <DialogContent>
+                        <Typography>Are you sure you want to cancel this appointment?</Typography>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => setCancelDialogOpen(false)}>No, Keep It</Button>
                         <Button
-                            danger
-                            size="large"
-                            icon={<CloseCircleOutlined />}
-                            onClick={handleCancel}
-                            loading={cancelMutation.isPending}
+                            onClick={() => id && cancelMutation.mutate(id)}
+                            color="error"
+                            variant="contained"
+                            disabled={cancelMutation.isPending}
                         >
-                            Cancel Appointment
+                            Yes, Cancel
                         </Button>
-                    </div>
-                )}
-            </Card>
-        </div>
+                    </DialogActions>
+                </Dialog>
+            </Container>
+        </Box>
     );
 };
 

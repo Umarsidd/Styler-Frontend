@@ -1,184 +1,121 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { Card, Button, Descriptions, Tag, Image, Rate, Tabs, Spin, Empty } from 'antd';
 import {
-    EnvironmentOutlined,
-    ClockCircleOutlined,
-    PhoneOutlined,
-    MailOutlined,
-    StarFilled,
-} from '@ant-design/icons';
+    Box,
+    Container,
+    Typography,
+    Button,
+    CircularProgress,
+    Card,
+    CardContent,
+    Grid,
+    Chip,
+} from '@mui/material';
+import { ArrowBack as ArrowBackIcon, LocationOn as LocationIcon, Phone as PhoneIcon, Star as StarIcon } from '@mui/icons-material';
 import { salonService } from '../../services/salonService';
-import { Salon, Service } from '../../types';
-import { formatCurrency, formatTime } from '../../utils/helpers';
+import { Salon } from '../../types';
 import './SalonDetails.css';
-
-const { TabPane } = Tabs;
 
 const SalonDetails: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
 
-    const { data: salonData, isLoading: loadingSalon } = useQuery({
+    const { data, isLoading } = useQuery({
         queryKey: ['salon', id],
         queryFn: () => salonService.getSalonById(id!),
         enabled: !!id,
     });
 
-    const { data: servicesData, isLoading: loadingServices } = useQuery({
-        queryKey: ['salon-services', id],
-        queryFn: () => salonService.getSalonServices(id!),
-        enabled: !!id,
-    });
+    const salon = data?.data as Salon | undefined;
 
-    const salon = salonData?.data as Salon | undefined;
-    const services = servicesData?.data as Service[] | undefined;
-
-    const handleBookNow = () => {
-        navigate(`/booking/${id}`);
-    };
-
-    if (loadingSalon) {
+    if (isLoading) {
         return (
-            <div className="salon-details-loading">
-                <Spin size="large" tip="Loading salon details..." />
-            </div>
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
+                <CircularProgress />
+            </Box>
         );
     }
 
     if (!salon) {
         return (
-            <div className="salon-details-error">
-                <Empty description="Salon not found" />
-                <Button type="primary" onClick={() => navigate('/salons')}>
-                    Browse Salons
-                </Button>
-            </div>
+            <Container>
+                <Typography variant="h5">Salon not found</Typography>
+            </Container>
         );
     }
 
     return (
-        <div className="salon-details-page">
-            {/* Hero Section */}
-            <div className="salon-hero">
-                <div className="salon-images">
-                    <Image.PreviewGroup>
-                        {salon.images && salon.images.length > 0 ? (
-                            salon.images.map((image, index) => (
-                                <Image
-                                    key={index}
-                                    src={image}
-                                    alt={`${salon.name} - ${index + 1}`}
-                                    className="salon-image"
-                                    fallback="/placeholder-salon.jpg"
-                                />
-                            ))
-                        ) : (
-                            <Image src="/placeholder-salon.jpg" alt={salon.name} />
-                        )}
-                    </Image.PreviewGroup>
-                </div>
-            </div>
+        <Box className="customer-dashboard">
+            <Container maxWidth="lg">
+                <Button startIcon={<ArrowBackIcon />} onClick={() => navigate('/salons')} sx={{ mb: 3 }}>
+                    Back to Salons
+                </Button>
 
-            {/* Main Content */}
-            <div className="salon-content">
-                <div className="salon-header">
-                    <div className="salon-title-section">
-                        <h1>{salon.name}</h1>
-                        <div className="salon-rating">
-                            <Rate disabled value={salon.rating || 0} allowHalf />
-                            <span className="rating-text">
-                                {salon.rating?.toFixed(1) || 'N/A'} ({salon.totalReviews || 0} reviews)
-                            </span>
-                        </div>
-                    </div>
-                    <Button
-                        type="primary"
-                        size="large"
-                        onClick={handleBookNow}
-                        className="book-now-btn"
-                    >
-                        Book Appointment
-                    </Button>
-                </div>
+                <Typography variant="h1" gutterBottom>
+                    {salon.name}
+                </Typography>
 
-                <Tabs defaultActiveKey="overview" className="salon-tabs">
-                    <TabPane tab="Overview" key="overview">
+                <Grid container spacing={4}>
+                    <Grid item xs={12} md={8}>
                         <Card>
-                            <p className="salon-description">{salon.description}</p>
+                            <CardContent>
+                                <Typography variant="h5" gutterBottom>About</Typography>
+                                <Typography variant="body1" paragraph>
+                                    {salon.description || 'Premium salon services'}
+                                </Typography>
 
-                            <Descriptions title="Contact Information" column={1} bordered>
-                                <Descriptions.Item label={<><EnvironmentOutlined /> Address</>}>
-                                    {salon.address.street}, {salon.address.city}, {salon.address.state} - {salon.address.pincode}
-                                </Descriptions.Item>
-                                {salon.phone && (
-                                    <Descriptions.Item label={<><PhoneOutlined /> Phone</>}>
-                                        {salon.phone}
-                                    </Descriptions.Item>
+                                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 3 }}>
+                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                        <LocationIcon color="action" />
+                                        <Typography variant="body1">
+                                            {salon.address?.street}, {salon.address?.city}, {salon.address?.state} - {salon.address?.zipCode}
+                                        </Typography>
+                                    </Box>
+
+                                    {salon.contactNumber && (
+                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                            <PhoneIcon color="action" />
+                                            <Typography variant="body1">{salon.contactNumber}</Typography>
+                                        </Box>
+                                    )}
+
+                                    {salon.rating && (
+                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                            <StarIcon sx={{ color: '#f59e0b' }} />
+                                            <Typography variant="body1">
+                                                {salon.rating.toFixed(1)} ({salon.totalReviews || 0} reviews)
+                                            </Typography>
+                                        </Box>
+                                    )}
+                                </Box>
+
+                                {salon.specialties && salon.specialties.length > 0 && (
+                                    <Box sx={{ mt: 3 }}>
+                                        <Typography variant="h6" gutterBottom>Specialties</Typography>
+                                        <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                                            {salon.specialties.map((specialty, index) => (
+                                                <Chip key={index} label={specialty} />
+                                            ))}
+                                        </Box>
+                                    </Box>
                                 )}
-                                {salon.email && (
-                                    <Descriptions.Item label={<><MailOutlined /> Email</>}>
-                                        {salon.email}
-                                    </Descriptions.Item>
-                                )}
-                            </Descriptions>
+                            </CardContent>
                         </Card>
-                    </TabPane>
+                    </Grid>
 
-                    <TabPane tab="Services" key="services">
-                        {loadingServices ? (
-                            <Spin />
-                        ) : services && services.length > 0 ? (
-                            <div className="services-grid">
-                                {services.map((service) => (
-                                    <Card key={service._id} className="service-card">
-                                        <div className="service-header">
-                                            <h3>{service.name}</h3>
-                                            <span className="service-price">{formatCurrency(service.price)}</span>
-                                        </div>
-                                        <p className="service-description">{service.description}</p>
-                                        <div className="service-details">
-                                            <Tag color="blue">{service.duration} min</Tag>
-                                            <Tag color={service.gender === 'unisex' ? 'green' : 'purple'}>
-                                                {service.gender}
-                                            </Tag>
-                                        </div>
-                                    </Card>
-                                ))}
-                            </div>
-                        ) : (
-                            <Empty description="No services available" />
-                        )}
-                    </TabPane>
-
-                    <TabPane tab="Operating Hours" key="hours">
+                    <Grid item xs={12} md={4}>
                         <Card>
-                            <div className="operating-hours">
-                                {salon.operatingHours && salon.operatingHours.length > 0 ? (
-                                    salon.operatingHours.map((hours) => (
-                                        <div key={hours.day} className="hours-row">
-                                            <span className="day-name">
-                                                {hours.day.charAt(0).toUpperCase() + hours.day.slice(1)}
-                                            </span>
-                                            {hours.isOpen ? (
-                                                <span className="hours-time">
-                                                    <ClockCircleOutlined /> {formatTime(hours.openTime)} - {formatTime(hours.closeTime)}
-                                                </span>
-                                            ) : (
-                                                <Tag color="red">Closed</Tag>
-                                            )}
-                                        </div>
-                                    ))
-                                ) : (
-                                    <Empty description="Operating hours not available" />
-                                )}
-                            </div>
+                            <CardContent>
+                                <Button variant="contained" fullWidth size="large" onClick={() => navigate(`/booking/${salon._id}`)}>
+                                    Book Appointment
+                                </Button>
+                            </CardContent>
                         </Card>
-                    </TabPane>
-                </Tabs>
-            </div>
-        </div>
+                    </Grid>
+                </Grid>
+            </Container>
+        </Box>
     );
 };
 

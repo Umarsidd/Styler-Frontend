@@ -1,184 +1,144 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { Table, Tag, Button, Select, DatePicker, Card, Empty } from 'antd';
-import { EyeOutlined, CalendarOutlined } from '@ant-design/icons';
-import type { ColumnsType } from 'antd/es/table';
+import {
+    Box,
+    Container,
+    Typography,
+    Card,
+    CardContent,
+    Select,
+    MenuItem,
+    FormControl,
+    InputLabel,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Chip,
+    IconButton,
+    CircularProgress,
+} from '@mui/material';
+import { Visibility as EyeIcon } from '@mui/icons-material';
+import { DatePicker } from '@mui/x-date-pickers';
 import dayjs, { Dayjs } from 'dayjs';
 import { appointmentService } from '../../services/appointmentService';
 import { Appointment, AppointmentStatus } from '../../types';
-import { AppointmentFilters } from '../../services/appointmentService';
 import { formatDate, formatCurrency } from '../../utils/helpers';
 import './MyAppointments.css';
 
-const { Option } = Select;
-const { RangePicker } = DatePicker;
-
-const getStatusColor = (status: AppointmentStatus): string => {
-    const colorMap: Record<AppointmentStatus, string> = {
-        pending: 'orange',
-        confirmed: 'blue',
-        in_progress: 'cyan',
-        completed: 'green',
-        cancelled: 'red',
-        no_show: 'volcano',
-    };
-    return colorMap[status] || 'default';
-};
-
 const MyAppointments: React.FC = () => {
     const navigate = useNavigate();
-    const [filters, setFilters] = useState<AppointmentFilters>({
-        page: 1,
-        limit: 10,
-    });
+    const [statusFilter, setStatusFilter] = useState<string>('');
+    const [dateFilter, setDateFilter] = useState<Dayjs | null>(null);
 
     const { data, isLoading } = useQuery({
-        queryKey: ['my-appointments', filters],
-        queryFn: () => appointmentService.getMyAppointments(filters),
+        queryKey: ['my-appointments', statusFilter, dateFilter],
+        queryFn: () =>
+            appointmentService.getUserAppointments({
+                status: statusFilter as AppointmentStatus,
+                date: dateFilter?.format('YYYY-MM-DD'),
+            }),
     });
 
-    const appointments = data?.data?.data || [];
-    const pagination = data?.data?.pagination;
+    const appointments = (data?.data as Appointment[]) || [];
 
-    const columns: ColumnsType<Appointment> = [
-        {
-            title: 'Appointment #',
-            dataIndex: 'appointmentNumber',
-            key: 'appointmentNumber',
-            render: (text) => <strong>{text}</strong>,
-        },
-        {
-            title: 'Date',
-            dataIndex: 'scheduledDate',
-            key: 'date',
-            render: (date) => formatDate(date, 'long'),
-        },
-        {
-            title: 'Time',
-            dataIndex: 'scheduledTime',
-            key: 'time',
-        },
-        {
-            title: 'Status',
-            dataIndex: 'status',
-            key: 'status',
-            render: (status: AppointmentStatus) => (
-                <Tag color={getStatusColor(status)}>
-                    {status.replace('_', ' ').toUpperCase()}
-                </Tag>
-            ),
-        },
-        {
-            title: 'Amount',
-            dataIndex: 'totalAmount',
-            key: 'amount',
-            render: (amount) => formatCurrency(amount),
-        },
-        {
-            title: 'Actions',
-            key: 'actions',
-            render: (_, record) => (
-                <Button
-                    type="link"
-                    icon={<EyeOutlined />}
-                    onClick={() => navigate(`/customer/appointments/${record._id}`)}
-                >
-                    View
-                </Button>
-            ),
-        },
-    ];
-
-    const handleStatusChange = (status: AppointmentStatus | 'all') => {
-        setFilters({
-            ...filters,
-            status: status === 'all' ? undefined : status,
-            page: 1,
-        });
-    };
-
-    const handleDateRangeChange = (dates: [Dayjs | null, Dayjs | null] | null) => {
-        if (dates && dates[0] && dates[1]) {
-            setFilters({
-                ...filters,
-                // Add date range to filters if backend supports it
-                page: 1,
-            });
-        } else {
-            const { ...rest } = filters;
-            setFilters({ ...rest, page: 1 });
-        }
+    const getStatusColor = (status: AppointmentStatus): 'success' | 'warning' | 'error' | 'info' | 'default' => {
+        const colorMap: Record<AppointmentStatus, 'success' | 'warning' | 'error' | 'info' | 'default'> = {
+            pending: 'warning',
+            confirmed: 'info',
+            in_progress: 'info',
+            completed: 'success',
+            cancelled: 'error',
+            no_show: 'error',
+        };
+        return colorMap[status] || 'default';
     };
 
     return (
-        <div className="my-appointments-page">
-            <Card>
-                <div className="page-header">
-                    <div>
-                        <h1>My Appointments</h1>
-                        <p>View and manage all your appointments</p>
-                    </div>
-                    <Button
-                        type="primary"
-                        size="large"
-                        icon={<CalendarOutlined />}
-                        onClick={() => navigate('/salons')}
-                    >
-                        Book New Appointment
-                    </Button>
-                </div>
+        <Box className="my-appointments-page">
+            <Container maxWidth="lg">
+                <Typography variant="h1" gutterBottom>
+                    My Appointments
+                </Typography>
 
-                {/* Filters */}
-                <div className="appointments-filters">
-                    <Select
-                        placeholder="Filter by status"
-                        style={{ width: 200 }}
-                        onChange={handleStatusChange}
-                        allowClear
-                    >
-                        <Option value="all">All Status</Option>
-                        <Option value="pending">Pending</Option>
-                        <Option value="confirmed">Confirmed</Option>
-                        <Option value="in_progress">In Progress</Option>
-                        <Option value="completed">Completed</Option>
-                        <Option value="cancelled">Cancelled</Option>
-                    </Select>
+                <Box sx={{ display: 'flex', gap: 2, mb: 3, flexWrap: 'wrap' }}>
+                    <FormControl sx={{ minWidth: 200 }}>
+                        <InputLabel>Status</InputLabel>
+                        <Select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} label="Status">
+                            <MenuItem value="">All</MenuItem>
+                            <MenuItem value="pending">Pending</MenuItem>
+                            <MenuItem value="confirmed">Confirmed</MenuItem>
+                            <MenuItem value="completed">Completed</MenuItem>
+                            <MenuItem value="cancelled">Cancelled</MenuItem>
+                        </Select>
+                    </FormControl>
 
-                    <RangePicker
-                        onChange={handleDateRangeChange}
-                        format="YYYY-MM-DD"
-                        style={{ width: 300 }}
+                    <DatePicker
+                        label="Filter by Date"
+                        value={dateFilter}
+                        onChange={(newValue) => setDateFilter(newValue)}
+                        slotProps={{ textField: { sx: { minWidth: 200 } } }}
                     />
-                </div>
+                </Box>
 
-                {/* Table */}
-                {appointments.length === 0 && !isLoading ? (
-                    <Empty
-                        description="No appointments found"
-                        image={Empty.PRESENTED_IMAGE_SIMPLE}
-                    >
-                        <Button type="primary" onClick={() => navigate('/salons')}>
-                            Book Your First Appointment
-                        </Button>
-                    </Empty>
-                ) : (
-                    <Table
-                        columns={columns}
-                        dataSource={appointments}
-                        loading={isLoading}
-                        rowKey="_id"
-                        pagination={{
-                            current: filters.page,
-                            pageSize: filters.limit,
-                            total: pagination?.total,
-                            onChange: (page) => setFilters({ ...filters, page }),
-                            showTotal: (total) => `Total ${total} appointments`,
-                        }}
-                    />
-                )}
-            </Card>
-        </div>
+                <Card>
+                    <CardContent>
+                        {isLoading ? (
+                            <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
+                                <CircularProgress />
+                            </Box>
+                        ) : appointments.length === 0 ? (
+                            <Box sx={{ textAlign: 'center', py: 8 }}>
+                                <Typography variant="h6" color="text.secondary">No appointments found</Typography>
+                            </Box>
+                        ) : (
+                            <TableContainer>
+                                <Table>
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell>Appointment #</TableCell>
+                                            <TableCell>Date</TableCell>
+                                            <TableCell>Time</TableCell>
+                                            <TableCell>Status</TableCell>
+                                            <TableCell>Amount</TableCell>
+                                            <TableCell>Actions</TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {appointments.map((appointment) => (
+                                            <TableRow key={appointment._id} hover>
+                                                <TableCell>{appointment.appointmentNumber}</TableCell>
+                                                <TableCell>{formatDate(appointment.scheduledDate)}</TableCell>
+                                                <TableCell>{appointment.scheduledTime}</TableCell>
+                                                <TableCell>
+                                                    <Chip
+                                                        label={appointment.status.toUpperCase()}
+                                                        color={getStatusColor(appointment.status)}
+                                                        size="small"
+                                                    />
+                                                </TableCell>
+                                                <TableCell>{formatCurrency(appointment.totalAmount)}</TableCell>
+                                                <TableCell>
+                                                    <IconButton
+                                                        size="small"
+                                                        onClick={() => navigate(`/customer/appointments/${appointment._id}`)}
+                                                    >
+                                                        <EyeIcon />
+                                                    </IconButton>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                        )}
+                    </CardContent>
+                </Card>
+            </Container>
+        </Box>
     );
 };
 

@@ -1,147 +1,86 @@
 import React, { useState } from 'react';
-import { Input, Select, Row, Col, Spin, Empty, Pagination } from 'antd';
-import { SearchOutlined, EnvironmentOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
+import {
+    Box,
+    Container,
+    Typography,
+    Grid,
+    TextField,
+    Select,
+    MenuItem,
+    FormControl,
+    InputLabel,
+    CircularProgress,
+} from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { salonService } from '../../services/salonService';
 import SalonCard from '../../components/salon/SalonCard';
+import SalonCardSkeleton from '../../components/common/SalonCardSkeleton';
 import { Salon } from '../../types';
-import { SalonSearchFilters } from '../../services/salonService';
 import './SalonList.css';
 
-const { Option } = Select;
-
 const SalonList: React.FC = () => {
-    const [filters, setFilters] = useState<SalonSearchFilters>({
-        name: '',
-        city: '',
-        page: 1,
-        limit: 12,
+    const navigate = useNavigate();
+    const [searchQuery, setSearchQuery] = useState('');
+    const [cityFilter, setCityFilter] = useState('');
+
+    const { data, isLoading } = useQuery({
+        queryKey: ['salons', searchQuery, cityFilter],
+        queryFn: () => salonService.getSalons({ search: searchQuery, city: cityFilter }),
     });
 
-    const { data, isLoading, error } = useQuery({
-        queryKey: ['salons', filters],
-        queryFn: () => salonService.searchSalons(filters),
-    });
-
-    const salons = data?.data?.data || [];
-    const pagination = data?.data?.pagination;
-
-    const handleSearchChange = (value: string) => {
-        setFilters({ ...filters, name: value, page: 1 });
-    };
-
-    const handleCityChange = (value: string) => {
-        setFilters({ ...filters, city: value, page: 1 });
-    };
-
-    const handlePageChange = (page: number) => {
-        setFilters({ ...filters, page });
-    };
+    const salons = (data?.data as Salon[]) || [];
 
     return (
-        <div className="salon-list-page">
-            <div className="salon-list-header">
-                <h1>Discover Premium Salons</h1>
-                <p>Find the best salons and barbers near you</p>
-            </div>
+        <Box className="customer-dashboard">
+            <Container maxWidth="lg">
+                <Typography variant="h1" gutterBottom>
+                    Find Salons
+                </Typography>
 
-            {/* Filters */}
-            <div className="salon-filters">
-                <Row gutter={[16, 16]}>
-                    <Col xs={24} sm={12} md={8}>
-                        <Input
-                            size="large"
-                            placeholder="Search salons..."
-                            prefix={<SearchOutlined />}
-                            value={filters.name}
-                            onChange={(e) => handleSearchChange(e.target.value)}
-                            allowClear
-                        />
-                    </Col>
-                    <Col xs={24} sm={12} md={8}>
-                        <Select
-                            size="large"
-                            placeholder="Select City"
-                            value={filters.city || undefined}
-                            onChange={handleCityChange}
-                            style={{ width: '100%' }}
-                            allowClear
-                        >
-                            <Option value="">All Cities</Option>
-                            <Option value="Mumbai">Mumbai</Option>
-                            <Option value="Delhi">Delhi</Option>
-                            <Option value="Bangalore">Bangalore</Option>
-                            <Option value="Hyderabad">Hyderabad</Option>
-                            <Option value="Chennai">Chennai</Option>
-                            <Option value="Pune">Pune</Option>
-                        </Select>
-                    </Col>
-                    <Col xs={24} sm={12} md={8}>
-                        <Select
-                            size="large"
-                            placeholder="Service Type"
-                            style={{ width: '100%' }}
-                            allowClear
-                        >
-                            <Option value="">All Services</Option>
-                            <Option value="haircut">Haircut</Option>
-                            <Option value="shave">Shave</Option>
-                            <Option value="facial">Facial</Option>
-                            <Option value="massage">Massage</Option>
-                        </Select>
-                    </Col>
-                </Row>
-            </div>
-
-            {/* Results */}
-            <div className="salon-results">
-                {isLoading ? (
-                    <div className="loading-container">
-                        <Spin size="large" tip="Loading salons..." />
-                    </div>
-                ) : error ? (
-                    <div className="error-container">
-                        <Empty description="Failed to load salons. Please try again." />
-                    </div>
-                ) : salons.length === 0 ? (
-                    <Empty
-                        description="No salons found"
-                        image={Empty.PRESENTED_IMAGE_SIMPLE}
+                <Box sx={{ display: 'flex', gap: 2, mb: 4, flexWrap: 'wrap' }}>
+                    <TextField
+                        label="Search salons..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        sx={{ flex: 1, minWidth: 250 }}
                     />
+                    <FormControl sx={{ minWidth: 200 }}>
+                        <InputLabel>City</InputLabel>
+                        <Select value={cityFilter} onChange={(e) => setCityFilter(e.target.value)} label="City">
+                            <MenuItem value="">All Cities</MenuItem>
+                            <MenuItem value="Mumbai">Mumbai</MenuItem>
+                            <MenuItem value="Delhi">Delhi</MenuItem>
+                            <MenuItem value="Bangalore">Bangalore</MenuItem>
+                        </Select>
+                    </FormControl>
+                </Box>
+
+                {isLoading ? (
+                    <Grid container spacing={3}>
+                        {[1, 2, 3, 4].map((i) => (
+                            <Grid item xs={12} sm={6} md={4} key={i}>
+                                <SalonCardSkeleton />
+                            </Grid>
+                        ))}
+                    </Grid>
+                ) : salons.length === 0 ? (
+                    <Box sx={{ textAlign: 'center', py: 8 }}>
+                        <Typography variant="h6" color="text.secondary">
+                            No salons found
+                        </Typography>
+                    </Box>
                 ) : (
-                    <>
-                        <div className="results-count">
-                            {pagination && (
-                                <p>
-                                    Showing {salons.length} of {pagination.total} salons
-                                </p>
-                            )}
-                        </div>
-
-                        <Row gutter={[24, 24]}>
-                            {salons.map((salon: Salon) => (
-                                <Col xs={24} sm={12} lg={8} key={salon._id}>
-                                    <SalonCard salon={salon} />
-                                </Col>
-                            ))}
-                        </Row>
-
-                        {pagination && pagination.totalPages > 1 && (
-                            <div className="pagination-container">
-                                <Pagination
-                                    current={filters.page}
-                                    total={pagination.total}
-                                    pageSize={filters.limit}
-                                    onChange={handlePageChange}
-                                    showSizeChanger={false}
-                                    showTotal={(total) => `Total ${total} salons`}
-                                />
-                            </div>
-                        )}
-                    </>
+                    <Grid container spacing={3}>
+                        {salons.map((salon) => (
+                            <Grid item xs={12} sm={6} md={4} key={salon._id}>
+                                <SalonCard salon={salon} onClick={() => navigate(`/salons/${salon._id}`)} />
+                            </Grid>
+                        ))}
+                    </Grid>
                 )}
-            </div>
-        </div>
+            </Container>
+        </Box>
     );
 };
 
