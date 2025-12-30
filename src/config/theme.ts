@@ -1,8 +1,9 @@
+import type { ThemeConfig } from 'antd';
 import { theme } from 'antd';
 
 const { darkAlgorithm } = theme;
 
-export const antdTheme = {
+export const antdTheme: ThemeConfig = {
     token: {
         // Colors
         colorPrimary: '#f59e0b', // Amber/Orange
