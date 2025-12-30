@@ -1,17 +1,30 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Form, Input, Button, Tabs, Typography, Card, Radio } from 'antd';
 import {
-    UserOutlined,
-    MailOutlined,
-    LockOutlined,
-    PhoneOutlined,
-    LoginOutlined,
-    UserAddOutlined,
-    ScissorOutlined,
-    ShopOutlined,
-    CalendarOutlined,
-} from '@ant-design/icons';
+    Box,
+    TextField,
+    Button,
+    Card,
+    CardContent,
+    Typography,
+    Tabs,
+    Tab,
+    ToggleButtonGroup,
+    ToggleButton,
+    InputAdornment,
+    CircularProgress,
+} from '@mui/material';
+import {
+    Person as PersonIcon,
+    Email as EmailIcon,
+    Lock as LockIcon,
+    Phone as PhoneIcon,
+    Login as LoginIcon,
+    PersonAdd as PersonAddIcon,
+    ContentCut as ScissorsIcon,
+    CalendarMonth as CalendarIcon,
+    Store as StoreIcon,
+} from '@mui/icons-material';
 import { motion } from 'framer-motion';
 import { authService } from '../services/authService';
 import { useAuthStore } from '../stores/authStore';
@@ -19,8 +32,7 @@ import toast from 'react-hot-toast';
 import { UserRole } from '../types';
 import './Login.css';
 
-const { Title, Text, Paragraph } = Typography;
-const MotionDiv = motion.div;
+const MotionBox = motion(Box);
 
 interface LoginFormValues {
     email: string;
@@ -40,22 +52,29 @@ interface LoginProps {
 }
 
 const Login: React.FC<LoginProps> = ({ isRegisterMode = false }) => {
-    const [activeTab, setActiveTab] = useState(isRegisterMode ? 'signup' : 'login');
+    const [activeTab, setActiveTab] = useState(isRegisterMode ? 1 : 0);
     const [loading, setLoading] = useState(false);
     const [selectedRole, setSelectedRole] = useState<UserRole>(UserRole.CUSTOMER);
 
-    const [loginForm] = Form.useForm<LoginFormValues>();
-    const [signupForm] = Form.useForm<RegisterFormValues>();
+    const [loginData, setLoginData] = useState<LoginFormValues>({ email: '', password: '' });
+    const [registerData, setRegisterData] = useState<RegisterFormValues>({
+        name: '',
+        email: '',
+        phone: '',
+        password: '',
+        confirmPassword: '',
+    });
 
     const navigate = useNavigate();
     const setAuth = useAuthStore((state) => state.setAuth);
 
-    const onLoginSubmit = async (values: LoginFormValues) => {
+    const handleLoginSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
         setLoading(true);
         try {
             const response = await authService.login({
-                emailOrPhone: values.email,
-                password: values.password,
+                emailOrPhone: loginData.email,
+                password: loginData.password,
             });
 
             if (response.success && response.data) {
@@ -63,7 +82,6 @@ const Login: React.FC<LoginProps> = ({ isRegisterMode = false }) => {
                 setAuth(user, tokens.accessToken, tokens.refreshToken);
                 toast.success('Login successful! Welcome back.');
 
-                // Redirect based on user role
                 switch (user.role) {
                     case UserRole.BARBER:
                         setTimeout(() => navigate('/barber/dashboard'), 500);
@@ -80,23 +98,28 @@ const Login: React.FC<LoginProps> = ({ isRegisterMode = false }) => {
                 }
             }
         } catch (err: any) {
-            const errorMessage = err.response?.data?.error?.message ||
-                err.response?.data?.message ||
-                'Login failed. Please try again.';
+            const errorMessage = err.response?.data?.error?.message || err.response?.data?.message || 'Login failed';
             toast.error(errorMessage);
         } finally {
             setLoading(false);
         }
     };
 
-    const onSignupSubmit = async (values: RegisterFormValues) => {
+    const handleRegisterSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        if (registerData.password !== registerData.confirmPassword) {
+            toast.error('Passwords do not match');
+            return;
+        }
+
         setLoading(true);
         try {
             const response = await authService.register({
-                name: values.name,
-                email: values.email,
-                password: values.password,
-                phone: values.phone,
+                name: registerData.name,
+                email: registerData.email,
+                password: registerData.password,
+                phone: registerData.phone,
                 role: selectedRole,
             });
 
@@ -105,7 +128,6 @@ const Login: React.FC<LoginProps> = ({ isRegisterMode = false }) => {
                 setAuth(user, tokens.accessToken, tokens.refreshToken);
                 toast.success('Account created successfully! Welcome aboard.');
 
-                // Redirect based on selected role
                 switch (selectedRole) {
                     case UserRole.BARBER:
                         setTimeout(() => navigate('/barber/dashboard'), 500);
@@ -118,223 +140,264 @@ const Login: React.FC<LoginProps> = ({ isRegisterMode = false }) => {
                         setTimeout(() => navigate('/customer/dashboard'), 500);
                 }
             } else {
-                setActiveTab('login');
+                setActiveTab(0);
                 toast.success('Registration successful! Please login.');
             }
         } catch (err: any) {
-            const errorMessage = err.response?.data?.error?.message ||
-                err.response?.data?.message ||
-                'Registration failed. Please try again.';
+            const errorMessage = err.response?.data?.error?.message || err.response?.data?.message || 'Registration failed';
             toast.error(errorMessage);
         } finally {
             setLoading(false);
         }
     };
 
-    const roleOptions = [
-        {
-            value: UserRole.CUSTOMER,
-            icon: <CalendarOutlined />,
-            label: 'Customer',
-            description: 'Book appointments and manage visits'
-        },
-        {
-            value: UserRole.BARBER,
-            icon: <ScissorOutlined />,
-            label: 'Barber / Stylist',
-            description: 'Manage schedule and appointments'
-        },
-        {
-            value: UserRole.SALON_OWNER,
-            icon: <ShopOutlined />,
-            label: 'Salon Owner',
-            description: 'Manage your salon and team'
-        }
-    ];
-
-    const tabItems = [
-        {
-            key: 'login',
-            label: (
-                <span className="tab-label">
-                    <LoginOutlined /> Login
-                </span>
-            ),
-            children: (
-                <Form form={loginForm} onFinish={onLoginSubmit} layout="vertical" size="large">
-                    <Form.Item
-                        name="email"
-                        rules={[
-                            { required: true, message: 'Please enter your email' },
-                            { type: 'email', message: 'Please enter a valid email' },
-                        ]}
-                    >
-                        <Input prefix={<MailOutlined />} placeholder="Email Address" />
-                    </Form.Item>
-
-                    <Form.Item
-                        name="password"
-                        rules={[{ required: true, message: 'Please enter your password' }]}
-                    >
-                        <Input.Password prefix={<LockOutlined />} placeholder="Password" />
-                    </Form.Item>
-
-                    <Form.Item>
-                        <Button
-                            type="primary"
-                            htmlType="submit"
-                            loading={loading}
-                            block
-                            icon={<LoginOutlined />}
-                            className="auth-submit-btn"
-                        >
-                            {loading ? 'Logging in...' : 'Login'}
-                        </Button>
-                    </Form.Item>
-                </Form>
-            ),
-        },
-        {
-            key: 'signup',
-            label: (
-                <span className="tab-label">
-                    <UserAddOutlined /> Sign Up
-                </span>
-            ),
-            children: (
-                <Form form={signupForm} onFinish={onSignupSubmit} layout="vertical" size="large">
-                    {/* Role Selection */}
-                    <Form.Item label={<span className="role-selection-label">I am a:</span>}>
-                        <Radio.Group
-                            value={selectedRole}
-                            onChange={(e) => setSelectedRole(e.target.value)}
-                            className="role-radio-group"
-                        >
-                            {roleOptions.map(option => (
-                                <Radio.Button
-                                    key={option.value}
-                                    value={option.value}
-                                    className="role-radio-button"
-                                >
-                                    <div className="role-option-content">
-                                        <span className="role-icon">{option.icon}</span>
-                                        <div className="role-text">
-                                            <strong>{option.label}</strong>
-                                            <small>{option.description}</small>
-                                        </div>
-                                    </div>
-                                </Radio.Button>
-                            ))}
-                        </Radio.Group>
-                    </Form.Item>
-
-                    <Form.Item
-                        name="name"
-                        rules={[{ required: true, message: 'Please enter your name' }]}
-                    >
-                        <Input prefix={<UserOutlined />} placeholder="Full Name" />
-                    </Form.Item>
-
-                    <Form.Item
-                        name="email"
-                        rules={[
-                            { required: true, message: 'Please enter your email' },
-                            { type: 'email', message: 'Please enter a valid email' },
-                        ]}
-                    >
-                        <Input prefix={<MailOutlined />} placeholder="Email Address" />
-                    </Form.Item>
-
-                    <Form.Item
-                        name="phone"
-                        rules={[
-                            { required: true, message: 'Please enter your phone number' },
-                            { pattern: /^[0-9]{10}$/, message: 'Please enter a valid 10-digit phone number' },
-                        ]}
-                    >
-                        <Input prefix={<PhoneOutlined />} placeholder="Phone Number" maxLength={10} />
-                    </Form.Item>
-
-                    <Form.Item
-                        name="password"
-                        rules={[
-                            { required: true, message: 'Please enter a password' },
-                            { min: 6, message: 'Password must be at least 6 characters' },
-                        ]}
-                    >
-                        <Input.Password prefix={<LockOutlined />} placeholder="Password" />
-                    </Form.Item>
-
-                    <Form.Item
-                        name="confirmPassword"
-                        dependencies={['password']}
-                        rules={[
-                            { required: true, message: 'Please confirm your password' },
-                            ({ getFieldValue }) => ({
-                                validator(_, value) {
-                                    if (!value || getFieldValue('password') === value) {
-                                        return Promise.resolve();
-                                    }
-                                    return Promise.reject(new Error('Passwords do not match'));
-                                },
-                            }),
-                        ]}
-                    >
-                        <Input.Password prefix={<LockOutlined />} placeholder="Confirm Password" />
-                    </Form.Item>
-
-                    <Form.Item>
-                        <Button
-                            type="primary"
-                            htmlType="submit"
-                            loading={loading}
-                            block
-                            icon={<UserAddOutlined />}
-                            className="auth-submit-btn"
-                        >
-                            {loading ? 'Creating Account...' : 'Create Account'}
-                        </Button>
-                    </Form.Item>
-                </Form>
-            ),
-        },
-    ];
-
     return (
-        <div className="login-page-modern">
-            <div className="login-bg-pattern" />
-            <div className="login-container-modern">
-                <MotionDiv
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
+        <Box className="login-page">
+            {/* Left Side - Branding */}
+            <Box className="login-left">
+                <MotionBox
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.6 }}
-                    className="login-content"
+                    className="login-branding"
                 >
-                    {/* Logo/Brand */}
-                    <div className="login-brand">
-                        <ScissorOutlined className="brand-icon" />
-                        <Title level={2} className="brand-title">STYLER</Title>
-                        <Text className="brand-subtitle">Premium Grooming Services</Text>
-                    </div>
+                    <Typography className="login-logo">Styler</Typography>
+                    <Typography className="login-tagline">
+                        Your premium salon booking platform
+                    </Typography>
+                    <Box className="login-features">
+                        <Box className="login-feature">
+                            <Box className="login-feature-icon"><ScissorsIcon /></Box>
+                            <Typography>Expert Stylists</Typography>
+                        </Box>
+                        <Box className="login-feature">
+                            <Box className="login-feature-icon"><CalendarIcon /></Box>
+                            <Typography>Easy Booking</Typography>
+                        </Box>
+                        <Box className="login-feature">
+                            <Box className="login-feature-icon"><StoreIcon /></Box>
+                            <Typography>20+ Locations</Typography>
+                        </Box>
+                    </Box>
+                </MotionBox>
+            </Box>
 
-                    {/* Auth Card */}
-                    <Card className="auth-card-modern" bordered={false}>
+            {/* Right Side - Form */}
+            <Box className="login-right">
+                <MotionBox
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.6 }}
+                    className="login-form-container"
+                >
+                    <Box className="login-form-header">
+                        <Typography variant="h1">Welcome</Typography>
+                        <Typography variant="body1">Sign in to continue to Styler</Typography>
+                    </Box>
+
+                    <Card sx={{ boxShadow: 0 }}>
                         <Tabs
-                            activeKey={activeTab}
-                            onChange={setActiveTab}
-                            items={tabItems}
-                            centered
-                            className="auth-tabs"
-                        />
+                            value={activeTab}
+                            onChange={(_, newValue) => setActiveTab(newValue)}
+                            variant="fullWidth"
+                            sx={{ borderBottom: 1, borderColor: 'divider' }}
+                        >
+                            <Tab icon={<LoginIcon />} label="Login" iconPosition="start" />
+                            <Tab icon={<PersonAddIcon />} label="Sign Up" iconPosition="start" />
+                        </Tabs>
+
+                        <CardContent sx={{ p: 0, pt: 3 }}>
+                            {/* Login Tab */}
+                            {activeTab === 0 && (
+                                <Box component="form" onSubmit={handleLoginSubmit} className="login-form">
+                                    <TextField
+                                        fullWidth
+                                        label="Email"
+                                        type="email"
+                                        value={loginData.email}
+                                        onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
+                                        required
+                                        InputProps={{
+                                            startAdornment: (
+                                                <InputAdornment position="start">
+                                                    <EmailIcon />
+                                                </InputAdornment>
+                                            ),
+                                        }}
+                                        sx={{ mb: 2 }}
+                                    />
+
+                                    <TextField
+                                        fullWidth
+                                        label="Password"
+                                        type="password"
+                                        value={loginData.password}
+                                        onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
+                                        required
+                                        InputProps={{
+                                            startAdornment: (
+                                                <InputAdornment position="start">
+                                                    <LockIcon />
+                                                </InputAdornment>
+                                            ),
+                                        }}
+                                        sx={{ mb: 3 }}
+                                    />
+
+                                    <Button
+                                        type="submit"
+                                        variant="contained"
+                                        fullWidth
+                                        size="large"
+                                        disabled={loading}
+                                        startIcon={loading ? <CircularProgress size={20} /> : <LoginIcon />}
+                                    >
+                                        {loading ? 'Logging in...' : 'Login'}
+                                    </Button>
+                                </Box>
+                            )}
+
+                            {/* Signup Tab */}
+                            {activeTab === 1 && (
+                                <Box component="form" onSubmit={handleRegisterSubmit} className="login-form">
+                                    {/* Role Selection */}
+                                    <Box className="role-selection" sx={{ mb: 3 }}>
+                                        <Typography variant="body2" sx={{ mb: 2, fontWeight: 600 }}>
+                                            I am a:
+                                        </Typography>
+                                        <ToggleButtonGroup
+                                            value={selectedRole}
+                                            exclusive
+                                            onChange={(_, newRole) => newRole && setSelectedRole(newRole)}
+                                            fullWidth
+                                            sx={{ mb: 2 }}
+                                        >
+                                            <ToggleButton value={UserRole.CUSTOMER}>
+                                                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0.5 }}>
+                                                    <CalendarIcon />
+                                                    <Typography variant="caption">Customer</Typography>
+                                                </Box>
+                                            </ToggleButton>
+                                            <ToggleButton value={UserRole.BARBER}>
+                                                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0.5 }}>
+                                                    <ScissorsIcon />
+                                                    <Typography variant="caption">Barber</Typography>
+                                                </Box>
+                                            </ToggleButton>
+                                            <ToggleButton value={UserRole.SALON_OWNER}>
+                                                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0.5 }}>
+                                                    <StoreIcon />
+                                                    <Typography variant="caption">Owner</Typography>
+                                                </Box>
+                                            </ToggleButton>
+                                        </ToggleButtonGroup>
+                                    </Box>
+
+                                    <TextField
+                                        fullWidth
+                                        label="Full Name"
+                                        value={registerData.name}
+                                        onChange={(e) => setRegisterData({ ...registerData, name: e.target.value })}
+                                        required
+                                        InputProps={{
+                                            startAdornment: (
+                                                <InputAdornment position="start">
+                                                    <PersonIcon />
+                                                </InputAdornment>
+                                            ),
+                                        }}
+                                        sx={{ mb: 2 }}
+                                    />
+
+                                    <TextField
+                                        fullWidth
+                                        label="Email"
+                                        type="email"
+                                        value={registerData.email}
+                                        onChange={(e) => setRegisterData({ ...registerData, email: e.target.value })}
+                                        required
+                                        InputProps={{
+                                            startAdornment: (
+                                                <InputAdornment position="start">
+                                                    <EmailIcon />
+                                                </InputAdornment>
+                                            ),
+                                        }}
+                                        sx={{ mb: 2 }}
+                                    />
+
+                                    <TextField
+                                        fullWidth
+                                        label="Phone"
+                                        value={registerData.phone}
+                                        onChange={(e) => setRegisterData({ ...registerData, phone: e.target.value })}
+                                        required
+                                        inputProps={{ maxLength: 10 }}
+                                        InputProps={{
+                                            startAdornment: (
+                                                <InputAdornment position="start">
+                                                    <PhoneIcon />
+                                                </InputAdornment>
+                                            ),
+                                        }}
+                                        sx={{ mb: 2 }}
+                                    />
+
+                                    <TextField
+                                        fullWidth
+                                        label="Password"
+                                        type="password"
+                                        value={registerData.password}
+                                        onChange={(e) => setRegisterData({ ...registerData, password: e.target.value })}
+                                        required
+                                        InputProps={{
+                                            startAdornment: (
+                                                <InputAdornment position="start">
+                                                    <LockIcon />
+                                                </InputAdornment>
+                                            ),
+                                        }}
+                                        sx={{ mb: 2 }}
+                                    />
+
+                                    <TextField
+                                        fullWidth
+                                        label="Confirm Password"
+                                        type="password"
+                                        value={registerData.confirmPassword}
+                                        onChange={(e) => setRegisterData({ ...registerData, confirmPassword: e.target.value })}
+                                        required
+                                        InputProps={{
+                                            startAdornment: (
+                                                <InputAdornment position="start">
+                                                    <LockIcon />
+                                                </InputAdornment>
+                                            ),
+                                        }}
+                                        sx={{ mb: 3 }}
+                                    />
+
+                                    <Button
+                                        type="submit"
+                                        variant="contained"
+                                        fullWidth
+                                        size="large"
+                                        disabled={loading}
+                                        startIcon={loading ? <CircularProgress size={20} /> : <PersonAddIcon />}
+                                    >
+                                        {loading ? 'Creating Account...' : 'Create Account'}
+                                    </Button>
+                                </Box>
+                            )}
+                        </CardContent>
                     </Card>
 
-                    {/* Footer Text */}
-                    <Paragraph className="login-footer-text">
+                    <Typography variant="caption" color="text.secondary" align="center" sx={{ mt: 3, display: 'block' }}>
                         By continuing, you agree to our Terms of Service and Privacy Policy
-                    </Paragraph>
-                </MotionDiv>
-            </div>
-        </div>
+                    </Typography>
+                </MotionBox>
+            </Box>
+        </Box>
     );
 };
 

@@ -1,10 +1,8 @@
 import React from 'react';
-import { Typography, Card, Row, Col } from 'antd';
-import { ScissorOutlined, SkinOutlined, BgColorsOutlined } from '@ant-design/icons';
+import { Container, Typography, Card, CardContent, Grid, Box } from '@mui/material';
+import { ContentCut as ScissorsIcon, Face as SkinIcon, Palette as ColorsIcon } from '@mui/icons-material';
 import { formatCurrency } from '../utils/helpers';
 import './Services.css';
-
-const { Title, Paragraph } = Typography;
 
 interface ServiceItem {
     icon: React.ReactNode;
@@ -16,19 +14,19 @@ interface ServiceItem {
 const Services: React.FC = () => {
     const services: ServiceItem[] = [
         {
-            icon: <ScissorOutlined />,
+            icon: <ScissorsIcon />,
             title: 'Haircut & Styling',
             description: 'Professional haircuts and styling by expert stylists',
             price: 500,
         },
         {
-            icon: <SkinOutlined />,
+            icon: <SkinIcon />,
             title: 'Beard Grooming',
             description: 'Complete beard trimming and shaping services',
             price: 300,
         },
         {
-            icon: <BgColorsOutlined />,
+            icon: <ColorsIcon />,
             title: 'Hair Coloring',
             description: 'Premium hair coloring and highlights',
             price: 2000,
@@ -36,27 +34,39 @@ const Services: React.FC = () => {
     ];
 
     return (
-        <div className="services-page">
-            <section className="services-hero">
-                <Title level={1}>Our Services</Title>
-                <Paragraph>Premium grooming services for the modern gentleman</Paragraph>
-            </section>
+        <Box className="services-page">
+            <Box className="services-hero">
+                <Typography variant="h1">Our Services</Typography>
+                <Typography variant="h5" sx={{ mt: 2, color: 'text.secondary' }}>
+                    Premium grooming services for the modern gentleman
+                </Typography>
+            </Box>
 
-            <section className="services-grid">
-                <Row gutter={[24, 24]}>
+            <Container maxWidth="lg" className="services-grid">
+                <Grid container spacing={3}>
                     {services.map((service, index) => (
-                        <Col xs={24} md={8} key={index}>
-                            <Card className="service-card" hoverable>
-                                <div className="service-icon">{service.icon}</div>
-                                <Title level={3}>{service.title}</Title>
-                                <Paragraph>{service.description}</Paragraph>
-                                <div className="service-price">Starting from {formatCurrency(service.price)}</div>
+                        <Grid item xs={12} md={4} key={index}>
+                            <Card className="service-card" sx={{ height: '100%', cursor: 'pointer' }}>
+                                <CardContent sx={{ textAlign: 'center' }}>
+                                    <Box className="service-icon" sx={{ mb: 2 }}>
+                                        {service.icon}
+                                    </Box>
+                                    <Typography variant="h3" gutterBottom>
+                                        {service.title}
+                                    </Typography>
+                                    <Typography variant="body1" color="text.secondary" paragraph>
+                                        {service.description}
+                                    </Typography>
+                                    <Typography variant="h6" className="service-price" sx={{ mt: 2 }}>
+                                        Starting from {formatCurrency(service.price)}
+                                    </Typography>
+                                </CardContent>
                             </Card>
-                        </Col>
+                        </Grid>
                     ))}
-                </Row>
-            </section>
-        </div>
+                </Grid>
+            </Container>
+        </Box>
     );
 };
 

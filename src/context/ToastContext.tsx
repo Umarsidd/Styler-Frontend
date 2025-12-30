@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useCallback, ReactNode } from 'react';
-import { message } from 'antd';
+import React, { createContext, useContext, ReactNode } from 'react';
+import toast from 'react-hot-toast';
 
 interface ToastContextType {
     success: (msg: string, duration?: number) => void;
@@ -11,37 +11,30 @@ interface ToastContextType {
 
 const ToastContext = createContext<ToastContextType | null>(null);
 
-// Configure message globally
-message.config({
-    top: 80,
-    duration: 3,
-    maxCount: 3,
-});
-
 interface ToastProviderProps {
     children: ReactNode;
 }
 
 export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
-    const success = useCallback((msg: string, duration = 3) => {
-        return message.success(msg, duration);
-    }, []);
+    const success = (msg: string, duration = 3) => {
+        return toast.success(msg, { duration: duration * 1000 });
+    };
 
-    const error = useCallback((msg: string, duration = 3) => {
-        return message.error(msg, duration);
-    }, []);
+    const error = (msg: string, duration = 3) => {
+        return toast.error(msg, { duration: duration * 1000 });
+    };
 
-    const warning = useCallback((msg: string, duration = 3) => {
-        return message.warning(msg, duration);
-    }, []);
+    const warning = (msg: string, duration = 3) => {
+        return toast(msg, { duration: duration * 1000, icon: '⚠️' });
+    };
 
-    const info = useCallback((msg: string, duration = 3) => {
-        return message.info(msg, duration);
-    }, []);
+    const info = (msg: string, duration = 3) => {
+        return toast(msg, { duration: duration * 1000, icon: 'ℹ️' });
+    };
 
-    const loading = useCallback((msg: string) => {
-        return message.loading(msg, 0);
-    }, []);
+    const loading = (msg: string) => {
+        return toast.loading(msg);
+    };
 
     return (
         <ToastContext.Provider

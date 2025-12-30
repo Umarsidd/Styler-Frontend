@@ -1,70 +1,51 @@
 import React from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Result, Button, Card, Alert } from 'antd';
-import { CloseCircleOutlined, HomeOutlined, ReloadOutlined } from '@ant-design/icons';
+import { Box, Container, Typography, Button, Card, CardContent, Alert } from '@mui/material';
+import { Error as ErrorIcon } from '@mui/icons-material';
 import './PaymentFailed.css';
 
 const PaymentFailed: React.FC = () => {
-    const [searchParams] = useSearchParams();
     const navigate = useNavigate();
-
-    const error = searchParams.get('error') || 'Payment failed. Please try again.';
-    const appointmentId = searchParams.get('appointmentId');
-
-    const handleRetry = () => {
-        if (appointmentId) {
-            navigate(`/customer/appointments/${appointmentId}`);
-        } else {
-            navigate('/salons');
-        }
-    };
+    const [searchParams] = useSearchParams();
+    const error = searchParams.get('error') || 'Payment processing failed';
 
     return (
-        <div className="payment-failed-page">
-            <Card className="failed-card">
-                <Result
-                    status="error"
-                    icon={<CloseCircleOutlined style={{ color: '#ff4d4f' }} />}
-                    title="Payment Failed"
-                    subTitle="We couldn't process your payment. Please try again."
-                    extra={[
-                        <Button
-                            type="primary"
-                            danger
-                            key="retry"
-                            icon={<ReloadOutlined />}
-                            onClick={handleRetry}
-                        >
-                            Try Again
-                        </Button>,
-                        <Button
-                            key="home"
-                            icon={<HomeOutlined />}
-                            onClick={() => navigate('/')}
-                        >
-                            Back to Home
-                        </Button>,
-                    ]}
-                >
-                    <Alert
-                        message="Error Details"
-                        description={error}
-                        type="error"
-                        showIcon
-                        style={{ marginTop: 24 }}
-                    />
+        <Box className="payment-failed-page" sx={{ minHeight: '80vh', display: 'flex', alignItems: 'center', py: 8 }}>
+            <Container maxWidth="sm">
+                <Card sx={{ textAlign: 'center', p: 4 }}>
+                    <ErrorIcon sx={{ fontSize: 80, color: 'error.main', mb: 3 }} />
+                    <CardContent>
+                        <Typography variant="h3" gutterBottom sx={{ fontWeight: 700, color: 'error.main' }}>
+                            Payment Failed
+                        </Typography>
+                        <Typography variant="h6" color="text.secondary" paragraph>
+                            We couldn't process your payment
+                        </Typography>
 
-                    <div className="help-section">
-                        <h4>Need Help?</h4>
-                        <p>If you continue to face issues, please contact our support team:</p>
-                        <ul>
-                            <li>Email: support@styler.com</li>
-                            <li>Phone: +91 1800-XXX-XXXX</li>
-                        </ul>
-                    </div>
-                </Result>
-            </Card>
-        </div>
+                        <Alert severity="error" sx={{ mb: 4, textAlign: 'left' }}>
+                            {error}
+                        </Alert>
+
+                        <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', mt: 4 }}>
+                            <Button
+                                variant="contained"
+                                size="large"
+                                onClick={() => navigate(-1)}
+                            >
+                                Try Again
+                            </Button>
+                            <Button
+                                variant="outlined"
+                                size="large"
+                                onClick={() => navigate('/')}
+                            >
+                                Go Home
+                            </Button>
+                        </Box>
+                    </CardContent>
+                </Card>
+            </Container>
+        </Box>
     );
 };
 

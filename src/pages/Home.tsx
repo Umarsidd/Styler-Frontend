@@ -1,20 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Typography, Button, Row, Col, Card, Space } from 'antd';
+import { Container, Typography, Button, Grid, Card, CardContent, Box } from '@mui/material';
 import {
-    ArrowRightOutlined,
-    EnvironmentOutlined,
-    StarOutlined,
-    ScissorOutlined,
-    CalendarOutlined,
-} from '@ant-design/icons';
+    ArrowForward as ArrowForwardIcon,
+    LocationOn as LocationOnIcon,
+    Star as StarIcon,
+    ContentCut as ScissorsIcon,
+    CalendarToday as CalendarIcon,
+} from '@mui/icons-material';
 import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import CountUp from 'react-countup';
 import './Home.css';
 
-const { Title, Paragraph } = Typography;
-const MotionDiv = motion.div;
+const MotionBox = motion(Box);
 
 interface Stat {
     count: number;
@@ -28,63 +27,91 @@ const Home: React.FC = () => {
     const navigate = useNavigate();
     const { user } = useAuth();
     const [stats] = useState<Stat[]>([
-        { count: 20, suffix: '+', title: 'Branches', color: '#f59e0b', icon: <EnvironmentOutlined /> },
-        { count: 5000, suffix: '+', title: 'Happy Clients', color: '#14b8a6', icon: <StarOutlined /> },
-        { count: 150, suffix: '+', title: 'Expert Stylists', color: '#8b5cf6', icon: <ScissorOutlined /> },
-        { count: 10, suffix: 'K+', title: 'Total Appointments', color: '#ec4899', icon: <CalendarOutlined /> },
+        { count: 20, suffix: '+', title: 'Branches', color: '#f59e0b', icon: <LocationOnIcon /> },
+        { count: 5000, suffix: '+', title: 'Happy Clients', color: '#14b8a6', icon: <StarIcon /> },
+        { count: 150, suffix: '+', title: 'Expert Stylists', color: '#8b5cf6', icon: <ScissorsIcon /> },
+        { count: 10, suffix: 'K+', title: 'Total Appointments', color: '#ec4899', icon: <CalendarIcon /> },
     ]);
 
     return (
-        <div className="home-page">
+        <Box className="home-page">
             {/* Hero Section */}
-            <section className="hero-section">
-                <MotionDiv
+            <Box className="hero-section">
+                <MotionBox
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6 }}
                     className="hero-content"
                 >
-                    <Title level={1}>Welcome to Styler</Title>
-                    <Paragraph>Your premium salon booking platform</Paragraph>
-                    <Space size="large">
-                        <Button type="primary" size="large" onClick={() => navigate('/salons')}>
-                            Book Now <ArrowRightOutlined />
+                    <Typography variant="h1" sx={{ color: 'white', mb: 2 }}>
+                        Welcome to Styler
+                    </Typography>
+                    <Typography variant="h5" sx={{ color: 'rgba(255, 255, 255, 0.95)', mb: 4 }}>
+                        Your premium salon booking platform
+                    </Typography>
+                    <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
+                        <Button
+                            variant="contained"
+                            size="large"
+                            endIcon={<ArrowForwardIcon />}
+                            onClick={() => navigate('/salons')}
+                            sx={{ px: 4 }}
+                        >
+                            Book Now
                         </Button>
-                        <Button size="large" onClick={() => navigate('/services')}>
+                        <Button
+                            variant="outlined"
+                            size="large"
+                            onClick={() => navigate('/services')}
+                            sx={{ px: 4, color: 'white', borderColor: 'white', '&:hover': { borderColor: 'white', bgcolor: 'rgba(255,255,255,0.1)' } }}
+                        >
                             Our Services
                         </Button>
-                    </Space>
-                </MotionDiv>
-            </section>
+                    </Box>
+                </MotionBox>
+            </Box>
 
             {/* Stats Section */}
-            <section className="stats-section">
-                <Row gutter={[24, 24]}>
+            <Container maxWidth="lg" className="stats-section">
+                <Grid container spacing={3}>
                     {stats.map((stat, index) => (
-                        <Col xs={24} sm={12} md={6} key={index}>
+                        <Grid item xs={12} sm={6} md={3} key={index}>
                             <Card className="stat-card">
-                                <div className="stat-icon" style={{ color: stat.color }}>
-                                    {stat.icon}
-                                </div>
-                                <Title level={2}>
-                                    <CountUp end={stat.count} duration={2.5} />
-                                    {stat.suffix}
-                                </Title>
-                                <p>{stat.title}</p>
+                                <CardContent sx={{ textAlign: 'center' }}>
+                                    <Box className="stat-icon" sx={{ color: stat.color, mb: 2 }}>
+                                        {stat.icon}
+                                    </Box>
+                                    <Typography variant="h3" sx={{ fontWeight: 800, color: stat.color }}>
+                                        <CountUp end={stat.count} duration={2.5} />
+                                        {stat.suffix}
+                                    </Typography>
+                                    <Typography variant="body1" color="text.secondary">
+                                        {stat.title}
+                                    </Typography>
+                                </CardContent>
                             </Card>
-                        </Col>
+                        </Grid>
                     ))}
-                </Row>
-            </section>
+                </Grid>
+            </Container>
 
             {/* CTA Section */}
-            <section className="cta-section">
-                <Title level={2}>Ready to Transform Your Look?</Title>
-                <Button type="primary" size="large" onClick={() => navigate(user ? '/salons' : '/login')}>
-                    Get Started
-                </Button>
-            </section>
-        </div>
+            <Box className="cta-section">
+                <Container maxWidth="md" sx={{ textAlign: 'center' }}>
+                    <Typography variant="h2" sx={{ mb: 3 }}>
+                        Ready to Transform Your Look?
+                    </Typography>
+                    <Button
+                        variant="contained"
+                        size="large"
+                        onClick={() => navigate(user ? '/salons' : '/login')}
+                        sx={{ px: 5, py: 1.5 }}
+                    >
+                        Get Started
+                    </Button>
+                </Container>
+            </Box>
+        </Box>
     );
 };
 

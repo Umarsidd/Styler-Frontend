@@ -1,22 +1,21 @@
 import React from 'react';
-import { Switch } from 'antd';
-import { BulbOutlined } from '@ant-design/icons';
+import { Switch, Box } from '@mui/material';
+import { LightMode as BulbIcon } from '@mui/icons-material';
 import './ThemeToggle.css';
 
 const ThemeToggle: React.FC = () => {
     const [darkMode, setDarkMode] = React.useState(false);
 
-    const handleToggle = (checked: boolean) => {
-        setDarkMode(checked);
-        // TODO: Implement theme switching logic
-        document.body.classList.toggle('dark-mode', checked);
+    const handleToggle = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setDarkMode(event.target.checked);
+        document.body.classList.toggle('dark-mode', event.target.checked);
     };
 
     return (
-        <div className="theme-toggle">
-            <BulbOutlined />
+        <Box className="theme-toggle" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <BulbIcon />
             <Switch checked={darkMode} onChange={handleToggle} />
-        </div>
+        </Box>
     );
 };
 

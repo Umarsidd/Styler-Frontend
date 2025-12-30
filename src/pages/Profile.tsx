@@ -1,55 +1,72 @@
 import React from 'react';
-import { Form, Input, Button, Card, Avatar } from 'antd';
-import { UserOutlined, MailOutlined, PhoneOutlined } from '@ant-design/icons';
+import { Box, Card, CardContent, TextField, Button, Avatar, Typography } from '@mui/material';
+import { Person as PersonIcon, Email as EmailIcon, Phone as PhoneIcon } from '@mui/icons-material';
 import { useAuthStore } from '../stores/authStore';
 import './Profile.css';
 
 const Profile: React.FC = () => {
     const user = useAuthStore((state) => state.user);
 
-    const handleSubmit = (values: any) => {
-        console.log('Profile update:', values);
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const formData = new FormData(event.currentTarget);
+        console.log('Profile update:', Object.fromEntries(formData));
         // TODO: Implement profile update
     };
 
     return (
-        <div className="profile-page">
-            <Card className="profile-card">
-                <div className="profile-header">
-                    <Avatar size={100} icon={<UserOutlined />} />
-                    <h1>{user?.name}</h1>
-                    <p>{user?.email}</p>
-                </div>
+        <Box className="profile-page">
+            <Card className="profile-card" sx={{ maxWidth: 600, mx: 'auto' }}>
+                <Box className="profile-header" sx={{ textAlign: 'center', p: 4 }}>
+                    <Avatar sx={{ width: 100, height: 100, mx: 'auto', mb: 2 }}>
+                        <PersonIcon sx={{ fontSize: 60 }} />
+                    </Avatar>
+                    <Typography variant="h4">{user?.name}</Typography>
+                    <Typography variant="body1" color="text.secondary">
+                        {user?.email}
+                    </Typography>
+                </Box>
 
-                <Form
-                    layout="vertical"
-                    initialValues={{
-                        name: user?.name,
-                        email: user?.email,
-                        phone: user?.phone,
-                    }}
-                    onFinish={handleSubmit}
-                >
-                    <Form.Item label="Name" name="name">
-                        <Input prefix={<UserOutlined />} />
-                    </Form.Item>
+                <CardContent>
+                    <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                        <TextField
+                            label="Name"
+                            name="name"
+                            defaultValue={user?.name}
+                            fullWidth
+                            InputProps={{
+                                startAdornment: <PersonIcon sx={{ mr: 1, color: 'action.active' }} />,
+                            }}
+                        />
 
-                    <Form.Item label="Email" name="email">
-                        <Input prefix={<MailOutlined />} disabled />
-                    </Form.Item>
+                        <TextField
+                            label="Email"
+                            name="email"
+                            defaultValue={user?.email}
+                            fullWidth
+                            disabled
+                            InputProps={{
+                                startAdornment: <EmailIcon sx={{ mr: 1, color: 'action.active' }} />,
+                            }}
+                        />
 
-                    <Form.Item label="Phone" name="phone">
-                        <Input prefix={<PhoneOutlined />} />
-                    </Form.Item>
+                        <TextField
+                            label="Phone"
+                            name="phone"
+                            defaultValue={user?.phone}
+                            fullWidth
+                            InputProps={{
+                                startAdornment: <PhoneIcon sx={{ mr: 1, color: 'action.active' }} />,
+                            }}
+                        />
 
-                    <Form.Item>
-                        <Button type="primary" htmlType="submit" block>
+                        <Button type="submit" variant="contained" size="large" fullWidth>
                             Update Profile
                         </Button>
-                    </Form.Item>
-                </Form>
+                    </Box>
+                </CardContent>
             </Card>
-        </div>
+        </Box>
     );
 };
 

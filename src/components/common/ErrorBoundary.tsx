@@ -1,6 +1,6 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
-import { Button, Result } from 'antd';
-import { BugOutlined } from '@ant-design/icons';
+import { Button, Box, Typography, Container } from '@mui/material';
+import { BugReport as BugIcon } from '@mui/icons-material';
 
 interface Props {
     children: ReactNode;
@@ -18,16 +18,13 @@ class ErrorBoundary extends Component<Props, State> {
         this.state = { hasError: false, error: null, errorInfo: null };
     }
 
-    static getDerivedStateFromError(_: Error): State {
-        return { hasError: true, error: null, errorInfo: null };
+    static getDerivedStateFromError(_: Error): Partial<State> {
+        return { hasError: true };
     }
 
     componentDidCatch(error: Error, errorInfo: ErrorInfo) {
         console.error('Error caught by boundary:', error, errorInfo);
-        this.setState({
-            error,
-            errorInfo,
-        });
+        this.setState({ error, errorInfo });
     }
 
     handleReset = () => {
@@ -38,56 +35,57 @@ class ErrorBoundary extends Component<Props, State> {
     render() {
         if (this.state.hasError) {
             return (
-                <div
-                    style={{
+                <Box
+                    sx={{
                         minHeight: '100vh',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        background: '#f9fafb',
-                        padding: '40px 20px',
+                        bgcolor: '#f9fafb',
+                        p: { xs: 2, md: 5 },
                     }}
                 >
-                    <Result
-                        status="error"
-                        icon={<BugOutlined style={{ fontSize: 72, color: '#ff4d4f' }} />}
-                        title="Oops! Something went wrong"
-                        subTitle="We're sorry for the inconvenience. Please try refreshing the page."
-                        extra={[
-                            <Button type="primary" size="large" key="home" onClick={this.handleReset}>
+                    <Container maxWidth="md" sx={{ textAlign: 'center' }}>
+                        <BugIcon sx={{ fontSize: 72, color: 'error.main', mb: 3 }} />
+                        <Typography variant="h3" gutterBottom>
+                            Oops! Something went wrong
+                        </Typography>
+                        <Typography variant="h6" color="text.secondary" paragraph>
+                            We're sorry for the inconvenience. Please try refreshing the page.
+                        </Typography>
+                        <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', mt: 4 }}>
+                            <Button variant="contained" size="large" onClick={this.handleReset}>
                                 Go to Homepage
-                            </Button>,
-                            <Button size="large" key="reload" onClick={() => window.location.reload()}>
+                            </Button>
+                            <Button variant="outlined" size="large" onClick={() => window.location.reload()}>
                                 Reload Page
-                            </Button>,
-                        ]}
-                    >
+                            </Button>
+                        </Box>
                         {import.meta.env.DEV && this.state.error && (
-                            <div
-                                style={{
-                                    marginTop: 24,
-                                    padding: 16,
-                                    background: '#fff',
-                                    borderRadius: 8,
+                            <Box
+                                sx={{
+                                    mt: 4,
+                                    p: 2,
+                                    bgcolor: 'background.paper',
+                                    borderRadius: 2,
                                     textAlign: 'left',
+                                    maxWidth: '100%',
+                                    overflow: 'auto',
                                 }}
                             >
                                 <details style={{ whiteSpace: 'pre-wrap' }}>
-                                    <summary>Error Details (Development Only)</summary>
-                                    <p>
+                                    <summary><strong>Error Details (Development Only)</strong></summary>
+                                    <Typography variant="body2" component="p" sx={{ mt: 2 }}>
                                         <strong>Error:</strong> {this.state.error.toString()}
-                                    </p>
-                                    <p>
-                                        <strong>Stack:</strong>
-                                    </p>
-                                    <pre style={{ fontSize: 12, color: '#666' }}>
+                                    </Typography>
+                                    <Typography variant="caption" component="pre" sx={{ mt: 1, fontSize: 12, color: '#666' }}>
                                         {this.state.errorInfo?.componentStack}
-                                    </pre>
+                                    </Typography>
                                 </details>
-                            </div>
+                            </Box>
                         )}
-                    </Result>
-                </div>
+                    </Container>
+                </Box>
             );
         }
 

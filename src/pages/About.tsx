@@ -1,70 +1,82 @@
 import React from 'react';
-import { Typography, Card, Row, Col } from 'antd';
-import { TeamOutlined, TrophyOutlined, HeartOutlined } from '@ant-design/icons';
+import { Container, Typography, Card, CardContent, Grid, Box } from '@mui/material';
+import { Favorite as HeartIcon, EmojiEvents as TrophyIcon, People as TeamIcon } from '@mui/icons-material';
 import './About.css';
-
-const { Title, Paragraph } = Typography;
 
 const About: React.FC = () => {
     const values = [
         {
-            icon: <HeartOutlined />,
+            icon: <HeartIcon />,
             title: 'Customer First',
             description: 'Your satisfaction is our priority',
         },
         {
-            icon: <TrophyOutlined />,
+            icon: <TrophyIcon />,
             title: 'Excellence',
             description: 'We strive for perfection in every service',
         },
         {
-            icon: <TeamOutlined />,
+            icon: <TeamIcon />,
             title: 'Expert Team',
             description: 'Highly trained professionals',
         },
     ];
 
     return (
-        <div className="about-page">
-            <section className="about-hero">
-                <Title level={1}>About Styler</Title>
-                <Paragraph>We're revolutionizing the salon booking experience</Paragraph>
-            </section>
+        <Box className="about-page">
+            <Box className="about-hero">
+                <Typography variant="h1">About Styler</Typography>
+                <Typography variant="h5" sx={{ mt: 2, color: 'text.secondary' }}>
+                    We're revolutionizing the salon booking experience
+                </Typography>
+            </Box>
 
-            <section className="about-content">
-                <Row gutter={[32, 32]}>
-                    <Col xs={24} md={12}>
-                        <Title level={2}>Our Story</Title>
-                        <Paragraph>
+            <Container maxWidth="lg" className="about-content">
+                <Grid container spacing={4}>
+                    <Grid item xs={12} md={6}>
+                        <Typography variant="h2" gutterBottom>Our Story</Typography>
+                        <Typography variant="body1" paragraph>
                             Founded with a vision to make premium salon services accessible to everyone, Styler has grown
                             to become the leading salon booking platform with over 20+ locations nationwide.
-                        </Paragraph>
-                    </Col>
-                    <Col xs={24} md={12}>
-                        <Title level={2}>Our Mission</Title>
-                        <Paragraph>
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <Typography variant="h2" gutterBottom>Our Mission</Typography>
+                        <Typography variant="body1" paragraph>
                             To provide a seamless booking experience while connecting customers with the best stylists
                             and salons in their area.
-                        </Paragraph>
-                    </Col>
-                </Row>
-            </section>
+                        </Typography>
+                    </Grid>
+                </Grid>
+            </Container>
 
-            <section className="values-section">
-                <Title level={2}>Our Values</Title>
-                <Row gutter={[24, 24]}>
-                    {values.map((value, index) => (
-                        <Col xs={24} md={8} key={index}>
-                            <Card className="value-card">
-                                <div className="value-icon">{value.icon}</div>
-                                <Title level={4}>{value.title}</Title>
-                                <Paragraph>{value.description}</Paragraph>
-                            </Card>
-                        </Col>
-                    ))}
-                </Row>
-            </section>
-        </div>
+            <Box className="values-section">
+                <Container maxWidth="lg">
+                    <Typography variant="h2" align="center" sx={{ mb: 6 }}>
+                        Our Values
+                    </Typography>
+                    <Grid container spacing={3}>
+                        {values.map((value, index) => (
+                            <Grid item xs={12} md={4} key={index}>
+                                <Card className="value-card" sx={{ height: '100%' }}>
+                                    <CardContent sx={{ textAlign: 'center' }}>
+                                        <Box className="value-icon" sx={{ mb: 2 }}>
+                                            {value.icon}
+                                        </Box>
+                                        <Typography variant="h4" gutterBottom>
+                                            {value.title}
+                                        </Typography>
+                                        <Typography variant="body1" color="text.secondary">
+                                            {value.description}
+                                        </Typography>
+                                    </CardContent>
+                                </Card>
+                            </Grid>
+                        ))}
+                    </Grid>
+                </Container>
+            </Box>
+        </Box>
     );
 };
 
