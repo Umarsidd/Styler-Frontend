@@ -1,0 +1,59 @@
+import { StrictMode, useEffect } from 'react';
+import { createRoot } from 'react-dom/client';
+import './index.css';
+import './styles/theme.css';
+import App from './App';
+import { ConfigProvider } from 'antd';
+import { antdTheme } from './config/theme';
+import { QueryClientProvider } from '@tantml:react-query';
+import { queryClient } from './lib/queryClient';
+import { Toaster } from 'react-hot-toast';
+import { useUIStore } from './stores/uiStore';
+import 'antd/dist/reset.css';
+
+const AppWrapper = () => {
+    const theme = useUIStore((state) => state.theme);
+
+    useEffect(() => {
+        document.documentElement.setAttribute('data-theme', theme);
+    }, [theme]);
+
+    return <App />;
+};
+
+const rootElement = document.getElementById('root');
+if (!rootElement) throw new Error('Root element not found');
+
+createRoot(rootElement).render(
+    <StrictMode>
+        <QueryClientProvider client={queryClient}>
+            <ConfigProvider theme={antdTheme}>
+                <AppWrapper />
+                <Toaster
+                    position="top-right"
+                    toastOptions={{
+                        duration: 4000,
+                        style: {
+                            background: '#363636',
+                            color: '#fff',
+                        },
+                        success: {
+                            duration: 3000,
+                            iconTheme: {
+                                primary: '#4ade80',
+                                secondary: '#fff',
+                            },
+                        },
+                        error: {
+                            duration: 4000,
+                            iconTheme: {
+                                primary: '#ef4444',
+                                secondary: '#fff',
+                            },
+                        },
+                    }}
+                />
+            </ConfigProvider>
+        </QueryClientProvider>
+    </StrictMode>
+);

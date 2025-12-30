@@ -1,7 +1,8 @@
+import React from 'react';
 import { FaCut } from 'react-icons/fa';
 import './Loader.css';
 
-const Loader = () => {
+const Loader: React.FC = () => {
     return (
         <div className="loader-container">
             <FaCut className="loader-icon" />
