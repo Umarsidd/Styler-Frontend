@@ -58,6 +58,21 @@
     gap: 8px;
 }
 
+/* Image Logo Variant */
+.styler-logo-image {
+    display: inline-flex;
+    transition: all 0.3s ease;
+}
+
+.styler-logo-image:hover {
+    transform: scale(1.05);
+    filter: brightness(1.1);
+}
+
+.styler-logo-image img {
+    display: block;
+}
+
 /* No animation for reduced motion */
 @media (prefers-reduced-motion: reduce) {
     .logo-scissor {

@@ -1,4 +1,3 @@
-```
 import React from 'react';
 import { Box, Container, Grid, Typography, Link as MuiLink, IconButton, Divider } from '@mui/material';
 import { Link } from 'react-router-dom';

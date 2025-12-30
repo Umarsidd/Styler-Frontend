@@ -64,7 +64,7 @@ const Navbar: React.FC = () => {
     const drawer = (
         <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center', pt: 2 }}>
             <Box sx={{ my: 2 }}>
-                <Logo size="medium" variant="default" clickable={false} />
+                <Logo size="medium" variant="image" clickable={false} />
             </Box>
             <List>
                 {navLinks.map((item) => (
@@ -82,7 +82,7 @@ const Navbar: React.FC = () => {
         <>
             <AppBar position="sticky" sx={{ backgroundColor: 'rgba(255, 255, 255, 0.95)', backdropFilter: 'blur(10px)', boxShadow: '0 2px 20px rgba(0, 0, 0, 0.08)', borderBottom: '1px solid rgba(0, 0, 0, 0.05)' }}>
                 <Toolbar sx={{ maxWidth: 1400, width: '100%', mx: 'auto', px: { xs: 2, md: 3 } }}>
-                    <Logo size="medium" variant="default" />
+                    <Logo size="medium" variant="image" />
 
                     {isMobile ? (
                         <IconButton

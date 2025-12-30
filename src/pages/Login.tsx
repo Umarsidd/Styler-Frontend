@@ -30,6 +30,7 @@ import { authService } from '../services/authService';
 import { useAuthStore } from '../stores/authStore';
 import toast from 'react-hot-toast';
 import { UserRole } from '../types';
+import Logo from '../components/common/Logo';
 import './Login.css';
 
 const MotionBox = motion(Box);
@@ -161,7 +162,9 @@ const Login: React.FC<LoginProps> = ({ isRegisterMode = false }) => {
                     transition={{ duration: 0.6 }}
                     className="login-branding"
                 >
-                    <Typography className="login-logo">Styler</Typography>
+                    <Box sx={{ mb: 3 }}>
+                        <Logo variant="light" size="large" clickable={false} />
+                    </Box>
                     <Typography className="login-tagline">
                         Your premium salon booking platform
                     </Typography>

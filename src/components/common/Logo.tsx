@@ -5,16 +5,16 @@ import { Link } from 'react-router-dom';
 import './Logo.css';
 
 interface LogoProps {
-    variant?: 'default' | 'light' | 'dark';
+    variant?: 'default' | 'light' | 'dark' | 'image';
     size?: 'small' | 'medium' | 'large';
     clickable?: boolean;
 }
 
 const Logo: React.FC<LogoProps> = ({ variant = 'default', size = 'medium', clickable = true }) => {
     const sizeMap = {
-        small: { fontSize: '1.5rem', iconSize: 24 },
-        medium: { fontSize: '1.75rem', iconSize: 28 },
-        large: { fontSize: '2.5rem', iconSize: 40 },
+        small: { fontSize: '1.5rem', iconSize: 24, imageHeight: 35 },
+        medium: { fontSize: '1.75rem', iconSize: 28, imageHeight: 45 },
+        large: { fontSize: '2.5rem', iconSize: 40, imageHeight: 60 },
     };
 
     const colorMap = {
@@ -23,6 +23,33 @@ const Logo: React.FC<LogoProps> = ({ variant = 'default', size = 'medium', click
         dark: '#212529',
     };
 
+    // Image variant - use uploaded logo
+    if (variant === 'image') {
+        const logoContent = (
+            <Box className="styler-logo-image" sx={{ display: 'inline-flex', alignItems: 'center' }}>
+                <img
+                    src="/images/styler-logo.png"
+                    alt="Styler"
+                    style={{
+                        height: sizeMap[size].imageHeight,
+                        width: 'auto',
+                        objectFit: 'contain'
+                    }}
+                />
+            </Box>
+        );
+
+        if (clickable) {
+            return (
+                <Link to="/" style={{ textDecoration: 'none', display: 'inline-flex' }}>
+                    {logoContent}
+                </Link>
+            );
+        }
+        return logoContent;
+    }
+
+    // Text + Icon variant (original)
     const logoContent = (
         <Box className={`styler-logo styler-logo-${variant} styler-logo-${size}`} sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.5 }}>
             <Typography
