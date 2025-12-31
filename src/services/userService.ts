@@ -46,6 +46,25 @@ class UserService {
     }
 
     /**
+     * Upload cover image
+     */
+    async uploadCoverImage(file: File): Promise<ApiResponse<{ coverImage: string }>> {
+        const formData = new FormData();
+        formData.append('coverImage', file);
+
+        const response = await api.post<ApiResponse<{ coverImage: string }>>(
+            '/auth/upload-cover-image',
+            formData,
+            {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            }
+        );
+        return response.data;
+    }
+
+    /**
      * Delete account
      */
     async deleteAccount(): Promise<ApiResponse<void>> {

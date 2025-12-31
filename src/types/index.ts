@@ -90,6 +90,7 @@ export interface User {
     name: string;
     role: UserRole;
     profilePicture?: string;
+    coverImage?: string;
     isActive: boolean;
     createdAt: string;
     updatedAt: string;

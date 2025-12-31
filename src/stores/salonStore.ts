@@ -18,6 +18,7 @@ interface SalonState {
     // Actions
     fetchOwnerStats: () => Promise<void>;
     fetchMySalons: () => Promise<void>;
+    registerSalon: (data: any) => Promise<void>;
     clearError: () => void;
 }
 
@@ -56,6 +57,22 @@ export const useSalonStore = create<SalonState>((set) => ({
             }
         } catch (error: any) {
             set({ error: error.message || 'Failed to fetch my salons', loading: false });
+        }
+    },
+
+    registerSalon: async (data: any) => {
+        set({ loading: true, error: null });
+        try {
+            const response = await salonService.createSalon(data);
+            if (response.success && response.data) {
+                set((state) => ({
+                    mySalons: [...state.mySalons, response.data!],
+                    loading: false
+                }));
+            }
+        } catch (error: any) {
+            set({ error: error.message || 'Failed to create salon', loading: false });
+            throw error;
         }
     },
 

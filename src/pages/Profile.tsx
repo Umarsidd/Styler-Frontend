@@ -98,6 +98,41 @@ const Profile: React.FC = () => {
         }
     };
 
+    const handleCoverImageSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+            setError('Please select an image file');
+            return;
+        }
+
+        // Validate file size (5MB)
+        if (file.size > 5 * 1024 * 1024) {
+            setError('Image size must be less than 5MB');
+            return;
+        }
+
+        try {
+            setUploading(true);
+            setError(null);
+            const response = await userService.uploadCoverImage(file);
+
+            if (response.success && response.data) {
+                updateUser({ coverImage: response.data.coverImage });
+                setSuccess(true);
+                setTimeout(() => setSuccess(false), 3000);
+            }
+        } catch (err: any) {
+            setError(err.response?.data?.message || 'Failed to upload cover image');
+        } finally {
+            setUploading(false);
+            // Reset file input
+            event.target.value = '';
+        }
+    };
+
     const getRoleDisplay = (role: string | undefined) => {
         if (!role) return 'User';
         if (role === 'salon_owner') return 'Salon Owner';
@@ -125,9 +160,35 @@ const Profile: React.FC = () => {
                     {/* Banner */}
                     <Box sx={{
                         height: 180,
-                        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                        background: user?.coverImage
+                            ? `url(${user.coverImage}) center/cover no-repeat`
+                            : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                         position: 'relative'
-                    }} />
+                    }}>
+                        <input
+                            type="file"
+                            accept="image/*"
+                            hidden
+                            id="cover-image-upload"
+                            onChange={handleCoverImageSelect}
+                        />
+                        <IconButton
+                            component="label"
+                            htmlFor="cover-image-upload"
+                            disabled={uploading}
+                            sx={{
+                                position: 'absolute',
+                                top: 16,
+                                right: 16,
+                                bgcolor: 'rgba(0,0,0,0.3)',
+                                color: 'white',
+                                '&:hover': { bgcolor: 'rgba(0,0,0,0.6)' },
+                                backdropFilter: 'blur(4px)'
+                            }}
+                        >
+                            {uploading ? <CircularProgress size={24} color="inherit" /> : <PhotoCameraIcon />}
+                        </IconButton>
+                    </Box>
 
                     {/* Profile Info */}
                     <Box sx={{ px: { xs: 2, md: 4 }, pb: 3, mt: -9 }}>
