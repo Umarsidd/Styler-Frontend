@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     Box,
@@ -68,6 +68,25 @@ const Login: React.FC<LoginProps> = ({ isRegisterMode = false }) => {
 
     const navigate = useNavigate();
     const setAuth = useAuthStore((state) => state.setAuth);
+    const { isAuthenticated, user } = useAuthStore();
+
+    // Redirect if already authenticated
+    useEffect(() => {
+        if (isAuthenticated && user) {
+            const dashboardPath = getDashboardPath(user.role);
+            navigate(dashboardPath, { replace: true });
+        }
+    }, [isAuthenticated, user, navigate]);
+
+    const getDashboardPath = (role: string) => {
+        switch (role) {
+            case 'barber': return '/barber/dashboard';
+            case 'salon_owner': return '/salon-owner/dashboard';
+            case 'superadmin': return '/admin/superadmin';
+            case 'customer':
+            default: return '/customer/dashboard';
+        }
+    };
 
     const handleLoginSubmit = async (e: React.FormEvent) => {
         e.preventDefault();

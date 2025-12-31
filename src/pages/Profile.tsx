@@ -11,8 +11,7 @@ import {
     Divider,
     Chip,
     IconButton,
-    Tabs,
-    Tab
+    Stack
 } from '@mui/material';
 import {
     Person as PersonIcon,
@@ -20,45 +19,15 @@ import {
     Phone as PhoneIcon,
     Edit as EditIcon,
     PhotoCamera as PhotoCameraIcon,
-    Security as SecurityIcon,
-    Notifications as NotificationsIcon,
+    Badge as BadgeIcon,
     CalendarMonth as CalendarIcon
 } from '@mui/icons-material';
 import { useAuthStore } from '../stores/authStore';
 import './Profile.css';
 
-interface TabPanelProps {
-    children?: React.ReactNode;
-    index: number;
-    value: number;
-}
-
-function TabPanel(props: TabPanelProps) {
-    const { children, value, index, ...other } = props;
-    return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            id={`profile-tabpanel-${index}`}
-            {...other}
-        >
-            {value === index && (
-                <Box sx={{ py: 3 }}>
-                    {children}
-                </Box>
-            )}
-        </div>
-    );
-}
-
 const Profile: React.FC = () => {
     const user = useAuthStore((state) => state.user);
-    const [tabValue, setTabValue] = useState(0);
     const [isEditing, setIsEditing] = useState(false);
-
-    const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
-        setTabValue(newValue);
-    };
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -68,157 +37,205 @@ const Profile: React.FC = () => {
         // TODO: Implement profile update
     };
 
+    const getRoleDisplay = (role: string | undefined) => {
+        if (!role) return 'User';
+        if (role === 'salon_owner') return 'Salon Owner';
+        return role.charAt(0).toUpperCase() + role.slice(1);
+    };
+
     return (
-        <Box className="profile-page" sx={{ maxWidth: 1200, mx: 'auto', px: { xs: 2, md: 4 }, pb: 4 }}>
-            {/* Header Card */}
-            <Card sx={{ mb: 3, borderRadius: 3, overflow: 'visible', position: 'relative' }}>
-                <Box sx={{
-                    height: 200,
-                    background: 'linear-gradient(120deg, #667eea 0%, #764ba2 100%)',
-                }} />
+        <Box sx={{ minHeight: '100vh', bgcolor: '#f5f5f5', py: 4 }}>
+            <Box sx={{ maxWidth: 1100, mx: 'auto', px: { xs: 2, md: 3 } }}>
 
-                <Box sx={{
-                    px: { xs: 2, md: 4 },
-                    pb: 3,
-                    display: 'flex',
-                    flexDirection: { xs: 'column', md: 'row' },
-                    alignItems: { xs: 'center', md: 'flex-end' },
-                    mt: -8
-                }}>
-                    <Box sx={{ position: 'relative' }}>
-                        <Avatar
-                            sx={{
-                                width: 140,
-                                height: 140,
-                                border: '4px solid white',
-                                boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-                                bgcolor: '#ff9800',
-                                fontSize: '3.5rem',
-                                color: 'white'
-                            }}
-                        >
-                            {user?.name?.charAt(0).toUpperCase()}
-                        </Avatar>
-                        <IconButton
-                            sx={{
-                                position: 'absolute',
-                                bottom: 5,
-                                right: 5,
-                                bgcolor: 'white',
-                                boxShadow: 2,
-                                '&:hover': { bgcolor: 'grey.100' }
-                            }}
-                            size="small"
-                        >
-                            <PhotoCameraIcon fontSize="small" color="primary" />
-                        </IconButton>
-                    </Box>
-
+                {/* Header Card with Banner */}
+                <Card sx={{ mb: 3, borderRadius: 3, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+                    {/* Banner */}
                     <Box sx={{
-                        ml: { md: 3 },
-                        mt: { xs: 2, md: 0 },
-                        textAlign: { xs: 'center', md: 'left' },
-                        flexGrow: 1,
-                        mb: 1
-                    }}>
-                        <Typography variant="h4" sx={{ fontWeight: 700, mb: 1, color: { xs: 'text.primary', md: 'white' }, textShadow: { md: '0 2px 4px rgba(0,0,0,0.3)' } }}>
-                            {user?.name}
-                        </Typography>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, justifyContent: { xs: 'center', md: 'flex-start' } }}>
-                            <Chip
-                                label={user?.role === 'salon_owner' ? 'Salon Owner' : user?.role?.toUpperCase()}
-                                color="primary"
-                                size="small"
-                                variant="filled"
-                                sx={{ textTransform: 'capitalize', fontWeight: 600, boxShadow: 1 }}
-                            />
-                            <Typography variant="body2" sx={{ color: { xs: 'text.secondary', md: 'rgba(255,255,255,0.9)' }, fontWeight: 500 }}>
-                                Member since {new Date().getFullYear()}
-                            </Typography>
+                        height: 180,
+                        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                        position: 'relative'
+                    }} />
+
+                    {/* Profile Info */}
+                    <Box sx={{ px: { xs: 2, md: 4 }, pb: 3, mt: -9 }}>
+                        <Box sx={{
+                            display: 'flex',
+                            flexDirection: { xs: 'column', sm: 'row' },
+                            alignItems: { xs: 'center', sm: 'flex-end' },
+                            gap: 3
+                        }}>
+                            {/* Avatar */}
+                            <Box sx={{ position: 'relative' }}>
+                                <Avatar
+                                    sx={{
+                                        width: 150,
+                                        height: 150,
+                                        border: '5px solid white',
+                                        boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                                        bgcolor: '#ff9800',
+                                        fontSize: '4rem',
+                                        fontWeight: 700
+                                    }}
+                                >
+                                    {user?.name?.charAt(0).toUpperCase()}
+                                </Avatar>
+                                <IconButton
+                                    sx={{
+                                        position: 'absolute',
+                                        bottom: 8,
+                                        right: 8,
+                                        bgcolor: 'primary.main',
+                                        color: 'white',
+                                        '&:hover': { bgcolor: 'primary.dark' },
+                                        boxShadow: 2
+                                    }}
+                                    size="small"
+                                >
+                                    <PhotoCameraIcon fontSize="small" />
+                                </IconButton>
+                            </Box>
+
+                            {/* Name and Info */}
+                            <Box sx={{
+                                flex: 1,
+                                textAlign: { xs: 'center', sm: 'left' },
+                                pb: 1
+                            }}>
+                                <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
+                                    {user?.name}
+                                </Typography>
+                                <Stack direction="row" spacing={1} sx={{ justifyContent: { xs: 'center', sm: 'flex-start' }, mb: 1 }}>
+                                    <Chip
+                                        icon={<BadgeIcon />}
+                                        label={getRoleDisplay(user?.role)}
+                                        color="primary"
+                                        size="small"
+                                        sx={{ fontWeight: 600 }}
+                                    />
+                                    <Chip
+                                        icon={<CalendarIcon />}
+                                        label={`Joined ${new Date().getFullYear()}`}
+                                        variant="outlined"
+                                        size="small"
+                                    />
+                                </Stack>
+                                <Typography variant="body2" color="text.secondary">
+                                    {user?.email}
+                                </Typography>
+                            </Box>
+
+                            {/* Edit Button */}
+                            <Button
+                                variant={isEditing ? "outlined" : "contained"}
+                                startIcon={<EditIcon />}
+                                onClick={() => setIsEditing(!isEditing)}
+                                size="large"
+                                sx={{
+                                    minWidth: 140,
+                                    borderRadius: 2,
+                                    mb: 1
+                                }}
+                            >
+                                {isEditing ? 'Cancel Edit' : 'Edit Profile'}
+                            </Button>
                         </Box>
                     </Box>
+                </Card>
 
-                    <Button
-                        variant={isEditing ? "outlined" : "contained"}
-                        startIcon={<EditIcon />}
-                        onClick={() => setIsEditing(!isEditing)}
-                        sx={{ mt: { xs: 2, md: 0 }, minWidth: 120, borderRadius: 2 }}
-                    >
-                        {isEditing ? 'Cancel' : 'Edit Profile'}
-                    </Button>
-                </Box>
-            </Card>
+                {/* Main Content */}
+                <Grid container spacing={3}>
 
-            {/* Content Tabs */}
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                <Tabs value={tabValue} onChange={handleTabChange} aria-label="profile tabs">
-                    <Tab label="Personal Info" icon={<PersonIcon />} iconPosition="start" />
-                    <Tab label="Security" icon={<SecurityIcon />} iconPosition="start" />
-                    <Tab label="Preferences" icon={<NotificationsIcon />} iconPosition="start" />
-                </Tabs>
-            </Box>
-
-            <TabPanel value={tabValue} index={0}>
-                {/* Replaced Grid with Flex Box for layout stability */}
-                <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 3 }}>
-
-                    {/* Left Column: Summary */}
-                    <Box sx={{ width: { xs: '100%', md: '350px' }, flexShrink: 0 }}>
-                        <Card sx={{ height: '100%', borderRadius: 3, boxShadow: '0 2px 12px rgba(0,0,0,0.05)' }}>
-                            <CardContent>
-                                <Typography variant="h6" gutterBottom sx={{ fontWeight: 600 }}>
+                    {/* Left Sidebar - Contact Info */}
+                    <Grid item xs={12} md={4}>
+                        <Card sx={{ borderRadius: 3, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+                            <CardContent sx={{ p: 3 }}>
+                                <Typography variant="h6" sx={{ fontWeight: 700, mb: 3 }}>
                                     Contact Information
                                 </Typography>
-                                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5, mt: 3 }}>
-                                    <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-                                        <Box sx={{ bgcolor: 'primary.lighter', p: 1.5, borderRadius: 2, color: 'primary.main', display: 'flex' }}>
-                                            <EmailIcon />
-                                        </Box>
-                                        <Box>
-                                            <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>Email Address</Typography>
-                                            <Typography variant="body2" sx={{ fontWeight: 600 }}>{user?.email}</Typography>
-                                        </Box>
-                                    </Box>
 
-                                    <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-                                        <Box sx={{ bgcolor: 'secondary.lighter', p: 1.5, borderRadius: 2, color: 'secondary.main', display: 'flex' }}>
-                                            <PhoneIcon />
-                                        </Box>
-                                        <Box>
-                                            <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>Phone Number</Typography>
-                                            <Typography variant="body2" sx={{ fontWeight: 600 }}>{user?.phone || 'Not provided'}</Typography>
-                                        </Box>
-                                    </Box>
-
-                                    <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-                                        <Box sx={{ bgcolor: 'success.lighter', p: 1.5, borderRadius: 2, color: 'success.main', display: 'flex' }}>
-                                            <CalendarIcon />
-                                        </Box>
-                                        <Box>
-                                            <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>Joined Date</Typography>
-                                            <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                                                {new Date().toLocaleDateString()}
+                                <Stack spacing={3}>
+                                    {/* Email */}
+                                    <Box>
+                                        <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 1 }}>
+                                            <Box sx={{
+                                                bgcolor: 'primary.lighter',
+                                                color: 'primary.main',
+                                                p: 1,
+                                                borderRadius: 1.5,
+                                                display: 'flex'
+                                            }}>
+                                                <EmailIcon fontSize="small" />
+                                            </Box>
+                                            <Typography variant="caption" color="text.secondary" fontWeight={600}>
+                                                EMAIL ADDRESS
                                             </Typography>
-                                        </Box>
+                                        </Stack>
+                                        <Typography variant="body2" sx={{ pl: 5, fontWeight: 500 }}>
+                                            {user?.email}
+                                        </Typography>
                                     </Box>
-                                </Box>
+
+                                    <Divider />
+
+                                    {/* Phone */}
+                                    <Box>
+                                        <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 1 }}>
+                                            <Box sx={{
+                                                bgcolor: 'success.lighter',
+                                                color: 'success.main',
+                                                p: 1,
+                                                borderRadius: 1.5,
+                                                display: 'flex'
+                                            }}>
+                                                <PhoneIcon fontSize="small" />
+                                            </Box>
+                                            <Typography variant="caption" color="text.secondary" fontWeight={600}>
+                                                PHONE NUMBER
+                                            </Typography>
+                                        </Stack>
+                                        <Typography variant="body2" sx={{ pl: 5, fontWeight: 500 }}>
+                                            {user?.phone || 'Not provided'}
+                                        </Typography>
+                                    </Box>
+
+                                    <Divider />
+
+                                    {/* Role */}
+                                    <Box>
+                                        <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 1 }}>
+                                            <Box sx={{
+                                                bgcolor: 'warning.lighter',
+                                                color: 'warning.main',
+                                                p: 1,
+                                                borderRadius: 1.5,
+                                                display: 'flex'
+                                            }}>
+                                                <BadgeIcon fontSize="small" />
+                                            </Box>
+                                            <Typography variant="caption" color="text.secondary" fontWeight={600}>
+                                                USER ROLE
+                                            </Typography>
+                                        </Stack>
+                                        <Typography variant="body2" sx={{ pl: 5, fontWeight: 500, textTransform: 'capitalize' }}>
+                                            {getRoleDisplay(user?.role)}
+                                        </Typography>
+                                    </Box>
+                                </Stack>
                             </CardContent>
                         </Card>
-                    </Box>
+                    </Grid>
 
-                    {/* Right Column: Edit Form */}
-                    <Box sx={{ flex: 1 }}>
-                        <Card sx={{ borderRadius: 3, boxShadow: '0 2px 12px rgba(0,0,0,0.05)' }}>
+                    {/* Right Content - Profile Details */}
+                    <Grid item xs={12} md={8}>
+                        <Card sx={{ borderRadius: 3, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
                             <CardContent sx={{ p: 3 }}>
-                                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3, alignItems: 'center' }}>
-                                    <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                                        Details
-                                    </Typography>
-                                </Box>
+                                <Typography variant="h6" sx={{ fontWeight: 700, mb: 3 }}>
+                                    Profile Details
+                                </Typography>
 
                                 <Box component="form" onSubmit={handleSubmit}>
                                     <Grid container spacing={3}>
-                                        <Grid item xs={12} md={6}>
+                                        <Grid item xs={12} sm={6}>
                                             <TextField
                                                 label="Full Name"
                                                 name="name"
@@ -226,10 +243,10 @@ const Profile: React.FC = () => {
                                                 fullWidth
                                                 disabled={!isEditing}
                                                 variant="outlined"
-                                                sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2 } }}
                                             />
                                         </Grid>
-                                        <Grid item xs={12} md={6}>
+
+                                        <Grid item xs={12} sm={6}>
                                             <TextField
                                                 label="Email Address"
                                                 name="email"
@@ -237,10 +254,11 @@ const Profile: React.FC = () => {
                                                 fullWidth
                                                 disabled
                                                 variant="filled"
-                                                sx={{ '& .MuiFilledInput-root': { borderRadius: 2 } }}
+                                                helperText="Email cannot be changed"
                                             />
                                         </Grid>
-                                        <Grid item xs={12} md={6}>
+
+                                        <Grid item xs={12} sm={6}>
                                             <TextField
                                                 label="Phone Number"
                                                 name="phone"
@@ -248,77 +266,47 @@ const Profile: React.FC = () => {
                                                 fullWidth
                                                 disabled={!isEditing}
                                                 variant="outlined"
-                                                sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2 } }}
                                             />
                                         </Grid>
-                                        <Grid item xs={12} md={6}>
+
+                                        <Grid item xs={12} sm={6}>
                                             <TextField
                                                 label="User Role"
-                                                defaultValue={user?.role}
+                                                defaultValue={getRoleDisplay(user?.role)}
                                                 fullWidth
                                                 disabled
                                                 variant="filled"
-                                                InputProps={{ style: { textTransform: 'capitalize' } }}
-                                                sx={{ '& .MuiFilledInput-root': { borderRadius: 2 } }}
                                             />
                                         </Grid>
 
                                         {isEditing && (
                                             <Grid item xs={12}>
-                                                <Divider sx={{ my: 2 }} />
-                                                <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
+                                                <Divider sx={{ my: 1 }} />
+                                                <Stack direction="row" spacing={2} justifyContent="flex-end" sx={{ mt: 2 }}>
                                                     <Button
                                                         variant="outlined"
                                                         onClick={() => setIsEditing(false)}
-                                                        sx={{ borderRadius: 2, px: 3 }}
+                                                        size="large"
                                                     >
                                                         Cancel
                                                     </Button>
                                                     <Button
                                                         type="submit"
                                                         variant="contained"
-                                                        sx={{ borderRadius: 2, px: 4 }}
+                                                        size="large"
                                                     >
                                                         Save Changes
                                                     </Button>
-                                                </Box>
+                                                </Stack>
                                             </Grid>
                                         )}
                                     </Grid>
                                 </Box>
                             </CardContent>
                         </Card>
-                    </Box>
-                </Box>
-            </TabPanel>
-
-            <TabPanel value={tabValue} index={1}>
-                <Card sx={{ borderRadius: 3 }}>
-                    <CardContent>
-                        <Box sx={{ textAlign: 'center', py: 4 }}>
-                            <SecurityIcon sx={{ fontSize: 60, color: 'text.secondary', mb: 2 }} />
-                            <Typography variant="h6" gutterBottom>Security Settings</Typography>
-                            <Typography variant="body2" color="text.secondary">
-                                Password change and 2FA settings would go here.
-                            </Typography>
-                        </Box>
-                    </CardContent>
-                </Card>
-            </TabPanel>
-
-            <TabPanel value={tabValue} index={2}>
-                <Card sx={{ borderRadius: 3 }}>
-                    <CardContent>
-                        <Box sx={{ textAlign: 'center', py: 4 }}>
-                            <NotificationsIcon sx={{ fontSize: 60, color: 'text.secondary', mb: 2 }} />
-                            <Typography variant="h6" gutterBottom>Preferences</Typography>
-                            <Typography variant="body2" color="text.secondary">
-                                Notification and customization settings would go here.
-                            </Typography>
-                        </Box>
-                    </CardContent>
-                </Card>
-            </TabPanel>
+                    </Grid>
+                </Grid>
+            </Box>
         </Box>
     );
 };
