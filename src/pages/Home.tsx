@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Container, Typography, Button, Grid, Card, CardContent, Box, Avatar } from '@mui/material';
 import {
@@ -19,6 +19,7 @@ import {
 } from '@mui/icons-material';
 import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
+import { useAuthStore } from '../stores/authStore';
 import CountUp from 'react-countup';
 import './Home.css';
 
@@ -36,6 +37,20 @@ interface Stat {
 const Home: React.FC = () => {
     const navigate = useNavigate();
     const { user } = useAuth();
+    const { isAuthenticated, user: authUser } = useAuthStore();
+
+    // Redirect professionals to their dashboard
+    useEffect(() => {
+        if (isAuthenticated && authUser) {
+            const role = authUser.role;
+            if (role === 'barber') {
+                navigate('/barber/dashboard', { replace: true });
+            } else if (role === 'salon_owner') {
+                navigate('/salon-owner/dashboard', { replace: true });
+            }
+        }
+    }, [isAuthenticated, authUser, navigate]);
+
     const [stats] = useState<Stat[]>([
         { count: 20, suffix: '+', title: 'Branches', color: '#f59e0b', icon: <LocationOnIcon /> },
         { count: 5000, suffix: '+', title: 'Happy Clients', color: '#14b8a6', icon: <StarIcon /> },
