@@ -58,11 +58,40 @@ const Navbar: React.FC = () => {
         setMobileOpen(!mobileOpen);
     };
 
-    const navLinks = [
-        { label: 'Find Salons', path: '/salons', icon: <LocationOnIcon sx={{ fontSize: 18, mr: 0.5 }} /> },
-        { label: 'Services', path: '/services', icon: <ContentCutIcon sx={{ fontSize: 18, mr: 0.5 }} /> },
-        { label: 'About', path: '/about', icon: <InfoIcon sx={{ fontSize: 18, mr: 0.5 }} /> },
-    ];
+    // Role-based navigation links
+    const getNavLinksForRole = () => {
+        if (!isAuthenticated || !user) {
+            return [
+                { label: 'Find Salons', path: '/salons', icon: <LocationOnIcon sx={{ fontSize: 18, mr: 0.5 }} /> },
+                { label: 'Services', path: '/services', icon: <ContentCutIcon sx={{ fontSize: 18, mr: 0.5 }} /> },
+                { label: 'About', path: '/about', icon: <InfoIcon sx={{ fontSize: 18, mr: 0.5 }} /> },
+            ];
+        }
+
+        switch (user.role) {
+            case 'barber':
+                return [
+                    { label: 'Dashboard', path: '/barber/dashboard', icon: <PersonIcon sx={{ fontSize: 18, mr: 0.5 }} /> },
+                    { label: 'My Appointments', path: '/barber/appointments', icon: <SettingsIcon sx={{ fontSize: 18, mr: 0.5 }} /> },
+                    { label: 'My Schedule', path: '/barber/schedule', icon: <InfoIcon sx={{ fontSize: 18, mr: 0.5 }} /> },
+                ];
+            case 'salon_owner':
+                return [
+                    { label: 'Dashboard', path: '/salon-owner/dashboard', icon: <PersonIcon sx={{ fontSize: 18, mr: 0.5 }} /> },
+                    { label: 'My Salons', path: '/salons/my', icon: <LocationOnIcon sx={{ fontSize: 18, mr: 0.5 }} /> },
+                    { label: 'Barbers', path: '/salon-owner/barbers', icon: <ContentCutIcon sx={{ fontSize: 18, mr: 0.5 }} /> },
+                ];
+            case 'customer':
+            default:
+                return [
+                    { label: 'Find Salons', path: '/salons', icon: <LocationOnIcon sx={{ fontSize: 18, mr: 0.5 }} /> },
+                    { label: 'Services', path: '/services', icon: <ContentCutIcon sx={{ fontSize: 18, mr: 0.5 }} /> },
+                    { label: 'About', path: '/about', icon: <InfoIcon sx={{ fontSize: 18, mr: 0.5 }} /> },
+                ];
+        }
+    };
+
+    const navLinks = getNavLinksForRole();
 
     const drawer = (
         <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center', pt: 2 }}>

@@ -142,6 +142,11 @@ class SalonService {
     /**
      * Get salon analytics
      */
+    async getAnalytics(): Promise<ApiResponse<any>> {
+        const response = await api.get<ApiResponse<any>>('/salons/analytics');
+        return response.data;
+    }
+
     /**
      * Add service to salon
      */
@@ -171,22 +176,6 @@ class SalonService {
      */
     async updateOperatingHours(salonId: string, operatingHours: any[]): Promise<ApiResponse<Salon>> {
         const response = await api.put<ApiResponse<Salon>>(`/salons/${salonId}/operating-hours`, { operatingHours });
-        return response.data;
-    }
-
-    /**
-     * Get salon owner statistics
-     */
-    async getOwnerStats(): Promise<ApiResponse<any>> {
-        const response = await api.get<ApiResponse<any>>('/salons/stats/owner');
-        return response.data;
-    }
-
-    /**
-     * Get salon analytics
-     */
-    async getAnalytics(): Promise<ApiResponse<any>> {
-        const response = await api.get<ApiResponse<any>>('/salons/analytics');
         return response.data;
     }
 }

@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { ContentCut as ScissorsIcon } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
+import { useAuthStore } from '../../stores/authStore';
 import './Logo.css';
 
 interface LogoProps {
@@ -22,6 +23,21 @@ const Logo: React.FC<LogoProps> = ({ variant = 'default', size = 'medium', click
         light: '#ffffff',
         dark: '#212529',
     };
+
+    const { user, isAuthenticated } = useAuthStore();
+
+    const getHomeLink = () => {
+        if (!isAuthenticated || !user) return '/';
+        switch (user.role) {
+            case 'barber': return '/barber/dashboard';
+            case 'salon_owner': return '/salon-owner/dashboard';
+            case 'superadmin': return '/admin/superadmin';
+            case 'customer': return '/customer/dashboard';
+            default: return '/';
+        }
+    };
+
+    const homeLink = getHomeLink();
 
     // Image variant - use CSS text with scissors icon
     if (variant === 'image') {
@@ -63,7 +79,7 @@ const Logo: React.FC<LogoProps> = ({ variant = 'default', size = 'medium', click
         );
         if (clickable) {
             return (
-                <Link to="/" style={{ textDecoration: 'none', display: 'inline-flex' }}>
+                <Link to={homeLink} style={{ textDecoration: 'none', display: 'inline-flex' }}>
                     {logoContent}
                 </Link>
             );
@@ -134,7 +150,7 @@ const Logo: React.FC<LogoProps> = ({ variant = 'default', size = 'medium', click
 
     if (clickable) {
         return (
-            <Link to="/" style={{ textDecoration: 'none', display: 'inline-flex' }}>
+            <Link to={homeLink} style={{ textDecoration: 'none', display: 'inline-flex' }}>
                 {logoContent}
             </Link>
         );

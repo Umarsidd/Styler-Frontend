@@ -2,21 +2,30 @@ import { create } from 'zustand';
 import { Barber, BarberStatus } from '../types';
 import barberService from '../services/barberService';
 
+interface BarberStats {
+    todaysAppointments: number;
+    totalClients: number;
+    averageRating: number;
+    servicesDone: number;
+}
+
 interface BarberState {
     barbers: Barber[];
     currentBarber: Barber | null;
     pendingBarbers: Barber[];
+    stats: BarberStats | null;
     loading: boolean;
     error: string | null;
 
     // Actions
     fetchSalonBarbers: (salonId: string) => Promise<void>;
-    fetchPendingBarbers: (salonId: string) => Promise<void>;
+    fetchPendingBarbers: () => Promise<void>;
+    fetchBarberStats: () => Promise<void>;
     registerBarber: (data: any) => Promise<Barber>;
     getBarberById: (id: string) => Promise<void>;
     updateBarberProfile: (id: string, data: any) => Promise<void>;
-    uploadDocument: (id: string, documentType: string, file: File) => Promise<void>;
-    updateAvailability: (id: string, availability: any[]) => Promise<void>;
+    uploadDocuments: (id: string, data: { documents: string[] }) => Promise<void>;
+    updateAvailability: (data: { date: string; isAvailable: boolean; startTime?: string; endTime?: string }) => Promise<void>;
     approveBarber: (id: string) => Promise<void>;
     rejectBarber: (id: string, reason: string) => Promise<void>;
     clearCurrentBarber: () => void;
@@ -27,8 +36,30 @@ export const useBarberStore = create<BarberState>((set, get) => ({
     barbers: [],
     currentBarber: null,
     pendingBarbers: [],
+    stats: null,
     loading: false,
     error: null,
+
+    fetchBarberStats: async () => {
+        set({ loading: true, error: null });
+        try {
+            const response = await barberService.getBarberStats();
+            if (response.success && response.data) {
+                // Map API response to stats structure
+                set({
+                    stats: {
+                        todaysAppointments: response.data.todaysAppointments || 0,
+                        totalClients: response.data.totalClients || 0,
+                        averageRating: response.data.averageRating || 0,
+                        servicesDone: response.data.servicesDone || 0,
+                    },
+                    loading: false
+                });
+            }
+        } catch (error: any) {
+            set({ error: error.message || 'Failed to fetch barber stats', loading: false });
+        }
+    },
 
     fetchSalonBarbers: async (salonId) => {
         set({ loading: true, error: null });
@@ -42,10 +73,10 @@ export const useBarberStore = create<BarberState>((set, get) => ({
         }
     },
 
-    fetchPendingBarbers: async (salonId) => {
+    fetchPendingBarbers: async () => {
         set({ loading: true, error: null });
         try {
-            const response = await barberService.getPendingBarbers(salonId);
+            const response = await barberService.getPendingBarbers();
             if (response.success && response.data) {
                 set({ pendingBarbers: response.data, loading: false });
             }
@@ -94,23 +125,23 @@ export const useBarberStore = create<BarberState>((set, get) => ({
         }
     },
 
-    uploadDocument: async (id, documentType, file) => {
+    uploadDocuments: async (id, data) => {
         set({ loading: true, error: null });
         try {
-            await barberService.uploadDocument(id, documentType as any, file);
+            await barberService.uploadDocuments(id, data);
             set({ loading: false });
         } catch (error: any) {
-            set({ error: error.message || 'Failed to upload document', loading: false });
+            set({ error: error.message || 'Failed to upload documents', loading: false });
             throw error;
         }
     },
 
-    updateAvailability: async (id, availability) => {
+    updateAvailability: async (data) => {
         set({ loading: true, error: null });
         try {
-            const response = await barberService.updateAvailability(id, availability);
+            const response = await barberService.updateAvailability(data);
             if (response.success && response.data) {
-                set({ currentBarber: response.data, loading: false });
+                set({ loading: false });
             }
         } catch (error: any) {
             set({ error: error.message || 'Failed to update availability', loading: false });

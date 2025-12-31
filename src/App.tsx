@@ -10,6 +10,8 @@ import Navbar from './components/common/Navbar';
 import Footer from './components/common/Footer';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import ErrorBoundary from './components/common/ErrorBoundary';
+import DashboardLayout from './components/layout/DashboardLayout';
+import { useAuthStore } from './stores/authStore';
 
 // Pages
 import Home from './pages/Home';
@@ -42,11 +44,14 @@ import AppointmentDetails from './pages/customer/AppointmentDetails';
 // Barber Pages
 import BarberDashboard from './pages/barber/BarberDashboard';
 import AvailabilityManagement from './pages/barber/AvailabilityManagement';
+import BarberAppointments from './pages/barber/BarberAppointments';
+import BarberSchedule from './pages/barber/BarberSchedule';
 
 // Salon Owner Pages
 import SalonOwnerDashboard from './pages/salon-owner/SalonOwnerDashboard';
 import StaffManagement from './pages/salon-owner/StaffManagement';
 import Analytics from './pages/salon-owner/Analytics';
+import MySalons from './pages/salon-owner/MySalons';
 
 // Admin Pages
 import SuperAdminDashboard from './pages/admin/SuperAdminDashboard';
@@ -68,6 +73,17 @@ const Layout: React.FC<LayoutProps> = ({ children, showFooter = true, showNavbar
             {showFooter && <Footer />}
         </div>
     );
+};
+
+const RoleBasedLayoutWrapper: React.FC<{ children: ReactNode }> = ({ children }) => {
+    const { user } = useAuthStore();
+    const isProfessional = user?.role === 'barber' || user?.role === 'salon_owner';
+
+    if (isProfessional) {
+        return <DashboardLayout>{children}</DashboardLayout>;
+    }
+
+    return <Layout>{children}</Layout>;
 };
 
 function AppContent() {
@@ -164,7 +180,7 @@ function AppContent() {
                     path="/barber/dashboard"
                     element={
                         <ProtectedRoute role="barber">
-                            <Layout><BarberDashboard /></Layout>
+                            <DashboardLayout><BarberDashboard /></DashboardLayout>
                         </ProtectedRoute>
                     }
                 />
@@ -172,7 +188,23 @@ function AppContent() {
                     path="/barber/availability"
                     element={
                         <ProtectedRoute role="barber">
-                            <Layout><AvailabilityManagement /></Layout>
+                            <DashboardLayout><AvailabilityManagement /></DashboardLayout>
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/barber/appointments"
+                    element={
+                        <ProtectedRoute role="barber">
+                            <DashboardLayout><BarberAppointments /></DashboardLayout>
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/barber/schedule"
+                    element={
+                        <ProtectedRoute role="barber">
+                            <DashboardLayout><BarberSchedule /></DashboardLayout>
                         </ProtectedRoute>
                     }
                 />
@@ -182,7 +214,15 @@ function AppContent() {
                     path="/salon-owner/dashboard"
                     element={
                         <ProtectedRoute role="salon_owner">
-                            <Layout><SalonOwnerDashboard /></Layout>
+                            <DashboardLayout><SalonOwnerDashboard /></DashboardLayout>
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/salons/my"
+                    element={
+                        <ProtectedRoute role="salon_owner">
+                            <DashboardLayout><MySalons /></DashboardLayout>
                         </ProtectedRoute>
                     }
                 />
@@ -190,7 +230,7 @@ function AppContent() {
                     path="/salon-owner/staff"
                     element={
                         <ProtectedRoute role="salon_owner">
-                            <Layout><StaffManagement /></Layout>
+                            <DashboardLayout><StaffManagement /></DashboardLayout>
                         </ProtectedRoute>
                     }
                 />
@@ -198,7 +238,7 @@ function AppContent() {
                     path="/salon-owner/analytics"
                     element={
                         <ProtectedRoute role="salon_owner">
-                            <Layout><Analytics /></Layout>
+                            <DashboardLayout><Analytics /></DashboardLayout>
                         </ProtectedRoute>
                     }
                 />
@@ -207,11 +247,12 @@ function AppContent() {
                 <Route
                     path="/profile"
                     element={
-                        <Layout>
-                            <ProtectedRoute>
+                        <ProtectedRoute>
+                            {/* Inline RoleBasedLayout logic */}
+                            <RoleBasedLayoutWrapper>
                                 <Profile />
-                            </ProtectedRoute>
-                        </Layout>
+                            </RoleBasedLayoutWrapper>
+                        </ProtectedRoute>
                     }
                 />
 
