@@ -60,18 +60,10 @@ class BarberService {
     }
 
     /**
-     * Get barber availability
-     */
-    async getAvailability(): Promise<ApiResponse<any>> {
-        const response = await api.get<ApiResponse<any>>('/barbers/availability');
-        return response.data;
-    }
-
-    /**
      * Update barber availability
      */
-    async updateAvailability(data: { date: string; isAvailable: boolean; startTime?: string; endTime?: string }): Promise<ApiResponse<any>> {
-        const response = await api.put<ApiResponse<any>>('/barbers/availability', data);
+    async updateAvailability(barberId: string, data: UpdateAvailabilityRequest): Promise<ApiResponse<Barber>> {
+        const response = await api.put<ApiResponse<Barber>>(`/barbers/${barberId}/availability`, data);
         return response.data;
     }
 
@@ -86,16 +78,8 @@ class BarberService {
     /**
      * Get pending barber approvals (salon owner)
      */
-    async getPendingBarbers(): Promise<ApiResponse<Barber[]>> {
-        const response = await api.get<ApiResponse<Barber[]>>('/barbers/pending');
-        return response.data;
-    }
-
-    /**
-     * Get approved barbers (salon owner)
-     */
-    async getApprovedBarbers(): Promise<ApiResponse<Barber[]>> {
-        const response = await api.get<ApiResponse<Barber[]>>('/barbers/approved');
+    async getPendingBarbers(salonId: string): Promise<ApiResponse<Barber[]>> {
+        const response = await api.get<ApiResponse<Barber[]>>(`/barbers/salon/${salonId}/pending`);
         return response.data;
     }
 
@@ -112,14 +96,6 @@ class BarberService {
      */
     async rejectBarber(id: string, reason: string): Promise<ApiResponse<Barber>> {
         const response = await api.post<ApiResponse<Barber>>(`/barbers/${id}/reject`, { reason });
-        return response.data;
-    }
-
-    /**
-     * Get barber statistics
-     */
-    async getBarberStats(): Promise<ApiResponse<any>> {
-        const response = await api.get<ApiResponse<any>>('/barbers/stats');
         return response.data;
     }
 }

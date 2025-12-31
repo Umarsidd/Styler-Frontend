@@ -146,6 +146,14 @@ class AppointmentService {
         );
         return response.data;
     }
+
+    /**
+     * Get salon appointment statistics (for salon owner)
+     */
+    async getSalonStatistics(salonId: string): Promise<ApiResponse<any>> {
+        const response = await api.get<ApiResponse<any>>(`/appointments/salon/${salonId}/statistics`);
+        return response.data;
+    }
 }
 
 export const appointmentService = new AppointmentService();

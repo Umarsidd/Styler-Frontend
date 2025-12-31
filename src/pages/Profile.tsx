@@ -11,7 +11,9 @@ import {
     Divider,
     Chip,
     IconButton,
-    Stack
+    Stack,
+    Alert,
+    CircularProgress
 } from '@mui/material';
 import {
     Person as PersonIcon,
@@ -23,18 +25,77 @@ import {
     CalendarMonth as CalendarIcon
 } from '@mui/icons-material';
 import { useAuthStore } from '../stores/authStore';
+import userService from '../services/userService';
 import './Profile.css';
 
 const Profile: React.FC = () => {
     const user = useAuthStore((state) => state.user);
+    const updateUser = useAuthStore((state) => state.updateUser);
     const [isEditing, setIsEditing] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [uploading, setUploading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [success, setSuccess] = useState(false);
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        setError(null);
+        setSuccess(false);
+
         const formData = new FormData(event.currentTarget);
-        console.log('Profile update:', Object.fromEntries(formData));
-        setIsEditing(false);
-        // TODO: Implement profile update
+        const name = formData.get('name') as string;
+        const phone = formData.get('phone') as string;
+
+        try {
+            setLoading(true);
+            const response = await userService.updateProfile({ name, phone });
+
+            if (response.success && response.data) {
+                updateUser(response.data);
+                setSuccess(true);
+                setIsEditing(false);
+                setTimeout(() => setSuccess(false), 3000);
+            }
+        } catch (err: any) {
+            setError(err.response?.data?.message || 'Failed to update profile');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+            setError('Please select an image file');
+            return;
+        }
+
+        // Validate file size (5MB)
+        if (file.size > 5 * 1024 * 1024) {
+            setError('Image size must be less than 5MB');
+            return;
+        }
+
+        try {
+            setUploading(true);
+            setError(null);
+            const response = await userService.uploadProfilePicture(file);
+
+            if (response.success && response.data) {
+                updateUser({ profilePicture: response.data.profilePicture });
+                setSuccess(true);
+                setTimeout(() => setSuccess(false), 3000);
+            }
+        } catch (err: any) {
+            setError(err.response?.data?.message || 'Failed to upload profile picture');
+        } finally {
+            setUploading(false);
+            // Reset file input
+            event.target.value = '';
+        }
     };
 
     const getRoleDisplay = (role: string | undefined) => {
@@ -46,6 +107,18 @@ const Profile: React.FC = () => {
     return (
         <Box sx={{ minHeight: '100vh', bgcolor: '#f5f5f5', py: 4 }}>
             <Box sx={{ maxWidth: 1100, mx: 'auto', px: { xs: 2, md: 3 } }}>
+
+                {/* Success/Error Alerts */}
+                {success && (
+                    <Alert severity="success" sx={{ mb: 2 }}>
+                        Profile updated successfully!
+                    </Alert>
+                )}
+                {error && (
+                    <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError(null)}>
+                        {error}
+                    </Alert>
+                )}
 
                 {/* Header Card with Banner */}
                 <Card sx={{ mb: 3, borderRadius: 3, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
@@ -67,6 +140,7 @@ const Profile: React.FC = () => {
                             {/* Avatar */}
                             <Box sx={{ position: 'relative' }}>
                                 <Avatar
+                                    src={user?.profilePicture}
                                     sx={{
                                         width: 150,
                                         height: 150,
@@ -77,9 +151,19 @@ const Profile: React.FC = () => {
                                         fontWeight: 700
                                     }}
                                 >
-                                    {user?.name?.charAt(0).toUpperCase()}
+                                    {!user?.profilePicture && user?.name?.charAt(0).toUpperCase()}
                                 </Avatar>
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    hidden
+                                    id="profile-picture-upload"
+                                    onChange={handleFileSelect}
+                                />
                                 <IconButton
+                                    component="label"
+                                    htmlFor="profile-picture-upload"
+                                    disabled={uploading}
                                     sx={{
                                         position: 'absolute',
                                         bottom: 8,
@@ -91,7 +175,7 @@ const Profile: React.FC = () => {
                                     }}
                                     size="small"
                                 >
-                                    <PhotoCameraIcon fontSize="small" />
+                                    {uploading ? <CircularProgress size={20} color="inherit" /> : <PhotoCameraIcon fontSize="small" />}
                                 </IconButton>
                             </Box>
 
@@ -146,7 +230,7 @@ const Profile: React.FC = () => {
                 <Grid container spacing={3}>
 
                     {/* Left Sidebar - Contact Info */}
-                    <Grid item xs={12} md={4}>
+                    <Grid item xs={12} sm={4} md={4}>
                         <Card sx={{ borderRadius: 3, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
                             <CardContent sx={{ p: 3 }}>
                                 <Typography variant="h6" sx={{ fontWeight: 700, mb: 3 }}>
@@ -226,7 +310,7 @@ const Profile: React.FC = () => {
                     </Grid>
 
                     {/* Right Content - Profile Details */}
-                    <Grid item xs={12} md={8}>
+                    <Grid item xs={12} sm={8} md={8}>
                         <Card sx={{ borderRadius: 3, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
                             <CardContent sx={{ p: 3 }}>
                                 <Typography variant="h6" sx={{ fontWeight: 700, mb: 3 }}>
@@ -294,8 +378,10 @@ const Profile: React.FC = () => {
                                                         type="submit"
                                                         variant="contained"
                                                         size="large"
+                                                        disabled={loading}
+                                                        startIcon={loading ? <CircularProgress size={20} color="inherit" /> : undefined}
                                                     >
-                                                        Save Changes
+                                                        {loading ? 'Saving...' : 'Save Changes'}
                                                     </Button>
                                                 </Stack>
                                             </Grid>

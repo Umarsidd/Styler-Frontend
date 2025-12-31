@@ -1,18 +1,15 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Box, Container, Typography, Grid, Card, CardContent, Button, CircularProgress, Alert } from '@mui/material';
 import { ContentCut as ScissorsIcon, Schedule as ScheduleIcon, People as PeopleIcon, Star as StarIcon } from '@mui/icons-material';
 import { useBarberStore } from '../../stores/barberStore';
 import './BarberDashboard.css';
 
 const BarberDashboard: React.FC = () => {
-    // We ignore the error from the store to suppress 500 errors in the UI
-    const { stats, loading, fetchBarberStats } = useBarberStore();
+    // Note: fetchBarberStats removed as backend doesn't have this endpoint
+    // Using default stats values until proper endpoint is implemented
+    const { stats, loading } = useBarberStore();
 
-    useEffect(() => {
-        fetchBarberStats();
-    }, [fetchBarberStats]);
-
-    // Use default 0 values if stats is null (API failure)
+    // Use default 0 values if stats is null (API not yet implemented)
     const currentStats = stats || {
         todaysAppointments: 0,
         totalClients: 0,

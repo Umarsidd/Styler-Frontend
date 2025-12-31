@@ -14,7 +14,7 @@ class UserService {
      * Get user profile
      */
     async getProfile(): Promise<ApiResponse<User>> {
-        const response = await api.get<ApiResponse<User>>('/user/profile');
+        const response = await api.get<ApiResponse<User>>('/auth/me');
         return response.data;
     }
 
@@ -22,22 +22,26 @@ class UserService {
      * Update user profile
      */
     async updateProfile(data: UpdateProfileRequest): Promise<ApiResponse<User>> {
-        const response = await api.put<ApiResponse<User>>('/user/profile', data);
+        const response = await api.put<ApiResponse<User>>('/auth/profile', data);
         return response.data;
     }
 
     /**
      * Upload profile picture
      */
-    async uploadProfilePicture(file: File): Promise<ApiResponse<{ url: string }>> {
+    async uploadProfilePicture(file: File): Promise<ApiResponse<{ profilePicture: string }>> {
         const formData = new FormData();
-        formData.append('profileImage', file);
+        formData.append('profilePicture', file);
 
-        const response = await api.post<ApiResponse<{ url: string }>>('/user/upload-profile-picture', formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-        });
+        const response = await api.post<ApiResponse<{ profilePicture: string }>>(
+            '/auth/upload-profile-picture',
+            formData,
+            {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            }
+        );
         return response.data;
     }
 

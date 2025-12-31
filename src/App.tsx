@@ -52,6 +52,7 @@ import SalonOwnerDashboard from './pages/salon-owner/SalonOwnerDashboard';
 import StaffManagement from './pages/salon-owner/StaffManagement';
 import Analytics from './pages/salon-owner/Analytics';
 import MySalons from './pages/salon-owner/MySalons';
+import CreateSalon from './pages/salon-owner/CreateSalon';
 
 // Admin Pages
 import SuperAdminDashboard from './pages/admin/SuperAdminDashboard';
@@ -239,6 +240,14 @@ function AppContent() {
                     element={
                         <ProtectedRoute role="salon_owner">
                             <DashboardLayout><Analytics /></DashboardLayout>
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/salons/create"
+                    element={
+                        <ProtectedRoute role="salon_owner">
+                            <DashboardLayout><CreateSalon /></DashboardLayout>
                         </ProtectedRoute>
                     }
                 />
