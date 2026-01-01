@@ -178,6 +178,27 @@ class SalonService {
         const response = await api.put<ApiResponse<Salon>>(`/salons/${salonId}/operating-hours`, { operatingHours });
         return response.data;
     }
+
+    /**
+     * Upload salon images (max 3)
+     */
+    async uploadSalonImages(files: File[]): Promise<ApiResponse<{ images: string[] }>> {
+        const formData = new FormData();
+        files.forEach((file) => {
+            formData.append('images', file);
+        });
+
+        const response = await api.post<ApiResponse<{ images: string[] }>>(
+            '/salons/upload-images',
+            formData,
+            {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            }
+        );
+        return response.data;
+    }
 }
 
 export const salonService = new SalonService();

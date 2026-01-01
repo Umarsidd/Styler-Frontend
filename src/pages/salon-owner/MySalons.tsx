@@ -12,6 +12,30 @@ const MySalons: React.FC = () => {
         fetchMySalons();
     }, [fetchMySalons]);
 
+    // Helper function to check if salon is currently open
+    const isSalonOpen = (salon: any): boolean => {
+        if (!salon.operatingHours || salon.operatingHours.length === 0) return false;
+
+        const now = new Date();
+        const currentDay = now.toLocaleDateString('en-US', { weekday: 'long' });
+        const currentTime = now.getHours() * 60 + now.getMinutes(); // Convert to minutes
+
+        const todayHours = salon.operatingHours.find((hours: any) =>
+            hours.day.toLowerCase() === currentDay.toLowerCase()
+        );
+
+        if (!todayHours || !todayHours.isOpen) return false;
+
+        // Parse opening and closing times (format: "HH:MM")
+        const [openHour, openMin] = todayHours.openTime.split(':').map(Number);
+        const [closeHour, closeMin] = todayHours.closeTime.split(':').map(Number);
+
+        const openingTime = openHour * 60 + openMin;
+        const closingTime = closeHour * 60 + closeMin;
+
+        return currentTime >= openingTime && currentTime <= closingTime;
+    };
+
     return (
         <Box>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
@@ -45,19 +69,62 @@ const MySalons: React.FC = () => {
                     {mySalons.map((salon) => (
                         <Grid xs={12} sm={6} md={4} key={salon._id}>
                             <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-                                <CardMedia
-                                    component="img"
-                                    height="200"
-                                    image={salon.images?.[0] || 'https://images.unsplash.com/photo-1521590832898-947c13a8ba85?w=600&auto=format&fit=crop&q=60'}
-                                    alt={salon.name}
-                                />
+                                <Box sx={{ position: 'relative' }}>
+                                    {salon.images && salon.images.length > 0 ? (
+                                        <CardMedia
+                                            component="img"
+                                            height="200"
+                                            image={salon.images[0]}
+                                            alt={salon.name}
+                                            sx={{
+                                                objectFit: 'cover',
+                                                bgcolor: '#f5f5f5'
+                                            }}
+                                            onError={(e: any) => {
+                                                e.target.style.display = 'none';
+                                                e.target.parentElement.style.backgroundColor = '#f0f0f0';
+                                            }}
+                                        />
+                                    ) : (
+                                        <Box
+                                            sx={{
+                                                height: 200,
+                                                bgcolor: '#f5f5f5',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                flexDirection: 'column',
+                                                gap: 1
+                                            }}
+                                        >
+                                            <StoreIcon sx={{ fontSize: 48, color: '#ccc' }} />
+                                            <Typography variant="caption" color="text.secondary">
+                                                No image
+                                            </Typography>
+                                        </Box>
+                                    )}
+                                    <Chip
+                                        label={isSalonOpen(salon) ? 'Open' : 'Closed'}
+                                        size="small"
+                                        sx={{
+                                            position: 'absolute',
+                                            top: 8,
+                                            right: 8,
+                                            bgcolor: isSalonOpen(salon) ? '#10b981' : '#ef4444',
+                                            color: 'white',
+                                            fontWeight: 600,
+                                            fontSize: '0.75rem',
+                                            boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
+                                        }}
+                                    />
+                                </Box>
                                 <CardContent sx={{ flexGrow: 1 }}>
                                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
                                         <Typography variant="h6" gutterBottom noWrap sx={{ fontWeight: 600 }}>
                                             {salon.name}
                                         </Typography>
                                         <Chip
-                                            label={salon.rating ? salon.rating.toFixed(1) : 'New'}
+                                            label={salon.rating?.average ? salon.rating.average.toFixed(1) : 'New'}
                                             size="small"
                                             color="primary"
                                             variant="outlined"

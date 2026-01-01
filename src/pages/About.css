@@ -37,8 +37,9 @@
     box-shadow: 0 8px 24px rgba(99, 102, 241, 0.08);
     position: relative;
     overflow: visible;
-    width: 320px;
-    margin-left: 60px;
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto;
 }
 
 .stat-card-about::before {
@@ -124,16 +125,51 @@
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
+@media (max-width: 960px) {
     .about-hero {
         min-height: 400px;
-        padding: 3rem 1rem 6rem;
+        padding: 4rem 1.5rem 6rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .about-hero {
+        min-height: 350px;
+        padding: 3rem 1rem 5rem;
+    }
+
+    .stat-card-about {
+        max-width: 100%;
+        border-radius: 16px;
+    }
+}
+
+@media (max-width: 600px) {
+    .about-hero {
+        min-height: 300px;
+        padding: 2.5rem 1rem 4rem;
+    }
+
+    .value-card {
+        margin-bottom: 1rem;
+    }
+
+    .team-card {
+        margin-bottom: 1rem;
     }
 }
 
 @media (max-width: 480px) {
     .about-hero {
-        min-height: 350px;
-        padding: 2.5rem 1rem 5rem;
+        min-height: 280px;
+        padding: 2rem 0.75rem 3.5rem;
+    }
+
+    .stat-card-about {
+        border-radius: 12px;
+    }
+
+    .stat-card-about:hover {
+        transform: translateY(-6px) scale(1.01);
     }
 }

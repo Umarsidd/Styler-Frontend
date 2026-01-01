@@ -50,7 +50,11 @@ const SalonCard: React.FC<SalonCardProps> = ({ salon, onClick }) => {
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mb: 1 }}>
                         <StarIcon fontSize="small" sx={{ color: '#f59e0b' }} />
                         <Typography variant="body2">
-                            {salon.rating.toFixed(1)} ({salon.totalReviews || 0} reviews)
+                            {typeof salon.rating === 'object' && salon.rating.average
+                                ? `${salon.rating.average.toFixed(1)} (${salon.rating.count || 0} reviews)`
+                                : typeof salon.rating === 'number'
+                                    ? `${salon.rating.toFixed(1)} (${salon.totalReviews || 0} reviews)`
+                                    : 'No rating'}
                         </Typography>
                     </Box>
                 )}

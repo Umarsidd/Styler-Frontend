@@ -46,9 +46,25 @@ const Profile: React.FC = () => {
         const name = formData.get('name') as string;
         const phone = formData.get('phone') as string;
 
+        // Build address object from form fields
+        const street = formData.get('street') as string;
+        const city = formData.get('city') as string;
+        const state = formData.get('state') as string;
+        const pincode = formData.get('pincode') as string;
+        const country = formData.get('country') as string;
+
+        // Only include address if at least one field is filled
+        const address = (street || city || state || pincode) ? {
+            street: street || '',
+            city: city || '',
+            state: state || '',
+            pincode: pincode || '',
+            country: country || 'India',
+        } : undefined;
+
         try {
             setLoading(true);
-            const response = await userService.updateProfile({ name, phone });
+            const response = await userService.updateProfile({ name, phone, address });
 
             if (response.success && response.data) {
                 updateUser(response.data);
@@ -287,172 +303,154 @@ const Profile: React.FC = () => {
                     </Box>
                 </Card>
 
-                {/* Main Content */}
-                <Grid container spacing={3}>
+                {/* Main Content - Combined Contact & Profile Details */}
+                <Card sx={{ borderRadius: 3, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+                    <CardContent sx={{ p: 4 }}>
+                        <Typography variant="h5" sx={{ fontWeight: 700, mb: 3 }}>
+                            Profile & Contact Information
+                        </Typography>
 
-                    {/* Left Sidebar - Contact Info */}
-                    <Grid item xs={12} sm={4} md={4}>
-                        <Card sx={{ borderRadius: 3, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
-                            <CardContent sx={{ p: 3 }}>
-                                <Typography variant="h6" sx={{ fontWeight: 700, mb: 3 }}>
-                                    Contact Information
-                                </Typography>
+                        <Box component="form" onSubmit={handleSubmit}>
+                            <Grid container spacing={3}>
 
-                                <Stack spacing={3}>
-                                    {/* Email */}
-                                    <Box>
-                                        <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 1 }}>
-                                            <Box sx={{
-                                                bgcolor: 'primary.lighter',
-                                                color: 'primary.main',
-                                                p: 1,
-                                                borderRadius: 1.5,
-                                                display: 'flex'
-                                            }}>
-                                                <EmailIcon fontSize="small" />
-                                            </Box>
-                                            <Typography variant="caption" color="text.secondary" fontWeight={600}>
-                                                EMAIL ADDRESS
-                                            </Typography>
-                                        </Stack>
-                                        <Typography variant="body2" sx={{ pl: 5, fontWeight: 500 }}>
-                                            {user?.email}
-                                        </Typography>
-                                    </Box>
+                                {/* Email - Read Only (No Icon) */}
+                                <Grid item xs={12} md={6}>
+                                    <TextField
+                                        label="Email Address"
+                                        name="email"
+                                        value={user?.email}
+                                        fullWidth
+                                        disabled
+                                        variant="filled"
+                                        helperText="Email cannot be changed"
+                                    />
+                                </Grid>
 
-                                    <Divider />
+                                {/* Full Name - Editable */}
+                                <Grid item xs={12} md={6}>
+                                    <TextField
+                                        label="Full Name"
+                                        name="name"
+                                        defaultValue={user?.name}
+                                        fullWidth
+                                        disabled={!isEditing}
+                                        variant="outlined"
+                                        InputProps={{
+                                            startAdornment: (
+                                                <PersonIcon sx={{ mr: 1, color: 'action.active' }} />
+                                            ),
+                                        }}
+                                    />
+                                </Grid>
 
-                                    {/* Phone */}
-                                    <Box>
-                                        <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 1 }}>
-                                            <Box sx={{
-                                                bgcolor: 'success.lighter',
-                                                color: 'success.main',
-                                                p: 1,
-                                                borderRadius: 1.5,
-                                                display: 'flex'
-                                            }}>
-                                                <PhoneIcon fontSize="small" />
-                                            </Box>
-                                            <Typography variant="caption" color="text.secondary" fontWeight={600}>
-                                                PHONE NUMBER
-                                            </Typography>
-                                        </Stack>
-                                        <Typography variant="body2" sx={{ pl: 5, fontWeight: 500 }}>
-                                            {user?.phone || 'Not provided'}
-                                        </Typography>
-                                    </Box>
+                                {/* Phone Number - Editable */}
+                                <Grid item xs={12} md={6}>
+                                    <TextField
+                                        label="Phone Number"
+                                        name="phone"
+                                        defaultValue={user?.phone}
+                                        fullWidth
+                                        disabled={!isEditing}
+                                        variant="outlined"
+                                        InputProps={{
+                                            startAdornment: (
+                                                <PhoneIcon sx={{ mr: 1, color: 'action.active' }} />
+                                            ),
+                                        }}
+                                    />
+                                </Grid>
 
-                                    <Divider />
+                                {/* Street Address */}
+                                <Grid item xs={12}>
+                                    <TextField
+                                        label="Street Address"
+                                        name="street"
+                                        defaultValue={user?.addresses?.[0]?.street || ''}
+                                        fullWidth
+                                        disabled={!isEditing}
+                                        variant="outlined"
+                                        placeholder="Enter your street address"
+                                    />
+                                </Grid>
 
-                                    {/* Role */}
-                                    <Box>
-                                        <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 1 }}>
-                                            <Box sx={{
-                                                bgcolor: 'warning.lighter',
-                                                color: 'warning.main',
-                                                p: 1,
-                                                borderRadius: 1.5,
-                                                display: 'flex'
-                                            }}>
-                                                <BadgeIcon fontSize="small" />
-                                            </Box>
-                                            <Typography variant="caption" color="text.secondary" fontWeight={600}>
-                                                USER ROLE
-                                            </Typography>
-                                        </Stack>
-                                        <Typography variant="body2" sx={{ pl: 5, fontWeight: 500, textTransform: 'capitalize' }}>
-                                            {getRoleDisplay(user?.role)}
-                                        </Typography>
-                                    </Box>
-                                </Stack>
-                            </CardContent>
-                        </Card>
-                    </Grid>
+                                {/* City */}
+                                <Grid item xs={12} md={6}>
+                                    <TextField
+                                        label="City"
+                                        name="city"
+                                        defaultValue={user?.addresses?.[0]?.city || ''}
+                                        fullWidth
+                                        disabled={!isEditing}
+                                        variant="outlined"
+                                        placeholder="Enter city"
+                                    />
+                                </Grid>
 
-                    {/* Right Content - Profile Details */}
-                    <Grid item xs={12} sm={8} md={8}>
-                        <Card sx={{ borderRadius: 3, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
-                            <CardContent sx={{ p: 3 }}>
-                                <Typography variant="h6" sx={{ fontWeight: 700, mb: 3 }}>
-                                    Profile Details
-                                </Typography>
+                                {/* State */}
+                                <Grid item xs={12} md={6}>
+                                    <TextField
+                                        label="State"
+                                        name="state"
+                                        defaultValue={user?.addresses?.[0]?.state || ''}
+                                        fullWidth
+                                        disabled={!isEditing}
+                                        variant="outlined"
+                                        placeholder="Enter state"
+                                    />
+                                </Grid>
 
-                                <Box component="form" onSubmit={handleSubmit}>
-                                    <Grid container spacing={3}>
-                                        <Grid item xs={12} sm={6}>
-                                            <TextField
-                                                label="Full Name"
-                                                name="name"
-                                                defaultValue={user?.name}
-                                                fullWidth
-                                                disabled={!isEditing}
-                                                variant="outlined"
-                                            />
-                                        </Grid>
+                                {/* Pincode */}
+                                <Grid item xs={12} md={6}>
+                                    <TextField
+                                        label="Pincode"
+                                        name="pincode"
+                                        defaultValue={user?.addresses?.[0]?.pincode || ''}
+                                        fullWidth
+                                        disabled={!isEditing}
+                                        variant="outlined"
+                                        placeholder="Enter pincode"
+                                    />
+                                </Grid>
 
-                                        <Grid item xs={12} sm={6}>
-                                            <TextField
-                                                label="Email Address"
-                                                name="email"
-                                                defaultValue={user?.email}
-                                                fullWidth
-                                                disabled
-                                                variant="filled"
-                                                helperText="Email cannot be changed"
-                                            />
-                                        </Grid>
+                                {/* Country */}
+                                <Grid item xs={12} md={6}>
+                                    <TextField
+                                        label="Country"
+                                        name="country"
+                                        defaultValue={user?.addresses?.[0]?.country || 'India'}
+                                        fullWidth
+                                        disabled={!isEditing}
+                                        variant="outlined"
+                                        placeholder="Enter country"
+                                    />
+                                </Grid>
 
-                                        <Grid item xs={12} sm={6}>
-                                            <TextField
-                                                label="Phone Number"
-                                                name="phone"
-                                                defaultValue={user?.phone}
-                                                fullWidth
-                                                disabled={!isEditing}
-                                                variant="outlined"
-                                            />
-                                        </Grid>
+                            </Grid>
 
-                                        <Grid item xs={12} sm={6}>
-                                            <TextField
-                                                label="User Role"
-                                                defaultValue={getRoleDisplay(user?.role)}
-                                                fullWidth
-                                                disabled
-                                                variant="filled"
-                                            />
-                                        </Grid>
-
-                                        {isEditing && (
-                                            <Grid item xs={12}>
-                                                <Divider sx={{ my: 1 }} />
-                                                <Stack direction="row" spacing={2} justifyContent="flex-end" sx={{ mt: 2 }}>
-                                                    <Button
-                                                        variant="outlined"
-                                                        onClick={() => setIsEditing(false)}
-                                                        size="large"
-                                                    >
-                                                        Cancel
-                                                    </Button>
-                                                    <Button
-                                                        type="submit"
-                                                        variant="contained"
-                                                        size="large"
-                                                        disabled={loading}
-                                                        startIcon={loading ? <CircularProgress size={20} color="inherit" /> : undefined}
-                                                    >
-                                                        {loading ? 'Saving...' : 'Save Changes'}
-                                                    </Button>
-                                                </Stack>
-                                            </Grid>
-                                        )}
-                                    </Grid>
+                            {/* Action Buttons - Outside Grid, Bottom Right */}
+                            {isEditing && (
+                                <Box sx={{ mt: 4, display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
+                                    <Button
+                                        variant="outlined"
+                                        onClick={() => setIsEditing(false)}
+                                        size="large"
+                                    >
+                                        Cancel
+                                    </Button>
+                                    <Button
+                                        type="submit"
+                                        variant="contained"
+                                        size="large"
+                                        disabled={loading}
+                                        startIcon={loading ? <CircularProgress size={20} color="inherit" /> : undefined}
+                                    >
+                                        {loading ? 'Saving...' : 'Save Changes'}
+                                    </Button>
                                 </Box>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                </Grid>
+                            )}
+                        </Box>
+                    </CardContent>
+                </Card>
             </Box>
         </Box>
     );

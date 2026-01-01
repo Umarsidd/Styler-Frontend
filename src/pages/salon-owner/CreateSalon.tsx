@@ -14,9 +14,13 @@ import {
     Paper,
     Stepper,
     Step,
-    StepLabel
+    StepLabel,
+    IconButton
 } from '@mui/material';
+import { Add as AddIcon, Delete as DeleteIcon, Image as ImageIcon } from '@mui/icons-material';
 import { useSalonStore } from '../../stores/salonStore';
+import { salonService } from '../../services/salonService';
+import LocationPicker from '../../components/LocationPicker';
 
 const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
@@ -33,6 +37,10 @@ const CreateSalon: React.FC = () => {
     const [activeStep, setActiveStep] = useState(0);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [uploadingImages, setUploadingImages] = useState(false);
+    const [selectedImages, setSelectedImages] = useState<File[]>([]);
+    const [imagesPreviews, setImagesPreviews] = useState<string[]>([]);
+    const [uploadedImageUrls, setUploadedImageUrls] = useState<string[]>([]);
 
     const [formData, setFormData] = useState({
         name: '',
@@ -63,6 +71,15 @@ const CreateSalon: React.FC = () => {
         setError(null);
     };
 
+    const handleLocationSelect = (lat: number, lng: number) => {
+        setFormData(prev => ({
+            ...prev,
+            latitude: lat.toString(),
+            longitude: lng.toString()
+        }));
+        setError(null);
+    };
+
     const handleOperatingHoursChange = (index: number, field: keyof OperatingHours, value: any) => {
         const updated = [...operatingHours];
         updated[index] = { ...updated[index], [field]: value };
@@ -78,6 +95,10 @@ const CreateSalon: React.FC = () => {
                 }
                 if (!formData.phone.trim() || formData.phone.length < 10) {
                     setError('Valid phone number is required');
+                    return false;
+                }
+                if (uploadedImageUrls.length === 0 && selectedImages.length === 0) {
+                    setError('At least 1 salon image is required');
                     return false;
                 }
                 return true;
@@ -103,10 +124,68 @@ const CreateSalon: React.FC = () => {
         }
     };
 
-    const handleNext = () => {
-        if (validateStep(activeStep)) {
-            setActiveStep(prev => prev + 1);
+    const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const files = Array.from(e.target.files || []);
+        const totalImages = selectedImages.length + uploadedImageUrls.length + files.length;
+
+        if (totalImages > 3) {
+            setError('Maximum 3 images allowed');
+            return;
         }
+
+        // Create preview URLs
+        const newPreviews = files.map(file => URL.createObjectURL(file));
+        setSelectedImages(prev => [...prev, ...files]);
+        setImagesPreviews(prev => [...prev, ...newPreviews]);
+        setError(null);
+    };
+
+    const handleRemoveImage = (index: number) => {
+        const newImages = [...selectedImages];
+        const newPreviews = [...imagesPreviews];
+
+        // Revoke object URL to prevent memory leak
+        URL.revokeObjectURL(newPreviews[index]);
+
+        newImages.splice(index, 1);
+        newPreviews.splice(index, 1);
+
+        setSelectedImages(newImages);
+        setImagesPreviews(newPreviews);
+        setError(null);
+    };
+
+    const handleRemoveUploadedImage = (index: number) => {
+        const newUrls = [...uploadedImageUrls];
+        newUrls.splice(index, 1);
+        setUploadedImageUrls(newUrls);
+    };
+
+    const handleNext = async () => {
+        if (!validateStep(activeStep)) return;
+
+        // Upload images before moving to next step if on step 0
+        if (activeStep === 0 && selectedImages.length > 0) {
+            setUploadingImages(true);
+            try {
+                const response = await salonService.uploadSalonImages(selectedImages);
+                setUploadedImageUrls(prev => [...prev, ...(response?.data?.images || [])]);
+                // Clear selected images after upload
+                selectedImages.forEach((_, index) => {
+                    URL.revokeObjectURL(imagesPreviews[index]);
+                });
+                setSelectedImages([]);
+                setImagesPreviews([]);
+            } catch (err: any) {
+                setError(err.response?.data?.message || 'Failed to upload images');
+                setUploadingImages(false);
+                return;
+            } finally {
+                setUploadingImages(false);
+            }
+        }
+
+        setActiveStep(prev => prev + 1);
     };
 
     const handleBack = () => {
@@ -121,31 +200,44 @@ const CreateSalon: React.FC = () => {
         setError(null);
 
         try {
+            // Upload any remaining images
+            let finalImageUrls = [...uploadedImageUrls];
+            if (selectedImages.length > 0) {
+                setUploadingImages(true);
+                const response = await salonService.uploadSalonImages(selectedImages);
+                finalImageUrls = [...finalImageUrls, ...(response?.data?.images || [])];
+                setUploadingImages(false);
+            }
+
             const payload = {
                 businessName: formData.name,
                 displayName: formData.name,
                 description: formData.description,
                 phone: formData.phone,
-                email: formData.email,
+                email: formData.email || `${formData.phone}@styler.com`,
+                images: finalImageUrls,
                 address: {
                     street: formData.street,
                     city: formData.city,
                     state: formData.state,
                     pincode: formData.pincode,
-                    location: {
-                        type: 'Point' as const,
-                        coordinates: [parseFloat(formData.longitude), parseFloat(formData.latitude)]
-                    }
+                    latitude: parseFloat(formData.latitude),
+                    longitude: parseFloat(formData.longitude)
                 },
                 operatingHours: operatingHours.filter(h => h.isOpen)
             };
 
             await registerSalon(payload);
+
+            // Cleanup preview URLs
+            imagesPreviews.forEach(url => URL.revokeObjectURL(url));
+
             navigate('/salon-owner/dashboard');
         } catch (err: any) {
             setError(err.response?.data?.message || 'Failed to create salon');
         } finally {
             setLoading(false);
+            setUploadingImages(false);
         }
     };
 
@@ -193,6 +285,124 @@ const CreateSalon: React.FC = () => {
                                 onChange={(e) => handleChange('email', e.target.value)}
                             />
                         </Grid>
+
+                        {/* Image Upload Section */}
+                        <Grid item xs={12}>
+                            <Typography variant="subtitle2" gutterBottom sx={{ mb: 1 }}>
+                                Salon Images * (Min 1, Max 3)
+                            </Typography>
+                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+                                {/* Display uploaded images */}
+                                {uploadedImageUrls.map((url, index) => (
+                                    <Box
+                                        key={`uploaded-${index}`}
+                                        sx={{
+                                            position: 'relative',
+                                            width: 150,
+                                            height: 150,
+                                            borderRadius: 2,
+                                            overflow: 'hidden',
+                                            border: '2px solid #e0e0e0'
+                                        }}
+                                    >
+                                        <img
+                                            src={url}
+                                            alt={`Salon ${index + 1}`}
+                                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                        />
+                                        <IconButton
+                                            onClick={() => handleRemoveUploadedImage(index)}
+                                            sx={{
+                                                position: 'absolute',
+                                                top: 4,
+                                                right: 4,
+                                                bgcolor: 'rgba(255, 255, 255, 0.9)',
+                                                '&:hover': { bgcolor: 'rgba(255, 255, 255, 1)' },
+                                                width: 28,
+                                                height: 28
+                                            }}
+                                            size="small"
+                                        >
+                                            <DeleteIcon fontSize="small" color="error" />
+                                        </IconButton>
+                                    </Box>
+                                ))}
+
+                                {/* Display selected images (not yet uploaded) */}
+                                {imagesPreviews.map((preview, index) => (
+                                    <Box
+                                        key={`preview-${index}`}
+                                        sx={{
+                                            position: 'relative',
+                                            width: 150,
+                                            height: 150,
+                                            borderRadius: 2,
+                                            overflow: 'hidden',
+                                            border: '2px dashed #6366f1'
+                                        }}
+                                    >
+                                        <img
+                                            src={preview}
+                                            alt={`Preview ${index + 1}`}
+                                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                        />
+                                        <IconButton
+                                            onClick={() => handleRemoveImage(index)}
+                                            sx={{
+                                                position: 'absolute',
+                                                top: 4,
+                                                right: 4,
+                                                bgcolor: 'rgba(255, 255, 255, 0.9)',
+                                                '&:hover': { bgcolor: 'rgba(255, 255, 255, 1)' },
+                                                width: 28,
+                                                height: 28
+                                            }}
+                                            size="small"
+                                        >
+                                            <DeleteIcon fontSize="small" color="error" />
+                                        </IconButton>
+                                    </Box>
+                                ))}
+
+                                {/* Add image button */}
+                                {(uploadedImageUrls.length + selectedImages.length) < 3 && (
+                                    <Box
+                                        component="label"
+                                        sx={{
+                                            width: 150,
+                                            height: 150,
+                                            border: '2px dashed #ccc',
+                                            borderRadius: 2,
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            cursor: 'pointer',
+                                            '&:hover': {
+                                                borderColor: '#6366f1',
+                                                bgcolor: 'rgba(99, 102, 241, 0.05)'
+                                            },
+                                            transition: 'all 0.2s'
+                                        }}
+                                    >
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            multiple
+                                            onChange={handleImageSelect}
+                                            style={{ display: 'none' }}
+                                        />
+                                        <AddIcon sx={{ fontSize: 40, color: '#999' }} />
+                                        <Typography variant="caption" color="text.secondary" sx={{ mt: 1 }}>
+                                            Add Image
+                                        </Typography>
+                                    </Box>
+                                )}
+                            </Box>
+                            <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
+                                {uploadedImageUrls.length + selectedImages.length} of 3 images selected
+                            </Typography>
+                        </Grid>
                     </Grid>
                 );
 
@@ -236,30 +446,13 @@ const CreateSalon: React.FC = () => {
                             />
                         </Grid>
                         <Grid item xs={12}>
-                            <Typography variant="subtitle2" gutterBottom>
-                                Location Coordinates
+                            <Typography variant="subtitle2" gutterBottom sx={{ mb: 2 }}>
+                                Salon Location
                             </Typography>
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                label="Latitude"
-                                fullWidth
-                                required
-                                type="number"
-                                value={formData.latitude}
-                                onChange={(e) => handleChange('latitude', e.target.value)}
-                                placeholder="e.g., 28.6139"
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                label="Longitude"
-                                fullWidth
-                                required
-                                type="number"
-                                value={formData.longitude}
-                                onChange={(e) => handleChange('longitude', e.target.value)}
-                                placeholder="e.g., 77.2090"
+                            <LocationPicker
+                                latitude={formData.latitude ? parseFloat(formData.latitude) : undefined}
+                                longitude={formData.longitude ? parseFloat(formData.longitude) : undefined}
+                                onLocationSelect={handleLocationSelect}
                             />
                         </Grid>
                     </Grid>

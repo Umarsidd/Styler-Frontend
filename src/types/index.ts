@@ -91,6 +91,7 @@ export interface User {
     role: UserRole;
     profilePicture?: string;
     coverImage?: string;
+    addresses?: Address[];
     isActive: boolean;
     createdAt: string;
     updatedAt: string;

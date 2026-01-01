@@ -56,6 +56,9 @@ import CreateSalon from './pages/salon-owner/CreateSalon';
 
 // Admin Pages
 import SuperAdminDashboard from './pages/admin/SuperAdminDashboard';
+import AdminLayout from './layouts/AdminLayout';
+import AdminDashboard from './pages/admin/AdminDashboard';
+import UsersManagement from './pages/admin/UsersManagement';
 
 // Lenis smooth scrolling (GSAP removed)
 
@@ -266,6 +269,28 @@ function AppContent() {
                 />
 
                 {/* Admin Routes */}
+                <Route path="/admin/login" element={<Layout showFooter={false} showNavbar={false}><AdminLogin /></Layout>} />
+
+                {/* New Super Admin Routes with AdminLayout */}
+                <Route
+                    path="/admin"
+                    element={
+                        <ProtectedRoute role="superadmin" redirectTo="/unauthorized">
+                            <AdminLayout />
+                        </ProtectedRoute>
+                    }
+                >
+                    <Route index element={<AdminDashboard />} />
+                    <Route path="users" element={<UsersManagement />} />
+                    {/* TODO: Add more admin pages */}
+                    {/* <Route path="salons" element={<SalonsManagement />} /> */}
+                    {/* <Route path="barbers" element={<BarbersManagement />} /> */}
+                    {/* <Route path="appointments" element={<AppointmentsManagement />} /> */}
+                    {/* <Route path="payments" element={<PaymentsManagement />} /> */}
+                    {/* <Route path="reviews" element={<ReviewsManagement />} /> */}
+                </Route>
+
+                {/* Legacy admin routes (keep for backwards compatibility) */}
                 <Route
                     path="/admin/superadmin"
                     element={
@@ -274,7 +299,6 @@ function AppContent() {
                         </ProtectedRoute>
                     }
                 />
-                <Route path="/admin/login" element={<Layout showFooter={false} showNavbar={false}><AdminLogin /></Layout>} />
                 <Route
                     path="/admin/dashboard"
                     element={

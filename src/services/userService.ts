@@ -6,6 +6,13 @@ export interface UpdateProfileRequest {
     name?: string;
     phone?: string;
     email?: string;
+    address?: {
+        street: string;
+        city: string;
+        state: string;
+        pincode: string;
+        country?: string;
+    };
 }
 
 // Service Class

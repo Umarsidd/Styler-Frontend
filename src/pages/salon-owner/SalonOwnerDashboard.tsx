@@ -116,7 +116,7 @@ const SalonOwnerDashboard: React.FC = () => {
                                 </Typography>
                                 <Button
                                     variant="contained"
-                                    sx={{ mt: 3, bgcolor: 'white', color: '#667eea', '&:hover': { bgcolor: '#f3f4f6' } }}
+                                    sx={{ mt: 3, bgcolor: 'white', color: 'white', '&:hover': { bgcolor: '#007bffff' } }}
                                     onClick={() => navigate('/salons/my')}
                                 >
                                     Update Photos

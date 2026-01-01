@@ -119,8 +119,7 @@ const Services: React.FC = () => {
                                 py: 1.5,
                                 fontSize: '1.1rem',
                                 bgcolor: 'white',
-                                color: 'primary.main',
-                                '&:hover': { bgcolor: 'rgba(255,255,255,0.9)' },
+                                '&:hover': { bgcolor: 'rgba(63, 92, 236, 0.9)' },
                             }}
                         >
                             Book Now

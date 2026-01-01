@@ -83,7 +83,11 @@ const SalonList: React.FC = () => {
                 }
                 break;
             case 'rating':
-                processed = processed.sort((a, b) => b.rating - a.rating);
+                processed = processed.sort((a, b) => {
+                    const ratingA = typeof a.rating === 'object' ? a.rating.average : a.rating;
+                    const ratingB = typeof b.rating === 'object' ? b.rating.average : b.rating;
+                    return (ratingB || 0) - (ratingA || 0);
+                });
                 break;
             case 'reviews':
                 processed = processed.sort((a, b) => b.totalReviews - a.totalReviews);
