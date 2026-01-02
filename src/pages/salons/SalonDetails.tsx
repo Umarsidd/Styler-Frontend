@@ -48,7 +48,7 @@ const SalonDetails: React.FC = () => {
     return (
         <Box className="customer-dashboard">
             <Container maxWidth="lg">
-                <Button startIcon={<ArrowBackIcon />} onClick={() => navigate('/salons')} sx={{ mb: 3 }}>
+                <Button startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)} sx={{ mb: 3 }}>
                     Back to Salons
                 </Button>
 

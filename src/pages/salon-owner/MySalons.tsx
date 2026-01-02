@@ -205,8 +205,8 @@ const MySalons: React.FC = () => {
                                     </Box>
                                 </CardContent>
                                 <CardActions sx={{ justifyContent: 'space-between', px: 2, pb: 2 }}>
-                                    <Button size="small" onClick={() => navigate(`/salons/${salon._id}`)}>
-                                        View Page
+                                    <Button size="small" onClick={() => navigate(`/salon-owner/salons/${salon._id}`)}>
+                                        View Details
                                     </Button>
                                     <Box>
                                         <IconButton size="small" onClick={() => navigate(`/salons/${salon._id}/edit`)}>
