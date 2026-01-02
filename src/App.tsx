@@ -37,7 +37,7 @@ import PaymentSuccess from './pages/payment/PaymentSuccess';
 import PaymentFailed from './pages/payment/PaymentFailed';
 
 // Customer Pages
-import CustomerDashboard from './pages/customer/Dashboard';
+
 import MyAppointments from './pages/customer/MyAppointments';
 import AppointmentDetails from './pages/customer/AppointmentDetails';
 
@@ -56,6 +56,8 @@ import MySalons from './pages/salon-owner/MySalons';
 import CreateSalon from './pages/salon-owner/CreateSalon';
 import SalonOwnerProfile from './pages/salon-owner/SalonOwnerProfile';
 import SalonOwnerSalonDetails from './pages/salon-owner/SalonOwnerSalonDetails';
+import ManageServices from './pages/salon-owner/ManageServices';
+import EditSalon from './pages/salon-owner/EditSalon';
 
 // Admin Pages
 import SuperAdminDashboard from './pages/admin/SuperAdminDashboard';
@@ -156,15 +158,7 @@ function AppContent() {
                 <Route path="/payment/success" element={<Layout><PaymentSuccess /></Layout>} />
                 <Route path="/payment/failed" element={<Layout><PaymentFailed /></Layout>} />
 
-                {/* Customer Dashboard Routes */}
-                <Route
-                    path="/customer/dashboard"
-                    element={
-                        <ProtectedRoute role="customer">
-                            <Layout><CustomerDashboard /></Layout>
-                        </ProtectedRoute>
-                    }
-                />
+
                 <Route
                     path="/customer/appointments"
                     element={
@@ -270,6 +264,22 @@ function AppContent() {
                     element={
                         <ProtectedRoute role="salon_owner">
                             <DashboardLayout><SalonOwnerSalonDetails /></DashboardLayout>
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/salon-owner/salons/:id/services"
+                    element={
+                        <ProtectedRoute role="salon_owner">
+                            <DashboardLayout><ManageServices /></DashboardLayout>
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/salon-owner/salons/:id/edit"
+                    element={
+                        <ProtectedRoute role="salon_owner">
+                            <DashboardLayout><EditSalon /></DashboardLayout>
                         </ProtectedRoute>
                     }
                 />

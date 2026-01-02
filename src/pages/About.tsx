@@ -103,67 +103,33 @@ const About: React.FC = () => {
             {/* Stats Section */}
             <Container
                 maxWidth={false}
+                className="stats-section"
+                disableGutters
                 sx={{
                     mt: -8,
                     position: 'relative',
                     zIndex: 10,
                     mb: 8,
-                    px: { xs: 1, sm: 2, md: 3 }
                 }}
             >
-                <Grid container spacing={3}>
+                <Grid container spacing={2} sx={{ px: 1 }}>
                     {stats.map((stat, index) => (
-                        <Grid item xs={6} md={3} key={index}>
+                        <Grid item xs={12} sm={6} md={3} key={index}>
                             <MotionCard
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 transition={{ delay: index * 0.1 }}
                                 viewport={{ once: true }}
-                                className="stat-card-about"
+                                className="stat-card"
                             >
-                                <CardContent sx={{ textAlign: 'center', p: { xs: 2, sm: 3, md: 4 } }}>
-                                    <Box
-                                        sx={{
-                                            width: { xs: 60, sm: 70, md: 80 },
-                                            height: { xs: 60, sm: 70, md: 80 },
-                                            margin: '0 auto 1.5rem',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            borderRadius: { xs: '16px', md: '20px' },
-                                            background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(236, 72, 153, 0.1) 100%)',
-                                            position: 'relative',
-                                            transition: 'all 0.4s ease',
-                                            fontSize: { xs: '2.5rem', sm: '3rem', md: '3.5rem' },
-                                            color: stat.color,
-                                            '&::before': {
-                                                content: '""',
-                                                position: 'absolute',
-                                                inset: '-2px',
-                                                borderRadius: { xs: '16px', md: '20px' },
-                                                padding: '2px',
-                                                background: `linear-gradient(135deg, ${stat.color}, #ec4899)`,
-                                                WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                                                WebkitMaskComposite: 'xor',
-                                                maskComposite: 'exclude',
-                                                opacity: 0,
-                                                transition: 'opacity 0.4s ease',
-                                            },
-                                            '.stat-card-about:hover &': {
-                                                transform: 'scale(1.1) rotate(5deg)',
-                                                background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(236, 72, 153, 0.15) 100%)',
-                                            },
-                                            '.stat-card-about:hover &::before': {
-                                                opacity: 1,
-                                            },
-                                        }}
-                                    >
+                                <CardContent sx={{ textAlign: 'center' }}>
+                                    <Box className="stat-icon" sx={{ color: stat.color, mb: 2 }}>
                                         {stat.icon}
                                     </Box>
-                                    <Typography variant="h3" sx={{ fontWeight: 800, color: stat.color, mb: 0.5, fontSize: { xs: '1.75rem', sm: '2.25rem', md: '3rem' } }}>
+                                    <Typography variant="h3" sx={{ fontWeight: 800, color: stat.color }}>
                                         {stat.value}
                                     </Typography>
-                                    <Typography variant="body1" color="text.secondary" sx={{ fontWeight: 500, fontSize: { xs: '0.875rem', sm: '1rem' } }}>
+                                    <Typography variant="body1" color="text.secondary">
                                         {stat.label}
                                     </Typography>
                                 </CardContent>
@@ -172,6 +138,7 @@ const About: React.FC = () => {
                     ))}
                 </Grid>
             </Container>
+
 
             {/* Mission Section */}
             <Container maxWidth="lg" sx={{ py: 8 }}>
