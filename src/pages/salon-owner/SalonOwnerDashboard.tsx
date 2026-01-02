@@ -83,7 +83,7 @@ const SalonOwnerDashboard: React.FC = () => {
                                         <Card
                                             variant="outlined"
                                             sx={{ cursor: 'pointer', '&:hover': { bgcolor: '#f9fafb' } }}
-                                            onClick={() => navigate('/salon-owner/staff')}
+                                            onClick={() => navigate('/salon-owner/staff-management')}
                                         >
                                             <CardContent sx={{ textAlign: 'center', py: 3 }}>
                                                 <PeopleIcon fontSize="large" color="secondary" sx={{ mb: 1 }} />
@@ -117,7 +117,7 @@ const SalonOwnerDashboard: React.FC = () => {
                                 <Button
                                     variant="contained"
                                     sx={{ mt: 3, bgcolor: 'white', color: 'white', '&:hover': { bgcolor: '#007bffff' } }}
-                                    onClick={() => navigate('/salons/my')}
+                                    onClick={() => navigate('/salons-owner/my-salons')}
                                 >
                                     Update Photos
                                 </Button>

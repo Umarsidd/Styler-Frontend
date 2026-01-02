@@ -1,16 +1,63 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Typography, Button, Grid, Card, CardContent, CardMedia, CardActions, Chip, IconButton } from '@mui/material';
+import {
+    Container,
+    Typography,
+    Box,
+    Grid,
+    Card,
+    CardContent,
+    CardMedia,
+    CardActions,
+    Button,
+    Alert,
+    CircularProgress,
+    IconButton,
+    Chip,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
+    DialogContentText
+} from '@mui/material';
 import { Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon, Store as StoreIcon } from '@mui/icons-material';
 import { useSalonStore } from '../../stores/salonStore';
 
 const MySalons: React.FC = () => {
     const navigate = useNavigate();
-    const { mySalons, loading, fetchMySalons } = useSalonStore();
+    const { mySalons, loading, error, fetchMySalons, deleteSalon } = useSalonStore();
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+    const [salonToDelete, setSalonToDelete] = useState<string | null>(null);
+    const [deleting, setDeleting] = useState(false);
 
     useEffect(() => {
         fetchMySalons();
     }, [fetchMySalons]);
+
+    const handleDeleteClick = (salonId: string) => {
+        setSalonToDelete(salonId);
+        setDeleteDialogOpen(true);
+    };
+
+    const handleDeleteConfirm = async () => {
+        if (!salonToDelete) return;
+
+        setDeleting(true);
+        try {
+            await deleteSalon(salonToDelete);
+            setDeleteDialogOpen(false);
+            setSalonToDelete(null);
+        } catch (error) {
+            // Error is already in the store
+        } finally {
+            setDeleting(false);
+        }
+    };
+
+    const handleDeleteCancel = () => {
+        setDeleteDialogOpen(false);
+        setSalonToDelete(null);
+    };
 
     // Helper function to check if salon is currently open
     const isSalonOpen = (salon: any): boolean => {
@@ -37,7 +84,7 @@ const MySalons: React.FC = () => {
     };
 
     return (
-        <Box>
+        <Container maxWidth="lg" sx={{ py: 4 }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
                 <Typography variant="h4" sx={{ fontWeight: 700 }}>
                     My Salons
@@ -51,7 +98,17 @@ const MySalons: React.FC = () => {
                 </Button>
             </Box>
 
-            {!loading && mySalons.length === 0 ? (
+            {error && (
+                <Alert severity="error" sx={{ mb: 3 }}>
+                    {error}
+                </Alert>
+            )}
+
+            {loading && mySalons.length === 0 ? (
+                <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
+                    <CircularProgress />
+                </Box>
+            ) : !loading && mySalons.length === 0 ? (
                 <Box sx={{ textAlign: 'center', py: 8 }}>
                     <StoreIcon sx={{ fontSize: 60, color: 'text.secondary', mb: 2, opacity: 0.5 }} />
                     <Typography variant="h6" color="text.secondary" gutterBottom>
@@ -67,7 +124,7 @@ const MySalons: React.FC = () => {
             ) : (
                 <Grid container spacing={3}>
                     {mySalons.map((salon) => (
-                        <Grid xs={12} sm={6} md={4} key={salon._id}>
+                        <Grid item xs={12} sm={6} md={4} key={salon._id}>
                             <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                                 <Box sx={{ position: 'relative' }}>
                                     {salon.images && salon.images.length > 0 ? (
@@ -155,7 +212,12 @@ const MySalons: React.FC = () => {
                                         <IconButton size="small" onClick={() => navigate(`/salons/${salon._id}/edit`)}>
                                             <EditIcon />
                                         </IconButton>
-                                        <IconButton size="small" color="error">
+                                        <IconButton
+                                            size="small"
+                                            color="error"
+                                            onClick={() => handleDeleteClick(salon._id)}
+                                            disabled={loading || deleting}
+                                        >
                                             <DeleteIcon />
                                         </IconButton>
                                     </Box>
@@ -165,7 +227,36 @@ const MySalons: React.FC = () => {
                     ))}
                 </Grid>
             )}
-        </Box>
+
+            {/* Delete Confirmation Dialog */}
+            <Dialog
+                open={deleteDialogOpen}
+                onClose={handleDeleteCancel}
+                aria-labelledby="delete-dialog-title"
+            >
+                <DialogTitle id="delete-dialog-title">Delete Salon?</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Are you sure you want to delete this salon? This action cannot be undone.
+                        All associated data including services, barbers, and appointments will be permanently removed.
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleDeleteCancel} disabled={deleting}>
+                        Cancel
+                    </Button>
+                    <Button
+                        onClick={handleDeleteConfirm}
+                        color="error"
+                        variant="contained"
+                        disabled={deleting}
+                        startIcon={deleting ? <CircularProgress size={16} color="inherit" /> : null}
+                    >
+                        {deleting ? 'Deleting...' : 'Delete'}
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </Container>
     );
 };
 

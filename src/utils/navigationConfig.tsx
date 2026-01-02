@@ -25,15 +25,15 @@ export const getNavLinksForRole = (role?: string): NavLink[] => {
                 { label: 'Dashboard', path: '/barber/dashboard', icon: <DashboardIcon /> },
                 { label: 'My Appointments', path: '/barber/appointments', icon: <CalendarIcon /> },
                 { label: 'My Schedule', path: '/barber/schedule', icon: <InfoIcon /> },
-                { label: 'Profile', path: '/profile', icon: <PersonIcon /> },
+                { label: 'Profile', path: '/barber/profile', icon: <PersonIcon /> },
             ];
         case 'salon_owner':
             return [
                 { label: 'Dashboard', path: '/salon-owner/dashboard', icon: <DashboardIcon /> },
-                { label: 'My Salons', path: '/salons/my', icon: <StoreIcon /> },
-                { label: 'Staff Management', path: '/salon-owner/staff', icon: <PeopleIcon /> },
+                { label: 'My Salons', path: '/salons-owner/my-salons', icon: <StoreIcon /> },
+                { label: 'Staff Management', path: '/salon-owner/staff-management', icon: <PeopleIcon /> },
                 { label: 'Analytics', path: '/salon-owner/analytics', icon: <AnalyticsIcon /> },
-                { label: 'Profile', path: '/profile', icon: <PersonIcon /> },
+                { label: 'Profile', path: '/salon-owner/profile', icon: <PersonIcon /> },
             ];
         case 'customer':
         default:

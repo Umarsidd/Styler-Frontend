@@ -46,6 +46,7 @@ import BarberDashboard from './pages/barber/BarberDashboard';
 import AvailabilityManagement from './pages/barber/AvailabilityManagement';
 import BarberAppointments from './pages/barber/BarberAppointments';
 import BarberSchedule from './pages/barber/BarberSchedule';
+import BarberProfile from './pages/barber/BarberProfile';
 
 // Salon Owner Pages
 import SalonOwnerDashboard from './pages/salon-owner/SalonOwnerDashboard';
@@ -53,6 +54,7 @@ import StaffManagement from './pages/salon-owner/StaffManagement';
 import Analytics from './pages/salon-owner/Analytics';
 import MySalons from './pages/salon-owner/MySalons';
 import CreateSalon from './pages/salon-owner/CreateSalon';
+import SalonOwnerProfile from './pages/salon-owner/SalonOwnerProfile';
 
 // Admin Pages
 import SuperAdminDashboard from './pages/admin/SuperAdminDashboard';
@@ -212,6 +214,14 @@ function AppContent() {
                         </ProtectedRoute>
                     }
                 />
+                <Route
+                    path="/barber/profile"
+                    element={
+                        <ProtectedRoute role="barber">
+                            <DashboardLayout><BarberProfile /></DashboardLayout>
+                        </ProtectedRoute>
+                    }
+                />
 
                 {/* Salon Owner Routes */}
                 <Route
@@ -223,7 +233,7 @@ function AppContent() {
                     }
                 />
                 <Route
-                    path="/salons/my"
+                    path="/salons-owner/my-salons"
                     element={
                         <ProtectedRoute role="salon_owner">
                             <DashboardLayout><MySalons /></DashboardLayout>
@@ -231,7 +241,7 @@ function AppContent() {
                     }
                 />
                 <Route
-                    path="/salon-owner/staff"
+                    path="/salon-owner/staff-management"
                     element={
                         <ProtectedRoute role="salon_owner">
                             <DashboardLayout><StaffManagement /></DashboardLayout>
@@ -251,6 +261,14 @@ function AppContent() {
                     element={
                         <ProtectedRoute role="salon_owner">
                             <DashboardLayout><CreateSalon /></DashboardLayout>
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/salon-owner/profile"
+                    element={
+                        <ProtectedRoute role="salon_owner">
+                            <DashboardLayout><SalonOwnerProfile /></DashboardLayout>
                         </ProtectedRoute>
                     }
                 />

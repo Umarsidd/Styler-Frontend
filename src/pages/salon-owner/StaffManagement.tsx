@@ -102,17 +102,30 @@ const StaffManagement: React.FC = () => {
         setError(null);
 
         try {
+            // First, check if the user exists in Styler
+            const userService = (await import('../../services/userService')).userService;
+            const checkResult = await userService.checkUserExists(formData.email, formData.phone);
+
+            if (!checkResult.success || !checkResult.data?.exists) {
+                setError('This barber is not registered in Styler. Please ask them to create an account first.');
+                setLoading(false);
+                return;
+            }
+
+            // If user exists and is a barber, proceed with registration
+            const userData = checkResult.data?.user;
+            if (userData && userData.role !== 'barber') {
+                setError(`This user is registered as ${userData.role}, not as a barber. Only barbers canbe added as staff.`);
+                setLoading(false);
+                return;
+            }
+
+            // User exists and is a barber, proceed with adding to salon
             await registerBarber({
-                userId: '', // Will be created on backend
                 salonId: formData.salonId,
-                specialties: formData.specialties,
-                experience: formData.experience,
-                user: {
-                    name: formData.name,
-                    email: formData.email,
-                    phone: formData.phone,
-                    role: 'barber'
-                }
+                displayName: formData.name,
+                specializations: formData.specialties,
+                experience: formData.experience
             });
 
             setSuccess('Staff member added successfully!');
@@ -360,7 +373,7 @@ const StaffManagement: React.FC = () => {
                             >
                                 {salons.map((salon: any) => (
                                     <MenuItem key={salon._id} value={salon._id}>
-                                        {salon.name}
+                                        {salon.displayName || salon.businessName}
                                     </MenuItem>
                                 ))}
                             </TextField>

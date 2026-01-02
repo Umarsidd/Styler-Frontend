@@ -19,6 +19,7 @@ interface SalonState {
     fetchOwnerStats: () => Promise<void>;
     fetchMySalons: () => Promise<void>;
     registerSalon: (data: any) => Promise<void>;
+    deleteSalon: (id: string) => Promise<void>;
     clearError: () => void;
 }
 
@@ -72,6 +73,20 @@ export const useSalonStore = create<SalonState>((set) => ({
             }
         } catch (error: any) {
             set({ error: error.message || 'Failed to create salon', loading: false });
+            throw error;
+        }
+    },
+
+    deleteSalon: async (id: string) => {
+        set({ loading: true, error: null });
+        try {
+            await salonService.deleteSalon(id);
+            set((state) => ({
+                mySalons: state.mySalons.filter(salon => salon._id !== id),
+                loading: false
+            }));
+        } catch (error: any) {
+            set({ error: error.message || 'Failed to delete salon', loading: false });
             throw error;
         }
     },

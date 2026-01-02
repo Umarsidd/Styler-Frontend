@@ -15,9 +15,12 @@ import {
     Stepper,
     Step,
     StepLabel,
-    IconButton
+    IconButton,
+    Dialog,
+    DialogContent,
+    DialogActions
 } from '@mui/material';
-import { Add as AddIcon, Delete as DeleteIcon, Image as ImageIcon } from '@mui/icons-material';
+import { Add as AddIcon, Delete as DeleteIcon, Image as ImageIcon, CheckCircle as CheckCircleIcon } from '@mui/icons-material';
 import { useSalonStore } from '../../stores/salonStore';
 import { salonService } from '../../services/salonService';
 import LocationPicker from '../../components/LocationPicker';
@@ -41,6 +44,7 @@ const CreateSalon: React.FC = () => {
     const [selectedImages, setSelectedImages] = useState<File[]>([]);
     const [imagesPreviews, setImagesPreviews] = useState<string[]>([]);
     const [uploadedImageUrls, setUploadedImageUrls] = useState<string[]>([]);
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
 
     const [formData, setFormData] = useState({
         name: '',
@@ -232,7 +236,8 @@ const CreateSalon: React.FC = () => {
             // Cleanup preview URLs
             imagesPreviews.forEach(url => URL.revokeObjectURL(url));
 
-            navigate('/salon-owner/dashboard');
+            // Show success modal
+            setShowSuccessModal(true);
         } catch (err: any) {
             setError(err.response?.data?.message || 'Failed to create salon');
         } finally {
@@ -587,6 +592,85 @@ const CreateSalon: React.FC = () => {
                     </Box>
                 </CardContent>
             </Card>
+
+            {/* Success Modal */}
+            <Dialog
+                open={showSuccessModal}
+                onClose={() => setShowSuccessModal(false)}
+                maxWidth="sm"
+                fullWidth
+                PaperProps={{
+                    sx: {
+                        borderRadius: 3,
+                        textAlign: 'center',
+                        p: 2
+                    }
+                }}
+            >
+                <DialogContent sx={{ pt: 4 }}>
+                    <Box
+                        sx={{
+                            width: 80,
+                            height: 80,
+                            borderRadius: '50%',
+                            bgcolor: 'success.light',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            margin: '0 auto 24px',
+                            animation: 'scaleIn 0.4s ease-out'
+                        }}
+                    >
+                        <CheckCircleIcon sx={{ fontSize: 50, color: 'success.main' }} />
+                    </Box>
+                    <Typography variant="h4" gutterBottom sx={{ fontWeight: 700, mb: 1 }}>
+                        🎉 Success!
+                    </Typography>
+                    <Typography variant="h6" gutterBottom sx={{ fontWeight: 600, color: 'text.primary' }}>
+                        Salon Created Successfully
+                    </Typography>
+                    <Typography variant="body1" color="text.secondary" sx={{ mt: 2, mb: 3 }}>
+                        Your salon has been registered. You can now manage it and add your team members.
+                    </Typography>
+                </DialogContent>
+                <DialogActions sx={{ justifyContent: 'center', pb: 3, gap: 2 }}>
+                    <Button
+                        onClick={() => setShowSuccessModal(false)}
+                        variant="outlined"
+                        size="large"
+                    >
+                        Stay Here
+                    </Button>
+                    <Button
+                        variant="contained"
+                        size="large"
+                        onClick={() => navigate('/salons-owner/my-salons')}
+                        sx={{
+                            minWidth: 160,
+                            background: 'linear-gradient(45deg, #6366f1 30%, #8b5cf6 90%)',
+                            fontWeight: 600
+                        }}
+                    >
+                        Go to My Salons
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            <style>
+                {`
+                    @keyframes scaleIn {
+                        0% {
+                            transform: scale(0);
+                        }
+                        50% {
+                            transform: scale(1.1);
+                        }
+                        100% {
+                            transform: scale(1);
+                        }
+                    }
+                `}
+            </style>
         </Container>
     );
 };

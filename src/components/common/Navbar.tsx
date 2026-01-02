@@ -78,7 +78,7 @@ const Navbar: React.FC = () => {
             case 'salon_owner':
                 return [
                     { label: 'Dashboard', path: '/salon-owner/dashboard', icon: <PersonIcon sx={{ fontSize: 18, mr: 0.5 }} /> },
-                    { label: 'My Salons', path: '/salons/my', icon: <LocationOnIcon sx={{ fontSize: 18, mr: 0.5 }} /> },
+                    { label: 'My Salons', path: '/salons-owner/my-salons', icon: <LocationOnIcon sx={{ fontSize: 18, mr: 0.5 }} /> },
                     { label: 'Barbers', path: '/salon-owner/barbers', icon: <ContentCutIcon sx={{ fontSize: 18, mr: 0.5 }} /> },
                 ];
             case 'customer':

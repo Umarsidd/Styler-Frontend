@@ -24,7 +24,7 @@ export const API_ENDPOINTS = {
     SALONS_NEARBY: '/salons/nearby',
     SALONS_BY_ID: '/salons/:id',
     SALONS_SERVICES: '/salons/:id/services',
-    SALONS_MY: '/salons/my',
+    SALONS_MY: '/salons-owner/my-salons',
     SALONS_CREATE: '/salons',
     SALONS_UPDATE: '/salons/:id',
     SALONS_DELETE: '/salons/:id',
@@ -87,7 +87,7 @@ export const ROUTES = {
     // Salon Owner
     SALON_OWNER_DASHBOARD: '/salon-owner/dashboard',
     SALON_OWNER_SALONS: '/salon-owner/salons',
-    SALON_OWNER_STAFF: '/salon-owner/staff',
+    SALON_OWNER_STAFF: '/salon-owner/staff-management',
     SALON_OWNER_SERVICES: '/salon-owner/services',
     SALON_OWNER_ANALYTICS: '/salon-owner/analytics',
 

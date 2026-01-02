@@ -78,6 +78,17 @@ class UserService {
         const response = await api.delete<ApiResponse<void>>('/user/account');
         return response.data;
     }
+
+    /**
+     * Check if user exists by email or phone
+     */
+    async checkUserExists(email?: string, phone?: string): Promise<ApiResponse<{ exists: boolean; user?: Partial<User> }>> {
+        const response = await api.post<ApiResponse<{ exists: boolean; user?: Partial<User> }>>('/auth/check-user', {
+            email,
+            phone
+        });
+        return response.data;
+    }
 }
 
 export const userService = new UserService();
