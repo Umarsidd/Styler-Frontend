@@ -146,21 +146,21 @@ const Home: React.FC = () => {
                     transition={{ duration: 0.6 }}
                     className="hero-content"
                 >
-                    <Typography variant="h1" sx={{ color: 'white', mb: 2 }}>
+                    <Typography variant="h1" sx={{ color: 'white', mb: 2, fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem', lg: '3rem' }, fontWeight: 800, lineHeight: 1.2 }}>
                         Premium Grooming,
                         <br />
                         Just a Click Away
                     </Typography>
-                    <Typography variant="h5" sx={{ color: 'rgba(255, 255, 255, 0.95)', mb: 4, maxWidth: 600, mx: 'auto' }}>
+                    <Typography variant="h5" sx={{ color: 'rgba(255, 255, 255, 0.95)', mb: 4, maxWidth: 600, mx: 'auto', fontSize: { xs: '0.9rem', sm: '1.1rem', md: '1.25rem' }, px: { xs: 2, sm: 0 } }}>
                         Book appointments with top salons and experienced stylists across 20+ locations
                     </Typography>
-                    <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
+                    <Box sx={{ display: 'flex', gap: { xs: 1.5, sm: 2 }, justifyContent: 'center', flexWrap: 'wrap', px: { xs: 1, sm: 0 } }}>
                         <Button
                             variant="contained"
                             size="large"
                             endIcon={<ArrowForwardIcon />}
                             onClick={() => navigate('/salons')}
-                            sx={{ px: 4, py: 1.5, fontSize: '1.1rem' }}
+                            sx={{ px: { xs: 3, sm: 4 }, py: { xs: 1.25, sm: 1.5 }, fontSize: { xs: '1rem', sm: '1.1rem' } }}
                         >
                             Book Now
                         </Button>
@@ -169,9 +169,9 @@ const Home: React.FC = () => {
                             size="large"
                             onClick={() => navigate('/services')}
                             sx={{
-                                px: 4,
-                                py: 1.5,
-                                fontSize: '1.1rem',
+                                px: { xs: 3, sm: 4 },
+                                py: { xs: 1.25, sm: 1.5 },
+                                fontSize: { xs: '1rem', sm: '1.1rem' },
                                 fontWeight: 600,
                                 color: 'white',
                                 borderColor: 'white',
@@ -188,7 +188,7 @@ const Home: React.FC = () => {
             < Container maxWidth={false} className="stats-section" disableGutters >
                 <Grid container spacing={2} sx={{ px: 1 }}>
                     {stats.map((stat, index) => (
-                        <Grid item xs={12} sm={6} md={3} key={index}>
+                        <Grid size={{ xs: 12, sm: 6, md: 3 }} key={index}>
                             <MotionCard
                                 className="stat-card"
                                 initial={{ opacity: 0, y: 20 }}
@@ -217,15 +217,15 @@ const Home: React.FC = () => {
             {/* Features Section */}
             < Box className="features-section" >
                 <Container maxWidth="lg">
-                    <Typography variant="h2" align="center" sx={{ mb: 2 }}>
+                    <Typography variant="h2" align="center" sx={{ mb: 2, fontSize: { xs: '1.75rem', sm: '2.25rem', md: '2.75rem' } }}>
                         Why Choose Styler?
                     </Typography>
-                    <Typography variant="h6" align="center" color="text.secondary" sx={{ mb: 6, maxWidth: 700, mx: 'auto' }}>
+                    <Typography variant="h6" align="center" color="text.secondary" sx={{ mb: 6, maxWidth: 700, mx: 'auto', fontSize: { xs: '1rem', sm: '1.125rem', md: '1.25rem' }, px: { xs: 2, sm: 0 } }}>
                         We make grooming simple, convenient, and luxurious with our comprehensive platform
                     </Typography>
                     <Grid container spacing={4}>
                         {features.map((feature, index) => (
-                            <Grid item xs={12} sm={6} md={3} key={index}>
+                            <Grid size={{ xs: 12, sm: 6, md: 3 }} key={index}>
                                 <MotionCard
                                     className="feature-card"
                                     initial={{ opacity: 0, y: 20 }}
@@ -255,15 +255,15 @@ const Home: React.FC = () => {
             {/* Services Showcase */}
             < Box className="services-showcase" >
                 <Container maxWidth="lg">
-                    <Typography variant="h2" align="center" sx={{ mb: 2 }}>
+                    <Typography variant="h2" align="center" sx={{ mb: 2, fontSize: { xs: '1.75rem', sm: '2.25rem', md: '2.75rem' } }}>
                         Our Popular Services
                     </Typography>
-                    <Typography variant="h6" align="center" color="text.secondary" sx={{ mb: 6 }}>
+                    <Typography variant="h6" align="center" color="text.secondary" sx={{ mb: 6, fontSize: { xs: '1rem', sm: '1.125rem', md: '1.25rem' }, px: { xs: 2, sm: 0 } }}>
                         Professional grooming services for everyone
                     </Typography>
                     <Grid container spacing={3}>
                         {services.map((service, index) => (
-                            <Grid item xs={12} md={4} key={index}>
+                            <Grid size={{ xs: 12, sm: 6, md: 4 }} key={index}>
                                 <MotionCard
                                     className="service-showcase-card"
                                     initial={{ opacity: 0, scale: 0.9 }}
@@ -303,12 +303,12 @@ const Home: React.FC = () => {
             {/* How It Works */}
             < Box className="how-it-works" >
                 <Container maxWidth="lg">
-                    <Typography variant="h2" align="center" sx={{ mb: 6 }}>
+                    <Typography variant="h2" align="center" sx={{ mb: 6, fontSize: { xs: '1.75rem', sm: '2.25rem', md: '2.75rem' } }}>
                         How It Works
                     </Typography>
                     <Grid container spacing={4}>
                         {howItWorks.map((item, index) => (
-                            <Grid item xs={12} sm={6} md={3} key={index}>
+                            <Grid size={{ xs: 12, sm: 6, md: 3 }} key={index}>
                                 <MotionBox
                                     className="step-card"
                                     initial={{ opacity: 0, y: 20 }}
@@ -334,15 +334,15 @@ const Home: React.FC = () => {
             {/* Testimonials */}
             < Box className="testimonials-section" >
                 <Container maxWidth="lg">
-                    <Typography variant="h2" align="center" sx={{ mb: 2 }}>
+                    <Typography variant="h2" align="center" sx={{ mb: 2, fontSize: { xs: '1.75rem', sm: '2.25rem', md: '2.75rem' } }}>
                         What Our Clients Say
                     </Typography>
-                    <Typography variant="h6" align="center" color="text.secondary" sx={{ mb: 6 }}>
+                    <Typography variant="h6" align="center" color="text.secondary" sx={{ mb: 6, fontSize: { xs: '1rem', sm: '1.125rem', md: '1.25rem' }, px: { xs: 2, sm: 0 } }}>
                         Trusted by thousands of happy customers
                     </Typography>
                     <Grid container spacing={3}>
                         {testimonials.map((testimonial, index) => (
-                            <Grid item xs={12} md={4} key={index}>
+                            <Grid size={{ xs: 12, md: 4 }} key={index}>
                                 <MotionCard
                                     className="testimonial-card"
                                     initial={{ opacity: 0, y: 20 }}
@@ -382,10 +382,10 @@ const Home: React.FC = () => {
             < Box className="cta-section" >
                 <Container maxWidth="md" sx={{ textAlign: 'center' }}>
                     <TrophyIcon sx={{ fontSize: 60, color: 'white', mb: 2 }} />
-                    <Typography variant="h2" sx={{ mb: 3, color: 'white' }}>
+                    <Typography variant="h2" sx={{ mb: 3, color: 'white', fontSize: { xs: '1.5rem', sm: '1.75rem', md: '2.25rem' } }}>
                         Ready to Transform Your Look?
                     </Typography>
-                    <Typography variant="h6" sx={{ mb: 4, color: 'rgba(255,255,255,0.9)' }}>
+                    <Typography variant="h6" sx={{ mb: 4, color: 'rgba(255,255,255,0.9)', fontSize: { xs: '0.9rem', sm: '1rem', md: '1.25rem' }, px: { xs: 2, sm: 0 } }}>
                         Join thousands of satisfied customers and book your appointment today
                     </Typography>
                     <Button
@@ -393,9 +393,9 @@ const Home: React.FC = () => {
                         size="large"
                         onClick={() => navigate(user ? '/salons' : '/login')}
                         sx={{
-                            px: 5,
-                            py: 1.5,
-                            fontSize: '1.1rem',
+                            px: { xs: 4, sm: 5 },
+                            py: { xs: 1.25, sm: 1.5 },
+                            fontSize: { xs: '1rem', sm: '1.1rem' },
                             bgcolor: 'white',
                             color: '#6366f1',
                             '&:hover': { bgcolor: 'rgba(255,255,255,0.9)' },

@@ -114,7 +114,7 @@ const About: React.FC = () => {
             >
                 <Grid container spacing={2} sx={{ px: 1 }}>
                     {stats.map((stat, index) => (
-                        <Grid item xs={12} sm={6} md={3} key={index}>
+                        <Grid size={{ xs: 12, sm: 6, md: 3 }} key={index}>
                             <MotionCard
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
@@ -143,7 +143,7 @@ const About: React.FC = () => {
             {/* Mission Section */}
             <Container maxWidth="lg" sx={{ py: 8 }}>
                 <Grid container spacing={6} alignItems="center">
-                    <Grid item xs={12} md={6}>
+                    <Grid size={{ xs: 12, md: 6 }}>
                         <MotionBox
                             initial={{ opacity: 0, x: -20 }}
                             whileInView={{ opacity: 1, x: 0 }}
@@ -164,7 +164,7 @@ const About: React.FC = () => {
                             </Typography>
                         </MotionBox>
                     </Grid>
-                    <Grid item xs={12} md={6}>
+                    <Grid size={{ xs: 12, md: 6 }}>
                         <Box
                             sx={{
                                 height: { xs: 250, sm: 300, md: 400 },
@@ -193,39 +193,69 @@ const About: React.FC = () => {
                         The principles that guide everything we do
                     </Typography>
 
-                    <Grid container spacing={4}>
+                    <Grid container spacing={3}>
                         {values.map((value, index) => (
-                            <Grid item xs={12} sm={6} md={3} key={index}>
+                            <Grid size={{ xs: 12, sm: 6, md: 3 }} key={index}>
                                 <MotionCard
                                     className="value-card"
                                     initial={{ opacity: 0, y: 20 }}
                                     whileInView={{ opacity: 1, y: 0 }}
                                     transition={{ delay: index * 0.1 }}
                                     viewport={{ once: true }}
-                                    sx={{ height: '100%', textAlign: 'center', p: { xs: 2, sm: 2.5, md: 3 } }}
+                                    sx={{
+                                        height: '100%',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        borderRadius: 3
+                                    }}
                                 >
-                                    <Box
-                                        sx={{
-                                            width: { xs: 60, sm: 65, md: 70 },
-                                            height: { xs: 60, sm: 65, md: 70 },
-                                            borderRadius: '50%',
-                                            background: 'linear-gradient(135deg, #6366f1 0%, #ec4899 100%)',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            margin: '0 auto 1.5rem',
-                                            fontSize: { xs: '1.5rem', sm: '1.75rem', md: '2rem' },
-                                            color: 'white',
-                                        }}
-                                    >
-                                        {value.icon}
-                                    </Box>
-                                    <Typography variant="h5" gutterBottom sx={{ fontWeight: 700, fontSize: { xs: '1.125rem', sm: '1.25rem', md: '1.5rem' } }}>
-                                        {value.title}
-                                    </Typography>
-                                    <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.875rem', sm: '0.9375rem' } }}>
-                                        {value.description}
-                                    </Typography>
+                                    <CardContent sx={{
+                                        flexGrow: 1,
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        alignItems: 'center',
+                                        textAlign: 'center',
+                                        p: { xs: 3, sm: 3, md: 3.5 }
+                                    }}>
+                                        <Box
+                                            sx={{
+                                                width: { xs: 64, sm: 70, md: 80 },
+                                                height: { xs: 64, sm: 70, md: 80 },
+                                                borderRadius: '50%',
+                                                background: 'linear-gradient(135deg, #6366f1 0%, #ec4899 100%)',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                mb: 2.5,
+                                                fontSize: { xs: '1.75rem', sm: '2rem', md: '2.25rem' },
+                                                color: 'white',
+                                                flexShrink: 0,
+                                            }}
+                                        >
+                                            {value.icon}
+                                        </Box>
+                                        <Typography
+                                            variant="h6"
+                                            gutterBottom
+                                            sx={{
+                                                fontWeight: 700,
+                                                fontSize: { xs: '1.125rem', sm: '1.25rem', md: '1.375rem' },
+                                                mb: 1.5
+                                            }}
+                                        >
+                                            {value.title}
+                                        </Typography>
+                                        <Typography
+                                            variant="body2"
+                                            color="text.secondary"
+                                            sx={{
+                                                fontSize: { xs: '0.875rem', sm: '0.9375rem', md: '1rem' },
+                                                lineHeight: 1.6
+                                            }}
+                                        >
+                                            {value.description}
+                                        </Typography>
+                                    </CardContent>
                                 </MotionCard>
                             </Grid>
                         ))}
@@ -311,7 +341,7 @@ const About: React.FC = () => {
 
                     <Grid container spacing={4} justifyContent="center">
                         {team.map((member, index) => (
-                            <Grid item xs={12} sm={6} md={4} key={index}>
+                            <Grid size={{ xs: 12, sm: 6, md: 4 }} key={index}>
                                 <MotionCard
                                     className="team-card"
                                     initial={{ opacity: 0, scale: 0.95 }}

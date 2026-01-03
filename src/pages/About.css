@@ -38,7 +38,7 @@
     position: relative;
     overflow: visible;
     width: 100%;
-    max-width: 320px;
+    max-width: 100%;
     margin: 0 auto;
 }
 
@@ -69,14 +69,13 @@
 
 /* Value Cards */
 .value-card {
-    width: 100%;
-    display: flex;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     border: 2px solid transparent;
+    background: white;
 }
 
 .value-card:hover {
-    transform: translateY(-8px) scale(1.02);
+    transform: translateY(-8px);
     border-color: rgba(99, 102, 241, 0.3);
     box-shadow: 0 20px 40px rgba(99, 102, 241, 0.15);
 }
@@ -130,6 +129,10 @@
         min-height: 400px;
         padding: 4rem 1.5rem 6rem;
     }
+
+    .stat-card-about {
+        margin-bottom: 1rem;
+    }
 }
 
 @media (max-width: 768px) {
@@ -139,15 +142,20 @@
     }
 
     .stat-card-about {
-        max-width: 100%;
         border-radius: 16px;
+        margin-bottom: 0.75rem;
     }
 }
 
 @media (max-width: 600px) {
     .about-hero {
-        min-height: 300px;
-        padding: 2.5rem 1rem 4rem;
+        min-height: 320px;
+        padding: 2.5rem 1rem 4.5rem;
+    }
+
+    .stat-card-about {
+        border-radius: 16px;
+        margin-bottom: 0.75rem;
     }
 
     .value-card {
@@ -167,6 +175,7 @@
 
     .stat-card-about {
         border-radius: 12px;
+        margin-bottom: 0.5rem;
     }
 
     .stat-card-about:hover {

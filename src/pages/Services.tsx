@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Container, Typography, Grid, Card, CardContent, Box, Button, Chip } from '@mui/material';
+import { Container, Typography, Card, CardContent, Box, Button, Chip, Grid } from '@mui/material';
 import {
     ContentCut as ScissorsIcon,
     Face as FaceIcon,
@@ -139,7 +139,7 @@ const Services: React.FC = () => {
 
                 <Grid container spacing={4}>
                     {services.map((service, index) => (
-                        <Grid item xs={12} sm={12} md={4} key={index}>
+                        <Grid size={{ xs: 12, sm: 12, md: 4 }} key={index}>
                             <Card
                                 className="service-detail-card"
                                 sx={{
@@ -221,7 +221,7 @@ const Services: React.FC = () => {
 
                     <Grid container spacing={4} sx={{ mt: 2 }}>
                         {packages.map((pkg, index) => (
-                            <Grid item xs={12} md={4} key={index} sx={{ overflow: 'visible' }}>
+                            <Grid size={{ xs: 12, md: 4 }} key={index} sx={{ overflow: 'visible' }}>
                                 <Card
                                     className="package-card"
                                     sx={{
@@ -236,7 +236,7 @@ const Services: React.FC = () => {
                                         <Box
                                             sx={{
                                                 position: 'absolute',
-      
+
                                                 left: '50%',
                                                 transform: 'translateX(-50%)',
                                                 bgcolor: 'primary.main',
@@ -300,7 +300,7 @@ const Services: React.FC = () => {
 
                 <Grid container spacing={4}>
                     {benefits.map((benefit, index) => (
-                        <Grid item xs={12} sm={6} md={3} key={index}>
+                        <Grid size={{ xs: 12, sm: 6, md: 3 }} key={index}>
                             <Box className="benefit-item" sx={{ textAlign: 'center' }}>
                                 <Box
                                     sx={{

@@ -1,8 +1,5 @@
 import React, { ReactNode, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Lenis from '@studio-freight/lenis';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { AuthProvider } from './context/AuthContext';
 import { ToastProvider } from './context/ToastContext';
 import { RBACProvider } from './context/RBACContext';
@@ -12,6 +9,7 @@ import ProtectedRoute from './components/auth/ProtectedRoute';
 import ErrorBoundary from './components/common/ErrorBoundary';
 import DashboardLayout from './components/layout/DashboardLayout';
 import { useAuthStore } from './stores/authStore';
+import { UserRole } from './types';
 
 // Pages
 import Home from './pages/Home';
@@ -86,7 +84,7 @@ const Layout: React.FC<LayoutProps> = ({ children, showFooter = true, showNavbar
 
 const RoleBasedLayoutWrapper: React.FC<{ children: ReactNode }> = ({ children }) => {
     const { user } = useAuthStore();
-    const isProfessional = user?.role === 'barber' || user?.role === 'salon_owner';
+    const isProfessional = user?.role === UserRole.BARBER || user?.role === UserRole.SALON_OWNER;
 
     if (isProfessional) {
         return <DashboardLayout>{children}</DashboardLayout>;
@@ -148,7 +146,7 @@ function AppContent() {
                 <Route
                     path="/booking/:salonId"
                     element={
-                        <ProtectedRoute role="customer">
+                        <ProtectedRoute role={UserRole.CUSTOMER}>
                             <Layout><BookingFlow /></Layout>
                         </ProtectedRoute>
                     }
@@ -162,7 +160,7 @@ function AppContent() {
                 <Route
                     path="/customer/appointments"
                     element={
-                        <ProtectedRoute role="customer">
+                        <ProtectedRoute role={UserRole.CUSTOMER}>
                             <Layout><MyAppointments /></Layout>
                         </ProtectedRoute>
                     }
@@ -170,7 +168,7 @@ function AppContent() {
                 <Route
                     path="/customer/appointments/:id"
                     element={
-                        <ProtectedRoute role="customer">
+                        <ProtectedRoute role={UserRole.CUSTOMER}>
                             <Layout><AppointmentDetails /></Layout>
                         </ProtectedRoute>
                     }
@@ -180,7 +178,7 @@ function AppContent() {
                 <Route
                     path="/barber/dashboard"
                     element={
-                        <ProtectedRoute role="barber">
+                        <ProtectedRoute role={UserRole.BARBER}>
                             <DashboardLayout><BarberDashboard /></DashboardLayout>
                         </ProtectedRoute>
                     }
@@ -188,7 +186,7 @@ function AppContent() {
                 <Route
                     path="/barber/availability"
                     element={
-                        <ProtectedRoute role="barber">
+                        <ProtectedRoute role={UserRole.BARBER}>
                             <DashboardLayout><AvailabilityManagement /></DashboardLayout>
                         </ProtectedRoute>
                     }
@@ -196,7 +194,7 @@ function AppContent() {
                 <Route
                     path="/barber/appointments"
                     element={
-                        <ProtectedRoute role="barber">
+                        <ProtectedRoute role={UserRole.BARBER}>
                             <DashboardLayout><BarberAppointments /></DashboardLayout>
                         </ProtectedRoute>
                     }
@@ -204,7 +202,7 @@ function AppContent() {
                 <Route
                     path="/barber/schedule"
                     element={
-                        <ProtectedRoute role="barber">
+                        <ProtectedRoute role={UserRole.BARBER}>
                             <DashboardLayout><BarberSchedule /></DashboardLayout>
                         </ProtectedRoute>
                     }
@@ -212,7 +210,7 @@ function AppContent() {
                 <Route
                     path="/barber/profile"
                     element={
-                        <ProtectedRoute role="barber">
+                        <ProtectedRoute role={UserRole.BARBER}>
                             <DashboardLayout><BarberProfile /></DashboardLayout>
                         </ProtectedRoute>
                     }
@@ -222,7 +220,7 @@ function AppContent() {
                 <Route
                     path="/salon-owner/dashboard"
                     element={
-                        <ProtectedRoute role="salon_owner">
+                        <ProtectedRoute role={UserRole.SALON_OWNER}>
                             <DashboardLayout><SalonOwnerDashboard /></DashboardLayout>
                         </ProtectedRoute>
                     }
@@ -230,7 +228,7 @@ function AppContent() {
                 <Route
                     path="/salons-owner/my-salons"
                     element={
-                        <ProtectedRoute role="salon_owner">
+                        <ProtectedRoute role={UserRole.SALON_OWNER}>
                             <DashboardLayout><MySalons /></DashboardLayout>
                         </ProtectedRoute>
                     }
@@ -238,7 +236,7 @@ function AppContent() {
                 <Route
                     path="/salon-owner/staff-management"
                     element={
-                        <ProtectedRoute role="salon_owner">
+                        <ProtectedRoute role={UserRole.SALON_OWNER}>
                             <DashboardLayout><StaffManagement /></DashboardLayout>
                         </ProtectedRoute>
                     }
@@ -246,7 +244,7 @@ function AppContent() {
                 <Route
                     path="/salon-owner/analytics"
                     element={
-                        <ProtectedRoute role="salon_owner">
+                        <ProtectedRoute role={UserRole.SALON_OWNER}>
                             <DashboardLayout><Analytics /></DashboardLayout>
                         </ProtectedRoute>
                     }
@@ -254,7 +252,7 @@ function AppContent() {
                 <Route
                     path="/salons/create"
                     element={
-                        <ProtectedRoute role="salon_owner">
+                        <ProtectedRoute role={UserRole.SALON_OWNER}>
                             <DashboardLayout><CreateSalon /></DashboardLayout>
                         </ProtectedRoute>
                     }
@@ -262,7 +260,7 @@ function AppContent() {
                 <Route
                     path="/salon-owner/salons/:id"
                     element={
-                        <ProtectedRoute role="salon_owner">
+                        <ProtectedRoute role={UserRole.SALON_OWNER}>
                             <DashboardLayout><SalonOwnerSalonDetails /></DashboardLayout>
                         </ProtectedRoute>
                     }
@@ -270,7 +268,7 @@ function AppContent() {
                 <Route
                     path="/salon-owner/salons/:id/services"
                     element={
-                        <ProtectedRoute role="salon_owner">
+                        <ProtectedRoute role={UserRole.SALON_OWNER}>
                             <DashboardLayout><ManageServices /></DashboardLayout>
                         </ProtectedRoute>
                     }
@@ -278,7 +276,7 @@ function AppContent() {
                 <Route
                     path="/salon-owner/salons/:id/edit"
                     element={
-                        <ProtectedRoute role="salon_owner">
+                        <ProtectedRoute role={UserRole.SALON_OWNER}>
                             <DashboardLayout><EditSalon /></DashboardLayout>
                         </ProtectedRoute>
                     }
@@ -286,7 +284,7 @@ function AppContent() {
                 <Route
                     path="/salon-owner/profile"
                     element={
-                        <ProtectedRoute role="salon_owner">
+                        <ProtectedRoute role={UserRole.SALON_OWNER}>
                             <DashboardLayout><SalonOwnerProfile /></DashboardLayout>
                         </ProtectedRoute>
                     }
@@ -312,7 +310,7 @@ function AppContent() {
                 <Route
                     path="/admin"
                     element={
-                        <ProtectedRoute role="superadmin" redirectTo="/unauthorized">
+                        <ProtectedRoute role={UserRole.SUPER_ADMIN} redirectTo="/unauthorized">
                             <AdminLayout />
                         </ProtectedRoute>
                     }
@@ -331,7 +329,7 @@ function AppContent() {
                 <Route
                     path="/admin/superadmin"
                     element={
-                        <ProtectedRoute role="superadmin" redirectTo="/admin/login">
+                        <ProtectedRoute role={UserRole.SUPER_ADMIN} redirectTo="/admin/login">
                             <Layout showFooter={false}><SuperAdminDashboard /></Layout>
                         </ProtectedRoute>
                     }
@@ -339,7 +337,7 @@ function AppContent() {
                 <Route
                     path="/admin/dashboard"
                     element={
-                        <ProtectedRoute role={['superadmin', 'salon_owner']} redirectTo="/admin/login">
+                        <ProtectedRoute role={[UserRole.SUPER_ADMIN, UserRole.SALON_OWNER]} redirectTo="/admin/login">
                             <Layout showFooter={false}><Dashboard /></Layout>
                         </ProtectedRoute>
                     }

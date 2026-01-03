@@ -314,7 +314,7 @@ const Profile: React.FC = () => {
                             <Grid container spacing={3}>
 
                                 {/* Email - Read Only (No Icon) */}
-                                <Grid item xs={12} md={6}>
+                                <Grid size={{ xs: 12, md: 6 }}>
                                     <TextField
                                         label="Email Address"
                                         name="email"
@@ -327,7 +327,7 @@ const Profile: React.FC = () => {
                                 </Grid>
 
                                 {/* Full Name - Editable */}
-                                <Grid item xs={12} md={6}>
+                                <Grid size={{ xs: 12, md: 6 }}>
                                     <TextField
                                         label="Full Name"
                                         name="name"
@@ -344,7 +344,7 @@ const Profile: React.FC = () => {
                                 </Grid>
 
                                 {/* Phone Number - Editable */}
-                                <Grid item xs={12} md={6}>
+                                <Grid size={{ xs: 12, md: 6 }}>
                                     <TextField
                                         label="Phone Number"
                                         name="phone"
@@ -361,7 +361,7 @@ const Profile: React.FC = () => {
                                 </Grid>
 
                                 {/* Street Address */}
-                                <Grid item xs={12}>
+                                <Grid size={{ xs: 12 }}>
                                     <TextField
                                         label="Street Address"
                                         name="street"
@@ -374,7 +374,7 @@ const Profile: React.FC = () => {
                                 </Grid>
 
                                 {/* City */}
-                                <Grid item xs={12} md={6}>
+                                <Grid size={{ xs: 12, md: 6 }}>
                                     <TextField
                                         label="City"
                                         name="city"
@@ -387,7 +387,7 @@ const Profile: React.FC = () => {
                                 </Grid>
 
                                 {/* State */}
-                                <Grid item xs={12} md={6}>
+                                <Grid size={{ xs: 12, md: 6 }}>
                                     <TextField
                                         label="State"
                                         name="state"
@@ -400,7 +400,7 @@ const Profile: React.FC = () => {
                                 </Grid>
 
                                 {/* Pincode */}
-                                <Grid item xs={12} md={6}>
+                                <Grid size={{ xs: 12, md: 6 }}>
                                     <TextField
                                         label="Pincode"
                                         name="pincode"
@@ -413,7 +413,7 @@ const Profile: React.FC = () => {
                                 </Grid>
 
                                 {/* Country */}
-                                <Grid item xs={12} md={6}>
+                                <Grid size={{ xs: 12, md: 6 }}>
                                     <TextField
                                         label="Country"
                                         name="country"

@@ -36,14 +36,14 @@ import {
     Save as SaveIcon,
 } from '@mui/icons-material';
 import { salonService } from '../../services/salonService';
-import { Service } from '../../types';
+import { Service, ServiceGender } from '../../types';
 
 interface ServiceFormData {
     name: string;
     description: string;
     price: number;
     duration: number;
-    gender: 'male' | 'female' | 'unisex';
+    gender: ServiceGender;
     isActive: boolean;
 }
 
@@ -64,7 +64,7 @@ const ManageServices: React.FC = () => {
         description: '',
         price: 0,
         duration: 30,
-        gender: 'male',
+        gender: ServiceGender.MALE,
         isActive: true,
     });
 
@@ -105,7 +105,7 @@ const ManageServices: React.FC = () => {
                 description: '',
                 price: 0,
                 duration: 30,
-                gender: 'male',
+                gender: ServiceGender.MALE,
                 isActive: true,
             });
         }
@@ -120,7 +120,7 @@ const ManageServices: React.FC = () => {
             description: '',
             price: 0,
             duration: 30,
-            gender: 'male',
+            gender: ServiceGender.MALE,
             isActive: true,
         });
     };
@@ -134,14 +134,11 @@ const ManageServices: React.FC = () => {
         try {
             if (editingService) {
                 // Update existing service
-                await salonService.updateService(editingService._id, formData);
+                await salonService.updateService(id!, editingService._id, formData);
                 setSuccess('Service updated successfully!');
             } else {
                 // Create new service
-                await salonService.createService({
-                    ...formData,
-                    salonId: id,
-                });
+                await salonService.addService(id, formData);
                 setSuccess('Service created successfully!');
             }
 
@@ -157,9 +154,10 @@ const ManageServices: React.FC = () => {
 
     const handleDelete = async (serviceId: string) => {
         if (!window.confirm('Are you sure you want to delete this service?')) return;
+        if (!id) return;
 
         try {
-            await salonService.deleteService(serviceId);
+            await salonService.removeService(id, serviceId);
             setSuccess('Service deleted successfully!');
             fetchServices();
             setTimeout(() => setSuccess(null), 3000);
@@ -169,8 +167,10 @@ const ManageServices: React.FC = () => {
     };
 
     const handleToggleActive = async (service: Service) => {
+        if (!id) return;
+
         try {
-            await salonService.updateService(service._id, {
+            await salonService.updateService(id, service._id, {
                 ...service,
                 isActive: !service.isActive,
             });
@@ -359,7 +359,7 @@ const ManageServices: React.FC = () => {
                             />
 
                             <Grid container spacing={2}>
-                                <Grid item xs={6}>
+                                <Grid size={{ xs: 6 }}>
                                     <TextField
                                         label="Price (₹)"
                                         required
@@ -370,7 +370,7 @@ const ManageServices: React.FC = () => {
                                         InputProps={{ inputProps: { min: 0 } }}
                                     />
                                 </Grid>
-                                <Grid item xs={6}>
+                                <Grid size={{ xs: 6 }}>
                                     <TextField
                                         label="Duration (minutes)"
                                         required
@@ -389,11 +389,11 @@ const ManageServices: React.FC = () => {
                                 required
                                 fullWidth
                                 value={formData.gender}
-                                onChange={(e) => setFormData({ ...formData, gender: e.target.value as 'male' | 'female' | 'unisex' })}
+                                onChange={(e) => setFormData({ ...formData, gender: e.target.value as ServiceGender })}
                             >
-                                <MenuItem value="male">Male</MenuItem>
-                                <MenuItem value="female">Female</MenuItem>
-                                <MenuItem value="unisex">Unisex</MenuItem>
+                                <MenuItem value={ServiceGender.MALE}>Male</MenuItem>
+                                <MenuItem value={ServiceGender.FEMALE}>Female</MenuItem>
+                                <MenuItem value={ServiceGender.UNISEX}>Unisex</MenuItem>
                             </TextField>
 
                             <FormControlLabel

@@ -203,7 +203,7 @@ const SalonOwnerSalonDetails: React.FC = () => {
                     </Box>
 
                     <Grid container spacing={3}>
-                        <Grid item xs={12} md={6}>
+                        <Grid size={{ xs: 12, md: 6 }}>
                             <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5, mb: 2 }}>
                                 <LocationIcon color="action" />
                                 <Box>
@@ -231,9 +231,9 @@ const SalonOwnerSalonDetails: React.FC = () => {
                             )}
                         </Grid>
 
-                        <Grid item xs={12} md={6}>
+                        <Grid size={{ xs: 12, md: 6 }}>
                             <Grid container spacing={2}>
-                                <Grid item xs={6}>
+                                <Grid size={6}>
                                     <Card sx={{ bgcolor: '#f0f9ff', p: 2, textAlign: 'center' }}>
                                         <PeopleIcon sx={{ fontSize: 40, color: '#0284c7', mb: 1 }} />
                                         <Typography variant="h4" sx={{ fontWeight: 700, color: '#0284c7' }}>
@@ -244,7 +244,7 @@ const SalonOwnerSalonDetails: React.FC = () => {
                                         </Typography>
                                     </Card>
                                 </Grid>
-                                <Grid item xs={6}>
+                                <Grid size={6}>
                                     <Card sx={{ bgcolor: '#f0fdf4', p: 2, textAlign: 'center' }}>
                                         <StoreIcon sx={{ fontSize: 40, color: '#16a34a', mb: 1 }} />
                                         <Typography variant="h4" sx={{ fontWeight: 700, color: '#16a34a' }}>
@@ -263,7 +263,7 @@ const SalonOwnerSalonDetails: React.FC = () => {
 
             <Grid container spacing={4}>
                 {/* Services Section */}
-                <Grid item xs={12} lg={6}>
+                <Grid size={{ xs: 12, lg: 6 }}>
                     <Card sx={{ height: '100%', boxShadow: 3 }}>
                         <CardContent>
                             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
@@ -337,7 +337,7 @@ const SalonOwnerSalonDetails: React.FC = () => {
                 </Grid>
 
                 {/* Staff Section */}
-                <Grid item xs={12} lg={6}>
+                <Grid size={{ xs: 12, lg: 6 }}>
                     <Card sx={{ height: '100%', boxShadow: 3 }}>
                         <CardContent>
                             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
@@ -428,7 +428,7 @@ const SalonOwnerSalonDetails: React.FC = () => {
                 </Grid>
 
                 {/* Operating Hours Section */}
-                <Grid item xs={12}>
+                <Grid size={12}>
                     <Card sx={{ boxShadow: 3 }}>
                         <CardContent>
                             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
@@ -448,7 +448,7 @@ const SalonOwnerSalonDetails: React.FC = () => {
                             ) : (
                                 <Grid container spacing={2}>
                                     {salon.operatingHours.map((hours, index) => (
-                                        <Grid item xs={12} sm={6} md={3} key={index}>
+                                        <Grid size={{ xs: 12, sm: 6, md: 3 }} key={index}>
                                             <Card variant="outlined" sx={{ p: 2, bgcolor: hours.isOpen ? 'background.paper' : '#f5f5f5' }}>
                                                 <Typography variant="body1" sx={{ fontWeight: 600, mb: 1 }}>
                                                     {hours.day}
@@ -472,14 +472,14 @@ const SalonOwnerSalonDetails: React.FC = () => {
                 </Grid>
 
                 {/* Quick Actions */}
-                <Grid item xs={12}>
+                <Grid size={12}>
                     <Card sx={{ boxShadow: 3, background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
                         <CardContent>
                             <Typography variant="h6" sx={{ color: 'white', fontWeight: 700, mb: 3 }}>
                                 Quick Actions
                             </Typography>
                             <Grid container spacing={2}>
-                                <Grid item xs={12} sm={6} md={3}>
+                                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                                     <Button
                                         fullWidth
                                         variant="contained"
@@ -490,7 +490,7 @@ const SalonOwnerSalonDetails: React.FC = () => {
                                         View Analytics
                                     </Button>
                                 </Grid>
-                                <Grid item xs={12} sm={6} md={3}>
+                                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                                     <Button
                                         fullWidth
                                         variant="contained"
@@ -501,7 +501,7 @@ const SalonOwnerSalonDetails: React.FC = () => {
                                         View Appointments
                                     </Button>
                                 </Grid>
-                                <Grid item xs={12} sm={6} md={3}>
+                                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                                     <Button
                                         fullWidth
                                         variant="contained"
@@ -512,7 +512,7 @@ const SalonOwnerSalonDetails: React.FC = () => {
                                         Manage Staff
                                     </Button>
                                 </Grid>
-                                <Grid item xs={12} sm={6} md={3}>
+                                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                                     <Button
                                         fullWidth
                                         variant="contained"

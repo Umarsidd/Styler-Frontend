@@ -124,7 +124,7 @@ const MySalons: React.FC = () => {
             ) : (
                 <Grid container spacing={3}>
                     {mySalons.map((salon) => (
-                        <Grid item xs={12} sm={6} md={4} key={salon._id}>
+                        <Grid size={{ xs: 12, sm: 6, md: 4 }} key={salon._id}>
                             <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                                 <Box sx={{ position: 'relative' }}>
                                     {salon.images && salon.images.length > 0 ? (
@@ -181,7 +181,13 @@ const MySalons: React.FC = () => {
                                             {salon.name}
                                         </Typography>
                                         <Chip
-                                            label={salon.rating?.average ? salon.rating.average.toFixed(1) : 'New'}
+                                            label={
+                                                typeof salon.rating === 'object' && salon.rating?.average
+                                                    ? salon.rating.average.toFixed(1)
+                                                    : typeof salon.rating === 'number'
+                                                        ? salon.rating.toFixed(1)
+                                                        : 'New'
+                                            }
                                             size="small"
                                             color="primary"
                                             variant="outlined"

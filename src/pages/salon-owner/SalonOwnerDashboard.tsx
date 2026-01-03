@@ -45,7 +45,7 @@ const SalonOwnerDashboard: React.FC = () => {
 
                 <Grid container spacing={3} sx={{ mb: 4 }}>
                     {statsDisplay.map((stat, index) => (
-                        <Grid xs={12} sm={6} md={3} key={index}>
+                        <Grid size={{ xs: 12, sm: 6, md: 3 }} key={index}>
                             <Card>
                                 <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                                     <Box sx={{ fontSize: 40, color: stat.color, bgcolor: `${stat.color}15`, p: 1.5, borderRadius: 2 }}>
@@ -62,12 +62,12 @@ const SalonOwnerDashboard: React.FC = () => {
                 </Grid>
 
                 <Grid container spacing={3}>
-                    <Grid xs={12} md={8}>
+                    <Grid size={{ xs: 12, md: 8 }}>
                         <Card sx={{ height: '100%' }}>
                             <CardContent>
                                 <Typography variant="h5" gutterBottom>Quick Actions</Typography>
                                 <Grid container spacing={2} sx={{ mt: 1 }}>
-                                    <Grid xs={12} sm={4}>
+                                    <Grid size={{ xs: 12, sm: 4 }}>
                                         <Card
                                             variant="outlined"
                                             sx={{ cursor: 'pointer', '&:hover': { bgcolor: '#f9fafb' } }}
@@ -79,7 +79,7 @@ const SalonOwnerDashboard: React.FC = () => {
                                             </CardContent>
                                         </Card>
                                     </Grid>
-                                    <Grid item xs={12} sm={4}>
+                                    <Grid size={{ xs: 12, sm: 4 }}>
                                         <Card
                                             variant="outlined"
                                             sx={{ cursor: 'pointer', '&:hover': { bgcolor: '#f9fafb' } }}
@@ -91,7 +91,7 @@ const SalonOwnerDashboard: React.FC = () => {
                                             </CardContent>
                                         </Card>
                                     </Grid>
-                                    <Grid item xs={12} sm={4}>
+                                    <Grid size={{ xs: 12, sm: 4 }}>
                                         <Card
                                             variant="outlined"
                                             sx={{ cursor: 'pointer', '&:hover': { bgcolor: '#f9fafb' } }}
@@ -107,7 +107,7 @@ const SalonOwnerDashboard: React.FC = () => {
                             </CardContent>
                         </Card>
                     </Grid>
-                    <Grid xs={12} md={4}>
+                    <Grid size={{ xs: 12, md: 4 }}>
                         <Card sx={{ height: '100%', bgcolor: '#667eea', color: 'white' }}>
                             <CardContent>
                                 <Typography variant="h5" gutterBottom>Pro Tip</Typography>

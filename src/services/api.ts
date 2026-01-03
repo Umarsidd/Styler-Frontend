@@ -3,7 +3,7 @@ import { useAuthStore } from '../stores/authStore';
 
 // Create axios instance with base configuration
 const api: AxiosInstance = axios.create({
-    baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:9168/api/v1',
+    baseURL: import.meta.env.VITE_API_BASE_URL!,
     headers: {
         'Content-Type': 'application/json',
     },
@@ -47,7 +47,7 @@ api.interceptors.response.use(
 
                 // Try to refresh the token
                 const response = await axios.post(
-                    `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:9168/api/v1'}/auth/refresh-token`,
+                    `${import.meta.env.VITE_API_BASE_URL!}/auth/refresh-token`,
                     { refreshToken }
                 );
 
