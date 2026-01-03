@@ -40,6 +40,7 @@ import PaymentFailed from './pages/payment/PaymentFailed';
 
 import MyAppointments from './pages/customer/MyAppointments';
 import AppointmentDetails from './pages/customer/AppointmentDetails';
+import Settings from './pages/customer/Settings';
 
 // Barber Pages
 import BarberDashboard from './pages/barber/BarberDashboard';
@@ -309,6 +310,17 @@ function AppContent() {
                     }
                 />
 
+                <Route
+                    path="/settings"
+                    element={
+                        <ProtectedRoute>
+                            <RoleBasedLayoutWrapper>
+                                <Settings />
+                            </RoleBasedLayoutWrapper>
+                        </ProtectedRoute>
+                    }
+                />
+
                 {/* Admin Routes */}
                 <Route path="/admin/login" element={<Layout showFooter={false} showNavbar={false}><AdminLogin /></Layout>} />
 
@@ -322,6 +334,7 @@ function AppContent() {
                     }
                 >
                     <Route index element={<AdminDashboard />} />
+                    <Route path="users" element={<UsersManagement />} />
                     <Route path="users" element={<UsersManagement />} />
                     {/* TODO: Add more admin pages */}
                     {/* <Route path="salons" element={<SalonsManagement />} /> */}
