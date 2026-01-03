@@ -33,6 +33,9 @@
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     border: 2px solid transparent;
     cursor: pointer;
+    width: 300px;
+    padding: 1rem;
+    margin-left: 50px;
 }
 
 .service-detail-card:hover {
@@ -51,8 +54,11 @@
 
 /* Package Cards */
 .package-card {
-    width: 400px;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 2.5rem;
 }
 
 .package-card:hover {

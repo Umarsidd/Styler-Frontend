@@ -256,21 +256,6 @@ const SalonDetails: React.FC = () => {
                     </>
                 )}
 
-                {/* Back Button Overlay */}
-                <IconButton
-                    onClick={() => navigate(-1)}
-                    sx={{
-                        position: 'absolute',
-                        top: 16,
-                        left: 16,
-                        bgcolor: 'rgba(255,255,255,0.9)',
-                        '&:hover': { bgcolor: 'white' },
-                        zIndex: 2,
-                    }}
-                >
-                    <ArrowBackIcon />
-                </IconButton>
-
                 {/* Salon Info Overlay */}
                 <Container
                     maxWidth="lg"
@@ -285,18 +270,31 @@ const SalonDetails: React.FC = () => {
                 >
                     <Box sx={{ color: 'white' }}>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2, flexWrap: 'wrap' }}>
-                            <Typography variant={isMobile ? 'h3' : 'h2'} sx={{ fontWeight: 800 }}>
-                                {salon.name}
+                            <Typography
+                                variant={isMobile ? 'h3' : 'h2'}
+                                sx={{
+                                    fontWeight: 800,
+                                    textShadow: '2px 2px 8px rgba(0,0,0,0.3)',
+                                    letterSpacing: '-0.5px'
+                                }}
+                            >
+                                {salon.displayName || salon.name}
                             </Typography>
                             <Chip
+                                icon={<FiberManualRecord sx={{ fontSize: 12, animation: isSalonOpen() ? 'pulse 2s infinite' : 'none' }} />}
                                 label={isSalonOpen() ? 'Open Now' : 'Closed'}
                                 sx={{
                                     bgcolor: isSalonOpen() ? '#10b981' : '#ef4444',
                                     color: 'white',
                                     fontWeight: 700,
-                                    px: 2,
-                                    py: 2.5,
-                                    fontSize: '0.95rem',
+                                    px: 2.5,
+                                    py: 3,
+                                    fontSize: '1rem',
+                                    boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+                                    '@keyframes pulse': {
+                                        '0%, 100%': { opacity: 1 },
+                                        '50%': { opacity: 0.7 },
+                                    },
                                 }}
                             />
                         </Box>
@@ -345,7 +343,7 @@ const SalonDetails: React.FC = () => {
                         overflow: 'hidden',
                     }}
                 >
-                    <CardContent sx={{ p: 4, background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white' }}>
+                    <CardContent sx={{ p: 4, background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)', color: 'white' }}>
                         <Grid container spacing={3} alignItems="center">
                             <Grid item xs={12} md={8}>
                                 <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
@@ -423,17 +421,36 @@ const SalonDetails: React.FC = () => {
                                     >
                                         <Box
                                             sx={{
-                                                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                                                p: 2,
+                                                background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+                                                p: 2.5,
                                                 color: 'white',
+                                                position: 'relative',
+                                                '&::after': {
+                                                    content: '""',
+                                                    position: 'absolute',
+                                                    top: 0,
+                                                    left: 0,
+                                                    right: 0,
+                                                    height: '4px',
+                                                    background: 'linear-gradient(90deg, #fbbf24 0%, #f59e0b 100%)',
+                                                },
                                             }}
                                         >
-                                            <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                                            <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5 }}>
                                                 {service.name}
                                             </Typography>
-                                            <Typography variant="caption" sx={{ opacity: 0.9 }}>
-                                                {service.gender} • {service.duration} min
-                                            </Typography>
+                                            <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}>
+                                                <Typography variant="caption" sx={{ opacity: 0.95, fontSize: '0.85rem' }}>
+                                                    {service.gender}
+                                                </Typography>
+                                                <Box sx={{ width: 4, height: 4, borderRadius: '50%', bgcolor: 'rgba(255,255,255,0.7)' }} />
+                                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                                                    <AccessTimeIcon sx={{ fontSize: 16, opacity: 0.9 }} />
+                                                    <Typography variant="caption" sx={{ opacity: 0.95, fontSize: '0.85rem' }}>
+                                                        {service.duration} min
+                                                    </Typography>
+                                                </Box>
+                                            </Box>
                                         </Box>
                                         <CardContent sx={{ p: 3 }}>
                                             {service.description && (
@@ -446,20 +463,33 @@ const SalonDetails: React.FC = () => {
                                                 <Typography variant="h4" sx={{ fontWeight: 800, color: '#667eea' }}>
                                                     ₹{service.price}
                                                 </Typography>
+                                                <Chip
+                                                    label={service.category || 'Service'}
+                                                    size="small"
+                                                    sx={{ bgcolor: '#f0f0ff', color: '#6366f1', fontWeight: 600 }}
+                                                />
                                             </Box>
 
                                             <Button
                                                 variant="contained"
-                                                size="medium"
+                                                size="large"
                                                 fullWidth
                                                 onClick={() => navigate(`/booking/${salon._id}?service=${service._id}`)}
                                                 sx={{
-                                                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                                                    py: 1.2,
+                                                    background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+                                                    py: 1.5,
                                                     fontWeight: 700,
+                                                    fontSize: '1rem',
+                                                    boxShadow: '0 4px 12px rgba(99, 102, 241, 0.4)',
+                                                    '&:hover': {
+                                                        background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
+                                                        transform: 'translateY(-2px)',
+                                                        boxShadow: '0 6px 16px rgba(99, 102, 241, 0.5)',
+                                                    },
+                                                    transition: 'all 0.3s',
                                                 }}
                                             >
-                                                Book Now
+                                                Book This Service
                                             </Button>
                                         </CardContent>
                                     </Card>
@@ -507,19 +537,34 @@ const SalonDetails: React.FC = () => {
                                         }}
                                     >
                                         <CardContent sx={{ p: 3 }}>
-                                            <Avatar
-                                                sx={{
-                                                    width: 120,
-                                                    height: 120,
-                                                    mx: 'auto',
-                                                    mb: 2,
-                                                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                                                    fontSize: '3rem',
-                                                    boxShadow: '0 8px 20px rgba(102, 126, 234, 0.3)',
-                                                }}
-                                            >
-                                                {(barber.userId as any)?.name?.charAt(0) || 'S'}
-                                            </Avatar>
+                                            <Box sx={{ position: 'relative', width: 'fit-content', mx: 'auto', mb: 2 }}>
+                                                <Avatar
+                                                    sx={{
+                                                        width: 120,
+                                                        height: 120,
+                                                        background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+                                                        fontSize: '3rem',
+                                                        boxShadow: '0 8px 24px rgba(99, 102, 241, 0.4)',
+                                                        border: '4px solid white',
+                                                    }}
+                                                >
+                                                    {(barber.userId as any)?.name?.charAt(0) || 'S'}
+                                                </Avatar>
+                                                {/* Availability Indicator */}
+                                                <Box
+                                                    sx={{
+                                                        position: 'absolute',
+                                                        bottom: 5,
+                                                        right: 5,
+                                                        width: 24,
+                                                        height: 24,
+                                                        borderRadius: '50%',
+                                                        bgcolor: '#10b981',
+                                                        border: '3px solid white',
+                                                        boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
+                                                    }}
+                                                />
+                                            </Box>
 
                                             <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5 }}>
                                                 {(barber.userId as any)?.name || 'Stylist'}
@@ -536,22 +581,42 @@ const SalonDetails: React.FC = () => {
                                             </Box>
 
                                             {barber.specialties && barber.specialties.length > 0 && (
-                                                <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap', justifyContent: 'center' }}>
-                                                    {barber.specialties.slice(0, 2).map((specialty, idx) => (
+                                                <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap', justifyContent: 'center', mb: 2 }}>
+                                                    {barber.specialties.slice(0, 3).map((specialty, idx) => (
                                                         <Chip
                                                             key={idx}
                                                             label={specialty}
                                                             size="small"
                                                             sx={{
-                                                                fontSize: '0.7rem',
+                                                                fontSize: '0.75rem',
                                                                 bgcolor: '#f0f0ff',
-                                                                color: '#667eea',
+                                                                color: '#6366f1',
                                                                 fontWeight: 600,
+                                                                borderRadius: 2,
                                                             }}
                                                         />
                                                     ))}
                                                 </Box>
                                             )}
+
+                                            <Button
+                                                variant="outlined"
+                                                size="small"
+                                                fullWidth
+                                                onClick={() => navigate(`/booking/${salon._id}?staff=${barber._id}`)}
+                                                sx={{
+                                                    borderColor: '#6366f1',
+                                                    color: '#6366f1',
+                                                    fontWeight: 600,
+                                                    py: 1,
+                                                    '&:hover': {
+                                                        borderColor: '#4f46e5',
+                                                        bgcolor: '#f0f0ff',
+                                                    },
+                                                }}
+                                            >
+                                                Book with {(barber.userId as any)?.name?.split(' ')[0] || 'Stylist'}
+                                            </Button>
                                         </CardContent>
                                     </Card>
                                 </Grid>

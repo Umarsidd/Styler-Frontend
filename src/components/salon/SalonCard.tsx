@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardMedia, CardContent, CardActions, Typography, Chip, Box } from '@mui/material';
+import { Card, CardMedia, CardContent, CardActions, Typography, Chip, Box, Button } from '@mui/material';
 import { LocationOn as LocationIcon, Star as StarIcon } from '@mui/icons-material';
 import { Salon } from '../../types';
 import './SalonCard.css';
@@ -34,33 +34,52 @@ const SalonCard: React.FC<SalonCardProps> = ({ salon, onClick }) => {
                 image={salon.images?.[0] || '/placeholder-salon.jpg'}
                 alt={salon.name}
             />
+
+            {/* Status Badge - Top Right Corner */}
+            <Chip
+                label={isOpen ? 'Open' : 'Closed'}
+                size="small"
+                color={isOpen ? 'success' : 'default'}
+                sx={{
+                    position: 'absolute',
+                    top: 16,
+                    right: 16,
+                    fontWeight: 600,
+                    zIndex: 1
+                }}
+            />
+
             <CardContent sx={{ flex: 1 }}>
-                <Typography variant="h5" component="h3" gutterBottom sx={{ fontWeight: 700 }}>
-                    {salon.name}
+                <Typography variant="h5" component="h3" gutterBottom sx={{ fontWeight: 800, color: '#6366f1' }}>
+                    {salon.displayName}
                 </Typography>
 
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mb: 1 }}>
                     <LocationIcon fontSize="small" color="action" />
                     <Typography variant="body2" color="text.secondary">
-                        {salon.address?.city}
+                        {salon.address?.city}{salon.address?.state ? `, ${salon.address.state}` : ''}
                     </Typography>
                 </Box>
 
-                {salon.rating && (
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mb: 1 }}>
-                        <StarIcon fontSize="small" sx={{ color: '#f59e0b' }} />
-                        <Typography variant="body2">
-                            {typeof salon.rating === 'object' && salon.rating.average
-                                ? `${salon.rating.average.toFixed(1)} (${salon.rating.count || 0} reviews)`
-                                : typeof salon.rating === 'number'
-                                    ? `${salon.rating.toFixed(1)} (${salon.totalReviews || 0} reviews)`
-                                    : 'No rating'}
-                        </Typography>
-                    </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mb: 1 }}>
+                    <StarIcon fontSize="small" sx={{ color: '#f59e0b' }} />
+                    <Typography variant="body2">
+                        {typeof salon.rating === 'object' && salon.rating.average
+                            ? `${salon.rating.average.toFixed(1)} (${salon.rating.count || 0} reviews)`
+                            : typeof salon.rating === 'number' && salon.rating > 0
+                                ? `${salon.rating.toFixed(1)} (${salon.totalReviews || 0} reviews)`
+                                : 'No rating'}
+                    </Typography>
+                </Box>
+
+                {salon.description && (
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2, overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
+                        {salon.description}
+                    </Typography>
                 )}
 
                 {salon.specialties && salon.specialties.length > 0 && (
-                    <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mt: 2 }}>
+                    <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mt: 'auto' }}>
                         {salon.specialties.slice(0, 3).map((specialty, index) => (
                             <Chip key={index} label={specialty} size="small" variant="outlined" />
                         ))}
@@ -69,12 +88,29 @@ const SalonCard: React.FC<SalonCardProps> = ({ salon, onClick }) => {
             </CardContent>
 
             <CardActions sx={{ px: 2, pb: 2 }}>
-                <Chip
-                    label={isOpen ? 'Open' : 'Closed'}
-                    size="small"
-                    color={isOpen ? 'success' : 'default'}
-                    sx={{ fontWeight: 600 }}
-                />
+                <Button
+                    fullWidth
+                    variant="contained"
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        onClick?.();
+                    }}
+                    disabled={!isOpen}
+                    sx={{
+                        background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+                        fontWeight: 600,
+                        py: 1.5,
+                        '&:hover': {
+                            background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
+                        },
+                        '&:disabled': {
+                            background: '#e5e7eb',
+                            color: '#9ca3af',
+                        }
+                    }}
+                >
+                    Book Now
+                </Button>
             </CardActions>
         </Card>
     );

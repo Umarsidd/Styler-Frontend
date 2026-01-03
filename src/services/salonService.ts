@@ -7,6 +7,7 @@ export interface SalonSearchFilters {
     name?: string;
     city?: string;
     serviceType?: string;
+    sortBy?: 'rating' | 'reviews' | 'name' | 'nearest';
     page?: number;
     limit?: number;
 }
@@ -55,6 +56,7 @@ class SalonService {
         if (filters.name) params.append('name', filters.name);
         if (filters.city) params.append('city', filters.city);
         if (filters.serviceType) params.append('serviceType', filters.serviceType);
+        if (filters.sortBy) params.append('sort', filters.sortBy);
         if (filters.page) params.append('page', filters.page.toString());
         if (filters.limit) params.append('limit', filters.limit.toString());
 

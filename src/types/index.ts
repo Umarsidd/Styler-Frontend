@@ -121,6 +121,8 @@ export interface Salon {
     _id: string;
     name: string;
     description: string;
+    displayName: string;
+    businessName: string;
     address: Address;
     phone: string;
     email?: string;

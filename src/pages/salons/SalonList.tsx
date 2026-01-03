@@ -47,6 +47,7 @@ interface SalonWithDistance extends Salon {
 const SalonList: React.FC = () => {
     const navigate = useNavigate();
     const [searchQuery, setSearchQuery] = useState('');
+    const [countryFilter, setCountryFilter] = useState('');
     const [cityFilter, setCityFilter] = useState('');
     const [sortBy, setSortBy] = useState<SortOption>('rating');
     const [viewMode, setViewMode] = useState<ViewMode>('grid');
@@ -54,14 +55,35 @@ const SalonList: React.FC = () => {
 
     const { coordinates, error: locationError, loading: locationLoading, getCurrentPosition } = useGeolocation();
 
+    // Country-City mapping
+    const countryCityMap: Record<string, string[]> = {
+        'India': ['Mumbai', 'Delhi', 'Bangalore', 'Pune', 'Hyderabad', 'Chennai', 'Kolkata', 'Ahmedabad'],
+        'USA': ['New York', 'Los Angeles', 'Chicago', 'Houston', 'Phoenix', 'Philadelphia', 'San Antonio'],
+        'UK': ['London', 'Manchester', 'Birmingham', 'Leeds', 'Glasgow', 'Liverpool', 'Edinburgh'],
+        'UAE': ['Dubai', 'Abu Dhabi', 'Sharjah', 'Ajman', 'Ras Al Khaimah'],
+    };
+
+    // Get cities based on selected country
+    const availableCities = countryFilter ? countryCityMap[countryFilter] || [] : [];
+
+    // Reset city when country changes
+    const handleCountryChange = (country: string) => {
+        setCountryFilter(country);
+        setCityFilter(''); // Reset city when country changes
+    };
+
     const { data, isLoading } = useQuery({
-        queryKey: ['salons', searchQuery, cityFilter],
-        queryFn: () => salonService.searchSalons({ name: searchQuery, city: cityFilter }),
+        queryKey: ['salons', searchQuery, cityFilter, sortBy],
+        queryFn: () => salonService.searchSalons({
+            name: searchQuery,
+            city: cityFilter,
+            sortBy: sortBy !== 'nearest' ? sortBy : undefined // Don't send 'nearest' to API
+        }),
     });
 
     const salons = (data?.data as Salon[]) || [];
 
-    // Add distance to salons and sort
+    // Add distance to salons for "nearest" sorting (client-side for geolocation)
     const processedSalons = useMemo(() => {
         let processed: SalonWithDistance[] = salons.map(salon => ({
             ...salon,
@@ -75,27 +97,11 @@ const SalonList: React.FC = () => {
                 : undefined,
         }));
 
-        // Sort salons
-        switch (sortBy) {
-            case 'nearest':
-                if (coordinates) {
-                    processed = processed.sort((a, b) => (a.distance || Infinity) - (b.distance || Infinity));
-                }
-                break;
-            case 'rating':
-                processed = processed.sort((a, b) => {
-                    const ratingA = typeof a.rating === 'object' ? a.rating.average : a.rating;
-                    const ratingB = typeof b.rating === 'object' ? b.rating.average : b.rating;
-                    return (ratingB || 0) - (ratingA || 0);
-                });
-                break;
-            case 'reviews':
-                processed = processed.sort((a, b) => b.totalReviews - a.totalReviews);
-                break;
-            case 'name':
-                processed = processed.sort((a, b) => a.name.localeCompare(b.name));
-                break;
+        // Only sort on client-side for "nearest" (requires user location)
+        if (sortBy === 'nearest' && coordinates) {
+            processed = processed.sort((a, b) => (a.distance || Infinity) - (b.distance || Infinity));
         }
+        // All other sorting is handled by the API
 
         return processed;
     }, [salons, coordinates, sortBy]);
@@ -110,10 +116,11 @@ const SalonList: React.FC = () => {
 
     const handleClearSearch = () => {
         setSearchQuery('');
+        setCountryFilter('');
         setCityFilter('');
     };
 
-    const hasActiveFilters = searchQuery || cityFilter;
+    const hasActiveFilters = searchQuery || countryFilter || cityFilter;
 
     return (
         <Box className="salon-list-page">
@@ -164,8 +171,25 @@ const SalonList: React.FC = () => {
                             />
                         </Grid>
 
-                        <Grid item xs={12} sm={6} md={2.5}>
-                            <FormControl fullWidth sx={{ minWidth: 150 }}>
+                        <Grid item xs={12} sm={6} md={2}>
+                            <FormControl fullWidth>
+                                <InputLabel>Country</InputLabel>
+                                <Select
+                                    value={countryFilter}
+                                    onChange={(e) => handleCountryChange(e.target.value)}
+                                    label="Country"
+                                >
+                                    <MenuItem value="">All Countries</MenuItem>
+                                    <MenuItem value="India">India</MenuItem>
+                                    <MenuItem value="USA">United States</MenuItem>
+                                    <MenuItem value="UK">United Kingdom</MenuItem>
+                                    <MenuItem value="UAE">United Arab Emirates</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </Grid>
+
+                        <Grid item xs={12} sm={6} md={2}>
+                            <FormControl fullWidth disabled={!countryFilter}>
                                 <InputLabel>City</InputLabel>
                                 <Select
                                     value={cityFilter}
@@ -173,11 +197,9 @@ const SalonList: React.FC = () => {
                                     label="City"
                                 >
                                     <MenuItem value="">All Cities</MenuItem>
-                                    <MenuItem value="Mumbai">Mumbai</MenuItem>
-                                    <MenuItem value="Delhi">Delhi</MenuItem>
-                                    <MenuItem value="Bangalore">Bangalore</MenuItem>
-                                    <MenuItem value="Pune">Pune</MenuItem>
-                                    <MenuItem value="Hyderabad">Hyderabad</MenuItem>
+                                    {availableCities.map((city) => (
+                                        <MenuItem key={city} value={city}>{city}</MenuItem>
+                                    ))}
                                 </Select>
                             </FormControl>
                         </Grid>

@@ -139,7 +139,7 @@ const Services: React.FC = () => {
 
                 <Grid container spacing={4}>
                     {services.map((service, index) => (
-                        <Grid item xs={12} sm={6} md={3} key={index}>
+                        <Grid item xs={12} sm={12} md={4} key={index}>
                             <Card
                                 className="service-detail-card"
                                 sx={{
@@ -219,9 +219,9 @@ const Services: React.FC = () => {
                         Save more with our combo packages
                     </Typography>
 
-                    <Grid container spacing={4}>
+                    <Grid container spacing={4} sx={{ mt: 2 }}>
                         {packages.map((pkg, index) => (
-                            <Grid item xs={12} md={4} key={index}>
+                            <Grid item xs={12} md={4} key={index} sx={{ overflow: 'visible' }}>
                                 <Card
                                     className="package-card"
                                     sx={{
@@ -236,7 +236,7 @@ const Services: React.FC = () => {
                                         <Box
                                             sx={{
                                                 position: 'absolute',
-                                                top: -16,
+      
                                                 left: '50%',
                                                 transform: 'translateX(-50%)',
                                                 bgcolor: 'primary.main',
