@@ -79,6 +79,29 @@ const AuthModal: React.FC = () => {
         confirmPassword: '',
     });
 
+    // Sync URL with Modal State
+    useEffect(() => {
+        if (isLoginModalOpen) {
+            const currentPath = window.location.pathname;
+            if (currentPath !== '/login') {
+                window.history.pushState({ modal: true }, '', '/login');
+            }
+
+            const handlePopState = () => {
+                closeLoginModal();
+            };
+
+            window.addEventListener('popstate', handlePopState);
+
+            return () => {
+                window.removeEventListener('popstate', handlePopState);
+                if (window.location.pathname === '/login') {
+                    window.history.back();
+                }
+            };
+        }
+    }, [isLoginModalOpen, closeLoginModal]);
+
     const handleLoginSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
@@ -97,17 +120,17 @@ const AuthModal: React.FC = () => {
                 // Navigation logic based on role
                 switch (user.role) {
                     case UserRole.BARBER:
-                        navigate('/barber/dashboard');
+                        navigate('/barber/dashboard', { replace: true });
                         break;
                     case UserRole.SALON_OWNER:
-                        navigate('/salon-owner/dashboard');
+                        navigate('/salon-owner/dashboard', { replace: true });
                         break;
                     case UserRole.SUPER_ADMIN:
-                        navigate('/admin/superadmin');
+                        navigate('/admin/superadmin', { replace: true });
                         break;
                     case UserRole.CUSTOMER:
                     default:
-                        navigate('/customer/dashboard');
+                        navigate('/customer/dashboard', { replace: true });
                 }
             }
         } catch (err: any) {
@@ -144,14 +167,14 @@ const AuthModal: React.FC = () => {
 
                 switch (selectedRole) {
                     case UserRole.BARBER:
-                        navigate('/barber/dashboard');
+                        navigate('/barber/dashboard', { replace: true });
                         break;
                     case UserRole.SALON_OWNER:
-                        navigate('/salon-owner/dashboard');
+                        navigate('/salon-owner/dashboard', { replace: true });
                         break;
                     case UserRole.CUSTOMER:
                     default:
-                        navigate('/customer/dashboard');
+                        navigate('/customer/dashboard', { replace: true });
                 }
             } else {
                 setActiveTab(0);
