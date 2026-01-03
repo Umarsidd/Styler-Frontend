@@ -140,71 +140,131 @@ const Home: React.FC = () => {
         <Box className="home-page">
             {/* Hero Section */}
             <Box className="hero-section">
-                <MotionBox
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6 }}
-                    className="hero-content"
-                >
-                    <Typography variant="h1" sx={{ color: 'white', mb: 2, fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem', lg: '3rem' }, fontWeight: 800, lineHeight: 1.2 }}>
-                        Premium Grooming,
-                        <br />
-                        Just a Click Away
-                    </Typography>
-                    <Typography variant="h5" sx={{ color: 'rgba(255, 255, 255, 0.95)', mb: 4, maxWidth: 600, mx: 'auto', fontSize: { xs: '0.9rem', sm: '1.1rem', md: '1.25rem' }, px: { xs: 2, sm: 0 } }}>
-                        Book appointments with top salons and experienced stylists across 20+ locations
-                    </Typography>
-                    <Box sx={{ display: 'flex', gap: { xs: 1.5, sm: 2 }, justifyContent: 'center', flexWrap: 'wrap', px: { xs: 1, sm: 0 } }}>
-                        <Button
-                            variant="contained"
-                            size="large"
-                            endIcon={<ArrowForwardIcon />}
-                            onClick={() => navigate('/salons')}
-                            sx={{ px: { xs: 3, sm: 4 }, py: { xs: 1.25, sm: 1.5 }, fontSize: { xs: '1rem', sm: '1.1rem' } }}
-                        >
-                            Book Now
-                        </Button>
-                        <Button
-                            variant="outlined"
-                            size="large"
-                            onClick={() => navigate('/services')}
-                            sx={{
-                                px: { xs: 3, sm: 4 },
-                                py: { xs: 1.25, sm: 1.5 },
-                                fontSize: { xs: '1rem', sm: '1.1rem' },
-                                fontWeight: 600,
-                                color: 'white',
-                                borderColor: 'white',
-                                '&:hover': { borderColor: 'white', bgcolor: 'rgba(255,255,255,0.1)' },
-                            }}
-                        >
-                            Our Services
-                        </Button>
-                    </Box>
-                </MotionBox>
+                <Box className="hero-overlay" />
+                <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 2 }}>
+                    <MotionBox
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8 }}
+                        className="hero-content"
+                    >
+                        <Box sx={{ mb: 3, display: 'inline-block' }}>
+                            <Box sx={{
+                                bgcolor: 'rgba(255,255,255,0.1)',
+                                backdropFilter: 'blur(10px)',
+                                px: 2,
+                                py: 0.5,
+                                borderRadius: '20px',
+                                border: '1px solid rgba(255,255,255,0.2)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 1
+                            }}>
+                                <StarIcon sx={{ color: '#fbbf24', fontSize: '1rem' }} />
+                                <Typography variant="caption" sx={{ color: 'white', fontWeight: 600, letterSpacing: 0.5 }}>
+                                    #1 RATED GROOMING PLATFORM
+                                </Typography>
+                            </Box>
+                        </Box>
+
+                        <Typography variant="h1" sx={{
+                            color: 'white',
+                            mb: 2,
+                            fontSize: { xs: '2.5rem', sm: '3.5rem', md: '4.5rem' },
+                            fontWeight: 800,
+                            lineHeight: 1.1,
+                            textShadow: '0 4px 60px rgba(0,0,0,0.5)'
+                        }}>
+                            Elevate Your <br />
+                            <span style={{
+                                background: 'linear-gradient(to right, #a78bfa, #f472b6)',
+                                WebkitBackgroundClip: 'text',
+                                WebkitTextFillColor: 'transparent'
+                            }}>Style & Confidence</span>
+                        </Typography>
+
+                        <Typography variant="h5" sx={{
+                            color: 'rgba(255, 255, 255, 0.95)',
+                            mb: 5,
+                            maxWidth: 600,
+                            mx: 'auto',
+                            fontSize: { xs: '1rem', sm: '1.25rem' },
+                            lineHeight: 1.6,
+                            fontWeight: 400
+                        }}>
+                            Discover and book appointments with the city's finest salons and expert stylists. Premium grooming, redefined.
+                        </Typography>
+
+                        <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
+                            <Button
+                                variant="contained"
+                                size="large"
+                                onClick={() => navigate('/salons')}
+                                sx={{
+                                    px: 5,
+                                    py: 1.8,
+                                    fontSize: '1.1rem',
+                                    borderRadius: '50px',
+                                    background: 'white',
+                                    color: '#4f46e5',
+                                    fontWeight: 700,
+                                    boxShadow: '0 10px 25px rgba(0,0,0,0.2)',
+                                    '&:hover': {
+                                        background: '#f8fafc',
+                                        transform: 'translateY(-2px)'
+                                    }
+                                }}
+                            >
+                                Find a Salon
+                            </Button>
+                            <Button
+                                variant="outlined"
+                                size="large"
+                                onClick={() => navigate('/services')}
+                                sx={{
+                                    px: 5,
+                                    py: 1.8,
+                                    fontSize: '1.1rem',
+                                    borderRadius: '50px',
+                                    fontWeight: 600,
+                                    color: 'white',
+                                    borderColor: 'rgba(255,255,255,0.4)',
+                                    backdropFilter: 'blur(5px)',
+                                    '&:hover': {
+                                        borderColor: 'white',
+                                        bgcolor: 'rgba(255,255,255,0.1)'
+                                    },
+                                }}
+                            >
+                                Explore Services
+                            </Button>
+                        </Box>
+                    </MotionBox>
+                </Container>
             </Box >
 
             {/* Stats Section */}
-            < Container maxWidth={false} className="stats-section" disableGutters >
-                <Grid container spacing={2} sx={{ px: 1 }}>
+            < Container maxWidth="lg" className="stats-section">
+                <Grid container spacing={3}>
                     {stats.map((stat, index) => (
-                        <Grid size={{ xs: 12, sm: 6, md: 3 }} key={index}>
+                        <Grid size={{ xs: 6, md: 3 }} key={index}>
                             <MotionCard
                                 className="stat-card"
-                                initial={{ opacity: 0, y: 20 }}
+                                initial={{ opacity: 0, y: 40 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 transition={{ delay: index * 0.1 }}
                                 viewport={{ once: true }}
+                                elevation={0}
                             >
-                                <CardContent sx={{ textAlign: 'center' }}>
-                                    <Box className="stat-icon" sx={{ color: stat.color, mb: 2 }}>
+                                <CardContent sx={{ textAlign: 'center', p: 3 }}>
+                                    <Box className="stat-icon-wrapper" sx={{ bgcolor: `${stat.color}15`, color: stat.color }}>
                                         {stat.icon}
                                     </Box>
-                                    <Typography variant="h3" sx={{ fontWeight: 800, color: stat.color }}>
+                                    <Typography variant="h3" sx={{ fontWeight: 800, color: 'text.primary', mb: 0.5 }}>
                                         <CountUp end={stat.count} duration={2.5} />
                                         {stat.suffix}
                                     </Typography>
-                                    <Typography variant="body1" color="text.secondary">
+                                    <Typography variant="body2" color="text.secondary" fontWeight={600} sx={{ textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: 1 }}>
                                         {stat.title}
                                     </Typography>
                                 </CardContent>
@@ -217,12 +277,15 @@ const Home: React.FC = () => {
             {/* Features Section */}
             < Box className="features-section" >
                 <Container maxWidth="lg">
-                    <Typography variant="h2" align="center" sx={{ mb: 2, fontSize: { xs: '1.75rem', sm: '2.25rem', md: '2.75rem' } }}>
-                        Why Choose Styler?
-                    </Typography>
-                    <Typography variant="h6" align="center" color="text.secondary" sx={{ mb: 6, maxWidth: 700, mx: 'auto', fontSize: { xs: '1rem', sm: '1.125rem', md: '1.25rem' }, px: { xs: 2, sm: 0 } }}>
-                        We make grooming simple, convenient, and luxurious with our comprehensive platform
-                    </Typography>
+                    <Box sx={{ textAlign: 'center', mb: 8 }}>
+                        <Typography variant="overline" color="primary" sx={{ fontWeight: 700, letterSpacing: 2 }}>
+                            WHY CHOOSE US
+                        </Typography>
+                        <Typography variant="h2" sx={{ fontWeight: 800, mt: 1 }}>
+                            Experience the Premium Difference
+                        </Typography>
+                    </Box>
+
                     <Grid container spacing={4}>
                         {features.map((feature, index) => (
                             <Grid size={{ xs: 12, sm: 6, md: 3 }} key={index}>
@@ -232,16 +295,17 @@ const Home: React.FC = () => {
                                     whileInView={{ opacity: 1, y: 0 }}
                                     transition={{ delay: index * 0.1 }}
                                     viewport={{ once: true }}
-                                    sx={{ height: '100%', textAlign: 'center' }}
+                                    elevation={0}
+                                    sx={{ height: '100%', borderRadius: '24px', bgcolor: 'transparent' }}
                                 >
-                                    <CardContent>
-                                        <Box className="feature-icon" sx={{ mb: 2 }}>
+                                    <CardContent sx={{ p: 4, height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+                                        <Box className="feature-icon-box">
                                             {feature.icon}
                                         </Box>
-                                        <Typography variant="h5" gutterBottom sx={{ fontWeight: 700 }}>
+                                        <Typography variant="h5" gutterBottom sx={{ fontWeight: 700, mt: 2 }}>
                                             {feature.title}
                                         </Typography>
-                                        <Typography variant="body2" color="text.secondary">
+                                        <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.6 }}>
                                             {feature.description}
                                         </Typography>
                                     </CardContent>
@@ -255,57 +319,81 @@ const Home: React.FC = () => {
             {/* Services Showcase */}
             < Box className="services-showcase" >
                 <Container maxWidth="lg">
-                    <Typography variant="h2" align="center" sx={{ mb: 2, fontSize: { xs: '1.75rem', sm: '2.25rem', md: '2.75rem' } }}>
-                        Our Popular Services
-                    </Typography>
-                    <Typography variant="h6" align="center" color="text.secondary" sx={{ mb: 6, fontSize: { xs: '1rem', sm: '1.125rem', md: '1.25rem' }, px: { xs: 2, sm: 0 } }}>
-                        Professional grooming services for everyone
-                    </Typography>
-                    <Grid container spacing={3}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', mb: 6 }}>
+                        <Box>
+                            <Typography variant="overline" color="primary" sx={{ fontWeight: 700, letterSpacing: 2 }}>
+                                OUR MENU
+                            </Typography>
+                            <Typography variant="h2" sx={{ fontWeight: 800, mt: 1 }}>
+                                Popular Services
+                            </Typography>
+                        </Box>
+                        <Button endIcon={<ArrowForwardIcon />} onClick={() => navigate('/services')} sx={{ display: { xs: 'none', md: 'flex' } }}>
+                            View All
+                        </Button>
+                    </Box>
+
+                    <Grid container spacing={4}>
                         {services.map((service, index) => (
-                            <Grid size={{ xs: 12, sm: 6, md: 4 }} key={index}>
+                            <Grid size={{ xs: 12, sm: 6, md: 3 }} key={index}>
                                 <MotionCard
                                     className="service-showcase-card"
-                                    initial={{ opacity: 0, scale: 0.9 }}
+                                    initial={{ opacity: 0, scale: 0.95 }}
                                     whileInView={{ opacity: 1, scale: 1 }}
                                     transition={{ delay: index * 0.1 }}
                                     viewport={{ once: true }}
                                     onClick={() => navigate('/services')}
+                                    elevation={0}
                                 >
                                     <Box
+                                        className="service-image-container"
                                         sx={{
-                                            height: 200,
-                                            background: `linear-gradient(135deg, rgba(102, 126, 234, 0.8) 0%, rgba(118, 75, 162, 0.8) 100%), url(${service.image}) center/cover`,
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            color: 'white',
-                                            fontSize: '3rem',
+                                            backgroundImage: `url(${service.image})`,
                                         }}
                                     >
-                                        {service.icon}
+                                        <Box className="service-overlay">
+                                            <Typography variant="h4" color="white">
+                                                {service.icon}
+                                            </Typography>
+                                        </Box>
                                     </Box>
-                                    <CardContent>
-                                        <Typography variant="h5" gutterBottom sx={{ fontWeight: 700 }}>
+                                    <CardContent sx={{ p: 3 }}>
+                                        <Typography variant="h6" gutterBottom sx={{ fontWeight: 700 }}>
                                             {service.title}
                                         </Typography>
-                                        <Typography variant="h6" color="primary" sx={{ fontWeight: 700 }}>
-                                            Starting from {service.price}
-                                        </Typography>
+                                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                            <Typography variant="body2" color="text.secondary">
+                                                Starts from
+                                            </Typography>
+                                            <Typography variant="h6" color="primary" sx={{ fontWeight: 800 }}>
+                                                {service.price}
+                                            </Typography>
+                                        </Box>
                                     </CardContent>
                                 </MotionCard>
                             </Grid>
                         ))}
                     </Grid>
+                    <Box sx={{ display: { xs: 'flex', md: 'none' }, justifyContent: 'center', mt: 4 }}>
+                        <Button endIcon={<ArrowForwardIcon />} onClick={() => navigate('/services')}>
+                            View All Services
+                        </Button>
+                    </Box>
                 </Container>
             </Box >
 
             {/* How It Works */}
             < Box className="how-it-works" >
                 <Container maxWidth="lg">
-                    <Typography variant="h2" align="center" sx={{ mb: 6, fontSize: { xs: '1.75rem', sm: '2.25rem', md: '2.75rem' } }}>
-                        How It Works
-                    </Typography>
+                    <Box sx={{ textAlign: 'center', mb: 8 }}>
+                        <Typography variant="overline" color="white" sx={{ fontWeight: 700, letterSpacing: 2, opacity: 0.8 }}>
+                            SIMPLE PROCESS
+                        </Typography>
+                        <Typography variant="h2" sx={{ fontWeight: 800, mt: 1, color: 'white' }}>
+                            How It Works
+                        </Typography>
+                    </Box>
+
                     <Grid container spacing={4}>
                         {howItWorks.map((item, index) => (
                             <Grid size={{ xs: 12, sm: 6, md: 3 }} key={index}>
@@ -315,13 +403,12 @@ const Home: React.FC = () => {
                                     whileInView={{ opacity: 1, y: 0 }}
                                     transition={{ delay: index * 0.1 }}
                                     viewport={{ once: true }}
-                                    sx={{ textAlign: 'center' }}
                                 >
                                     <Box className="step-number">{item.step}</Box>
-                                    <Typography variant="h5" gutterBottom sx={{ fontWeight: 700, mt: 2 }}>
+                                    <Typography variant="h5" gutterBottom sx={{ fontWeight: 700, mt: 3, color: 'white' }}>
                                         {item.title}
                                     </Typography>
-                                    <Typography variant="body2" color="text.secondary">
+                                    <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)', lineHeight: 1.6 }}>
                                         {item.description}
                                     </Typography>
                                 </MotionBox>
@@ -334,13 +421,16 @@ const Home: React.FC = () => {
             {/* Testimonials */}
             < Box className="testimonials-section" >
                 <Container maxWidth="lg">
-                    <Typography variant="h2" align="center" sx={{ mb: 2, fontSize: { xs: '1.75rem', sm: '2.25rem', md: '2.75rem' } }}>
-                        What Our Clients Say
-                    </Typography>
-                    <Typography variant="h6" align="center" color="text.secondary" sx={{ mb: 6, fontSize: { xs: '1rem', sm: '1.125rem', md: '1.25rem' }, px: { xs: 2, sm: 0 } }}>
-                        Trusted by thousands of happy customers
-                    </Typography>
-                    <Grid container spacing={3}>
+                    <Box sx={{ textAlign: 'center', mb: 8 }}>
+                        <Typography variant="overline" color="primary" sx={{ fontWeight: 700, letterSpacing: 2 }}>
+                            TESTIMONIALS
+                        </Typography>
+                        <Typography variant="h2" sx={{ fontWeight: 800, mt: 1 }}>
+                            Loved by Clients
+                        </Typography>
+                    </Box>
+
+                    <Grid container spacing={4}>
                         {testimonials.map((testimonial, index) => (
                             <Grid size={{ xs: 12, md: 4 }} key={index}>
                                 <MotionCard
@@ -349,27 +439,30 @@ const Home: React.FC = () => {
                                     whileInView={{ opacity: 1, y: 0 }}
                                     transition={{ delay: index * 0.1 }}
                                     viewport={{ once: true }}
-                                    sx={{ height: '100%' }}
+                                    elevation={0}
                                 >
-                                    <CardContent>
-                                        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                                            <Avatar sx={{ width: 50, height: 50, bgcolor: 'primary.main', mr: 2 }}>
+                                    <CardContent sx={{ p: 4, display: 'flex', flexDirection: 'column', height: '100%' }}>
+                                        <Box sx={{ mb: 3 }}>
+                                            {[...Array(testimonial.rating)].map((_, i) => (
+                                                <StarIcon key={i} sx={{ color: '#fbbf24', fontSize: 20 }} />
+                                            ))}
+                                        </Box>
+                                        <Typography variant="h6" sx={{ fontStyle: 'italic', fontWeight: 500, lineHeight: 1.6, flexGrow: 1, mb: 3 }}>
+                                            "{testimonial.comment}"
+                                        </Typography>
+                                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                            <Avatar sx={{ width: 48, height: 48, bgcolor: 'primary.main', mr: 2, fontWeight: 700 }}>
                                                 {testimonial.avatar}
                                             </Avatar>
                                             <Box>
-                                                <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                                                <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
                                                     {testimonial.name}
                                                 </Typography>
-                                                <Box sx={{ display: 'flex', gap: 0.5 }}>
-                                                    {[...Array(testimonial.rating)].map((_, i) => (
-                                                        <StarIcon key={i} sx={{ color: '#f59e0b', fontSize: 18 }} />
-                                                    ))}
-                                                </Box>
+                                                <Typography variant="caption" color="text.secondary">
+                                                    Verified Customer
+                                                </Typography>
                                             </Box>
                                         </Box>
-                                        <Typography variant="body2" color="text.secondary" sx={{ fontStyle: 'italic' }}>
-                                            "{testimonial.comment}"
-                                        </Typography>
                                     </CardContent>
                                 </MotionCard>
                             </Grid>
@@ -380,30 +473,57 @@ const Home: React.FC = () => {
 
             {/* CTA Section */}
             < Box className="cta-section" >
-                <Container maxWidth="md" sx={{ textAlign: 'center' }}>
-                    <TrophyIcon sx={{ fontSize: 60, color: 'white', mb: 2 }} />
-                    <Typography variant="h2" sx={{ mb: 3, color: 'white', fontSize: { xs: '1.5rem', sm: '1.75rem', md: '2.25rem' } }}>
-                        Ready to Transform Your Look?
-                    </Typography>
-                    <Typography variant="h6" sx={{ mb: 4, color: 'rgba(255,255,255,0.9)', fontSize: { xs: '0.9rem', sm: '1rem', md: '1.25rem' }, px: { xs: 2, sm: 0 } }}>
-                        Join thousands of satisfied customers and book your appointment today
-                    </Typography>
-                    <Button
-                        variant="contained"
-                        size="large"
-                        onClick={() => navigate(user ? '/salons' : '/login')}
-                        sx={{
-                            px: { xs: 4, sm: 5 },
-                            py: { xs: 1.25, sm: 1.5 },
-                            fontSize: { xs: '1rem', sm: '1.1rem' },
-                            bgcolor: 'white',
-                            color: '#6366f1',
-                            '&:hover': { bgcolor: 'rgba(255,255,255,0.9)' },
-                        }}
-                        endIcon={<ArrowForwardIcon />}
+                <Container maxWidth="md" sx={{ textAlign: 'center', position: 'relative', zIndex: 2 }}>
+                    <MotionBox
+                        initial={{ scale: 0.9, opacity: 0 }}
+                        whileInView={{ scale: 1, opacity: 1 }}
+                        transition={{ duration: 0.5 }}
                     >
-                        {user ? 'Browse Salons' : 'Get Started'}
-                    </Button>
+                        <Box sx={{
+                            width: 80,
+                            height: 80,
+                            bgcolor: 'rgba(255,255,255,0.2)',
+                            borderRadius: '50%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            mx: 'auto',
+                            mb: 3,
+                            backdropFilter: 'blur(5px)'
+                        }}>
+                            <TrophyIcon sx={{ fontSize: 40, color: 'white' }} />
+                        </Box>
+
+                        <Typography variant="h2" sx={{ mb: 3, color: 'white', fontWeight: 800, fontSize: { xs: '2rem', md: '3rem' } }}>
+                            Ready to Transform Your Look?
+                        </Typography>
+                        <Typography variant="h6" sx={{ mb: 5, color: 'rgba(255,255,255,0.9)', maxWidth: 600, mx: 'auto', lineHeight: 1.6 }}>
+                            Join thousands of satisfied customers who trust Styler for their premium grooming needs.
+                        </Typography>
+                        <Button
+                            variant="contained"
+                            size="large"
+                            onClick={() => navigate(user ? '/salons' : '/login')}
+                            sx={{
+                                px: 6,
+                                py: 2,
+                                fontSize: '1.2rem',
+                                borderRadius: '50px',
+                                bgcolor: 'white',
+                                color: '#6366f1',
+                                fontWeight: 800,
+                                boxShadow: '0 10px 30px rgba(0,0,0,0.2)',
+                                '&:hover': {
+                                    bgcolor: '#f8fafc',
+                                    transform: 'translateY(-2px)',
+                                    boxShadow: '0 15px 40px rgba(0,0,0,0.3)'
+                                },
+                            }}
+                            endIcon={<ArrowForwardIcon />}
+                        >
+                            {user ? 'Browse Salons' : 'Get Started Now'}
+                        </Button>
+                    </MotionBox>
                 </Container>
             </Box >
         </Box >

@@ -15,8 +15,9 @@ import {
     InputAdornment,
     ToggleButtonGroup,
     ToggleButton,
-    Alert,
     Snackbar,
+    IconButton,
+    Alert,
 } from '@mui/material';
 import {
     Search as SearchIcon,
@@ -125,177 +126,174 @@ const SalonList: React.FC = () => {
     return (
         <Box className="salon-list-page">
             {/* Hero Section */}
-            <Box className="salon-list-hero">
-                <Container maxWidth="lg">
+            <Box className="salon-list-hero" sx={{ backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)), url(/images/hero-salon.png)` }}>
+                <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 2, textAlign: 'center' }}>
                     <MotionBox
-                        initial={{ opacity: 0, y: 20 }}
+                        initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6 }}
+                        transition={{ duration: 0.8 }}
                     >
                         <Typography variant="h1" className="salon-list-title" gutterBottom>
                             Find Your Perfect Salon
                         </Typography>
-                        <Typography variant="h6" className="salon-list-subtitle" sx={{ textAlign: 'center' }}>
+                        <Typography variant="h5" className="salon-list-subtitle" sx={{ mb: 6 }}>
                             Discover top-rated salons near you and book your next appointment
                         </Typography>
-                    </MotionBox>
-                </Container>
-            </Box>
 
-            {/* Main Content */}
-            <Container maxWidth="lg" sx={{ mt: -6, position: 'relative', zIndex: 2 }}>
-                {/* Search & Filters Card */}
-                <Box className="filters-card">
-                    <Grid container spacing={2} alignItems="center">
-                        <Grid size={{ xs: 12, md: 5 }}>
+                        {/* Search Bar in Hero */}
+                        <Box className="hero-search-bar" sx={{ maxWidth: 700, mx: 'auto', position: 'relative' }}>
                             <TextField
                                 fullWidth
-                                placeholder="Search salons, services..."
+                                placeholder="Search specifically for salons, services..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
+                                sx={{
+                                    '& .MuiOutlinedInput-root': {
+                                        bgcolor: 'white',
+                                        borderRadius: '50px !important',
+                                        height: 64,
+                                        fontSize: '1.1rem',
+                                        pl: 3,
+                                        boxShadow: '0 8px 32px rgba(0,0,0,0.2)',
+                                        '& fieldset': { border: 'none' },
+                                        '&:hover fieldset': { border: 'none' },
+                                        '&.Mui-focused fieldset': { border: 'none' },
+                                    }
+                                }}
                                 InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            <SearchIcon />
-                                        </InputAdornment>
-                                    ),
-                                    endAdornment: searchQuery && (
-                                        <InputAdornment position="end">
-                                            <ClearIcon
-                                                sx={{ cursor: 'pointer' }}
-                                                onClick={() => setSearchQuery('')}
-                                            />
+                                    endAdornment: (
+                                        <InputAdornment position="end" sx={{ mr: 1 }}>
+                                            {searchQuery && (
+                                                <IconButton onClick={() => setSearchQuery('')} edge="end" sx={{ mr: 1 }}>
+                                                    <ClearIcon />
+                                                </IconButton>
+                                            )}
+                                            <Button
+                                                variant="contained"
+                                                onClick={handleFindNearest}
+                                                size="large"
+                                                startIcon={locationLoading ? null : <MyLocationIcon />}
+                                                disabled={locationLoading}
+                                                sx={{
+                                                    borderRadius: '30px',
+                                                    px: 4,
+                                                    height: 48,
+                                                    textTransform: 'none',
+                                                    fontSize: '1rem',
+                                                    fontWeight: 600,
+                                                    background: 'linear-gradient(135deg, #6366f1 0%, #ec4899 100%)',
+                                                }}
+                                            >
+                                                {locationLoading ? 'Locating...' : 'Near Me'}
+                                            </Button>
                                         </InputAdornment>
                                     ),
                                 }}
                             />
-                        </Grid>
+                        </Box>
+                    </MotionBox>
+                </Container>
+            </Box>
 
-                        <Grid size={{ xs: 12, sm: 6, md: 2 }}>
-                            <FormControl fullWidth>
-                                <InputLabel>Country</InputLabel>
-                                <Select
-                                    value={countryFilter}
-                                    onChange={(e) => handleCountryChange(e.target.value)}
-                                    label="Country"
+            {/* Filter Bar */}
+            <Box className="filter-bar-sticky">
+                <Container maxWidth="lg">
+                    <Grid container spacing={2} alignItems="center">
+                        <Grid size={{ xs: 12, md: 8 }}>
+                            <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+                                <FormControl size="small" sx={{ minWidth: 150 }}>
+                                    <InputLabel>Country</InputLabel>
+                                    <Select
+                                        value={countryFilter}
+                                        onChange={(e) => handleCountryChange(e.target.value)}
+                                        label="Country"
+                                        sx={{ borderRadius: '12px', bgcolor: 'white' }}
+                                    >
+                                        <MenuItem value="">All Countries</MenuItem>
+                                        <MenuItem value="India">India</MenuItem>
+                                        <MenuItem value="USA">United States</MenuItem>
+                                        <MenuItem value="UK">United Kingdom</MenuItem>
+                                        <MenuItem value="UAE">United Arab Emirates</MenuItem>
+                                    </Select>
+                                </FormControl>
+                                <FormControl size="small" sx={{ minWidth: 150 }} disabled={!countryFilter}>
+                                    <InputLabel>City</InputLabel>
+                                    <Select
+                                        value={cityFilter}
+                                        onChange={(e) => setCityFilter(e.target.value)}
+                                        label="City"
+                                        sx={{ borderRadius: '12px', bgcolor: 'white' }}
+                                    >
+                                        <MenuItem value="">All Cities</MenuItem>
+                                        {availableCities.map((city) => (
+                                            <MenuItem key={city} value={city}>{city}</MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                                <FormControl size="small" sx={{ minWidth: 180 }}>
+                                    <InputLabel>Sort By</InputLabel>
+                                    <Select
+                                        value={sortBy}
+                                        onChange={(e) => setSortBy(e.target.value as SortOption)}
+                                        label="Sort By"
+                                        startAdornment={<SortIcon sx={{ mr: 1, fontSize: 18, color: 'text.secondary' }} />}
+                                        sx={{ borderRadius: '12px', bgcolor: 'white' }}
+                                    >
+                                        <MenuItem value="rating">Highest Rated</MenuItem>
+                                        <MenuItem value="reviews">Most Reviews</MenuItem>
+                                        <MenuItem value="name">Name (A-Z)</MenuItem>
+                                        {coordinates && <MenuItem value="nearest">Nearest First</MenuItem>}
+                                    </Select>
+                                </FormControl>
+                            </Box>
+                        </Grid>
+                        <Grid size={{ xs: 12, md: 4 }} sx={{ display: 'flex', justifyContent: { xs: 'flex-start', md: 'flex-end' }, alignItems: 'center', gap: 2 }}>
+                            <Typography variant="body2" color="text.secondary" fontWeight={500}>
+                                {isLoading ? 'Searching...' : `${processedSalons.length} results`}
+                            </Typography>
+                            <Box sx={{ bgcolor: 'background.paper', borderRadius: 2, border: '1px solid', borderColor: 'divider' }}>
+                                <ToggleButtonGroup
+                                    value={viewMode}
+                                    exclusive
+                                    onChange={(_, newMode) => newMode && setViewMode(newMode)}
+                                    size="small"
+                                    sx={{ p: 0.5 }}
                                 >
-                                    <MenuItem value="">All Countries</MenuItem>
-                                    <MenuItem value="India">India</MenuItem>
-                                    <MenuItem value="USA">United States</MenuItem>
-                                    <MenuItem value="UK">United Kingdom</MenuItem>
-                                    <MenuItem value="UAE">United Arab Emirates</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Grid>
-
-                        <Grid size={{ xs: 12, sm: 6, md: 2 }}>
-                            <FormControl fullWidth disabled={!countryFilter}>
-                                <InputLabel>City</InputLabel>
-                                <Select
-                                    value={cityFilter}
-                                    onChange={(e) => setCityFilter(e.target.value)}
-                                    label="City"
-                                >
-                                    <MenuItem value="">All Cities</MenuItem>
-                                    {availableCities.map((city) => (
-                                        <MenuItem key={city} value={city}>{city}</MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </Grid>
-
-                        <Grid size={{ xs: 12, sm: 6, md: 1.5 }}>
-                            <FormControl fullWidth>
-                                <InputLabel>Sort By</InputLabel>
-                                <Select
-                                    value={sortBy}
-                                    onChange={(e) => setSortBy(e.target.value as SortOption)}
-                                    label="Sort By"
-                                    startAdornment={<SortIcon sx={{ mr: 1, fontSize: 20 }} />}
-                                >
-                                    <MenuItem value="rating">Highest Rated</MenuItem>
-                                    <MenuItem value="reviews">Most Reviews</MenuItem>
-                                    <MenuItem value="name">Name (A-Z)</MenuItem>
-                                    {coordinates && <MenuItem value="nearest">Nearest First</MenuItem>}
-                                </Select>
-                            </FormControl>
-                        </Grid>
-
-                        <Grid size={{ xs: 12, md: 1.5 }}>
-                            <Button
-                                fullWidth
-                                variant="contained"
-                                startIcon={<MyLocationIcon />}
-                                onClick={handleFindNearest}
-                                disabled={locationLoading}
-                                sx={{
-                                    height: 56,
-                                    background: 'linear-gradient(135deg, #6366f1 0%, #ec4899 100%)',
-                                    '&:hover': {
-                                        background: 'linear-gradient(135deg, #4f46e5 0%, #db2777 100%)',
-                                    },
-                                }}
-                            >
-                                {locationLoading ? 'Locating...' : 'Near Me'}
-                            </Button>
+                                    <ToggleButton value="grid" sx={{ border: 'none', borderRadius: 1.5, p: 0.7 }}>
+                                        <GridViewIcon fontSize="small" />
+                                    </ToggleButton>
+                                    <ToggleButton value="list" sx={{ border: 'none', borderRadius: 1.5, p: 0.7 }}>
+                                        <ViewListIcon fontSize="small" />
+                                    </ToggleButton>
+                                </ToggleButtonGroup>
+                            </Box>
                         </Grid>
                     </Grid>
 
-                    {/* Active Filters */}
+                    {/* Active Filters Display */}
                     {hasActiveFilters && (
                         <Box sx={{ mt: 2, display: 'flex', gap: 1, flexWrap: 'wrap', alignItems: 'center' }}>
-                            <Typography variant="body2" color="text.secondary">
-                                Active filters:
-                            </Typography>
                             {searchQuery && (
-                                <Chip
-                                    label={`Search: "${searchQuery}"`}
-                                    onDelete={() => setSearchQuery('')}
-                                    size="small"
-                                />
+                                <Chip label={`Search: ${searchQuery}`} onDelete={() => setSearchQuery('')} size="small" sx={{ borderRadius: '8px' }} />
+                            )}
+                            {countryFilter && (
+                                <Chip label={countryFilter} onDelete={() => { setCountryFilter(''); setCityFilter(''); }} size="small" sx={{ borderRadius: '8px' }} />
                             )}
                             {cityFilter && (
-                                <Chip
-                                    label={`City: ${cityFilter}`}
-                                    onDelete={() => setCityFilter('')}
-                                    size="small"
-                                />
+                                <Chip label={cityFilter} onDelete={() => setCityFilter('')} size="small" sx={{ borderRadius: '8px' }} />
                             )}
-                            <Button
-                                size="small"
-                                onClick={handleClearSearch}
-                                sx={{ ml: 1 }}
-                            >
+                            <Button size="small" onClick={handleClearSearch} sx={{ ml: 1, color: 'text.secondary' }}>
                                 Clear All
                             </Button>
                         </Box>
                     )}
-                </Box>
+                </Container>
+            </Box>
 
-                {/* Results Header */}
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', my: 3 }}>
-                    <Typography variant="h6" color="text.secondary">
-                        {isLoading ? 'Loading...' : `${processedSalons.length} salon${processedSalons.length !== 1 ? 's' : ''} found`}
-                    </Typography>
-
-                    <ToggleButtonGroup
-                        value={viewMode}
-                        exclusive
-                        onChange={(_, newMode) => newMode && setViewMode(newMode)}
-                        size="small"
-                    >
-                        <ToggleButton value="grid">
-                            <GridViewIcon />
-                        </ToggleButton>
-                        <ToggleButton value="list">
-                            <ViewListIcon />
-                        </ToggleButton>
-                    </ToggleButtonGroup>
-                </Box>
-
-                {/* Salon Grid/List */}
+            {/* Main Content Grid */}
+            <Container maxWidth="lg" sx={{ py: 6, minHeight: '60vh' }}>
                 {isLoading ? (
-                    <Grid container spacing={3}>
+                    <Grid container spacing={4}>
                         {[1, 2, 3, 4, 5, 6].map((i) => (
                             <Grid size={{ xs: 12, sm: 6, md: viewMode === 'grid' ? 4 : 12 }} key={i}>
                                 <SalonCardSkeleton />
@@ -304,28 +302,34 @@ const SalonList: React.FC = () => {
                     </Grid>
                 ) : processedSalons.length === 0 ? (
                     <Box className="empty-state">
-                        <Typography variant="h4" gutterBottom>
-                            😔 No Salons Found
+                        <Box
+                            component="img"
+                            src="/images/styler-logo-purple.png"
+                            sx={{ width: 80, height: 'auto', mb: 3, opacity: 0.5, filter: 'grayscale(1)' }}
+                            alt="No results"
+                        />
+                        <Typography variant="h4" gutterBottom fontWeight={700} color="text.primary">
+                            No Salons Found
                         </Typography>
-                        <Typography variant="body1" color="text.secondary" paragraph>
+                        <Typography variant="body1" color="text.secondary" paragraph sx={{ maxWidth: 400, mx: 'auto' }}>
                             {hasActiveFilters
-                                ? "We couldn't find any salons matching your criteria. Try adjusting your filters."
-                                : "No salons available at the moment."}
+                                ? "We couldn't find any salons matching your current filters. Try removing some filters or searching for something else."
+                                : "There are no salons available at the moment. Please check back later."}
                         </Typography>
                         {hasActiveFilters && (
-                            <Button variant="contained" onClick={handleClearSearch}>
-                                Clear Filters
+                            <Button variant="outlined" onClick={handleClearSearch} size="large" sx={{ mt: 2, borderRadius: '50px' }}>
+                                Clear All Filters
                             </Button>
                         )}
                     </Box>
                 ) : (
-                    <Grid container spacing={3}>
+                    <Grid container spacing={4}>
                         {processedSalons.map((salon, index) => (
                             <Grid size={{ xs: 12, sm: 6, md: viewMode === 'grid' ? 4 : 12 }} key={salon._id}>
                                 <MotionBox
-                                    initial={{ opacity: 0, y: 20 }}
+                                    initial={{ opacity: 0, y: 30 }}
                                     animate={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.4, delay: index * 0.1 }}
+                                    transition={{ duration: 0.5, delay: index * 0.05 }}
                                 >
                                     <Box className="salon-card-wrapper" sx={{ position: 'relative' }}>
                                         {salon.distance !== undefined && (
@@ -339,6 +343,7 @@ const SalonList: React.FC = () => {
                                                     right: 16,
                                                     zIndex: 2,
                                                     fontWeight: 600,
+                                                    boxShadow: '0 4px 12px rgba(99, 102, 241, 0.4)'
                                                 }}
                                             />
                                         )}
@@ -361,7 +366,7 @@ const SalonList: React.FC = () => {
                 onClose={() => setShowLocationAlert(false)}
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
             >
-                <Alert severity="success" onClose={() => setShowLocationAlert(false)}>
+                <Alert severity="success" variant="filled" onClose={() => setShowLocationAlert(false)} sx={{ borderRadius: '12px' }}>
                     📍 Showing salons nearest to your location
                 </Alert>
             </Snackbar>
@@ -372,7 +377,7 @@ const SalonList: React.FC = () => {
                     autoHideDuration={6000}
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
                 >
-                    <Alert severity="error">
+                    <Alert severity="error" variant="filled" sx={{ borderRadius: '12px' }}>
                         {locationError}
                     </Alert>
                 </Snackbar>

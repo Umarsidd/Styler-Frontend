@@ -82,19 +82,43 @@ const About: React.FC = () => {
     return (
         <Box className="about-page">
             {/* Hero Section */}
-            <Box className="about-hero">
+            <Box className="about-hero" sx={{ backgroundImage: `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.7)), url(/images/hero-salon.png)` }}>
                 <Container maxWidth="lg">
                     <MotionBox
-                        initial={{ opacity: 0, y: 20 }}
+                        initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6 }}
-                        sx={{ textAlign: 'center' }}
+                        transition={{ duration: 0.8 }}
+                        sx={{ textAlign: 'center', position: 'relative', zIndex: 2 }}
                     >
-                        <Typography variant="h1" sx={{ color: 'white', mb: 2, fontSize: { xs: '1.75rem', sm: '2.5rem', md: '3.5rem' }, fontWeight: 800 }}>
-                            Transforming Grooming Experiences
+                        <Chip
+                            label="Our Story"
+                            sx={{
+                                bgcolor: 'rgba(255,255,255,0.1)',
+                                color: 'white',
+                                backdropFilter: 'blur(10px)',
+                                mb: 3,
+                                px: 1,
+                                border: '1px solid rgba(255,255,255,0.2)'
+                            }}
+                        />
+                        <Typography variant="h1" sx={{
+                            color: 'white',
+                            mb: 3,
+                            fontSize: { xs: '2.5rem', md: '4.5rem' },
+                            fontWeight: 800,
+                            textShadow: '0 4px 20px rgba(0,0,0,0.3)'
+                        }}>
+                            Redefining Grooming
                         </Typography>
-                        <Typography variant="h5" sx={{ color: 'rgba(255, 255, 255, 0.95)', maxWidth: { xs: '100%', sm: 600, md: 800 }, mx: 'auto', fontSize: { xs: '1rem', sm: '1.25rem', md: '1.5rem' }, px: { xs: 2, sm: 3 } }}>
-                            We connect you with the best salons and stylists for a premium grooming experience
+                        <Typography variant="h5" sx={{
+                            color: 'rgba(255, 255, 255, 0.9)',
+                            mb: 0,
+                            maxWidth: 800,
+                            mx: 'auto',
+                            lineHeight: 1.6,
+                            fontSize: { xs: '1.1rem', md: '1.4rem' }
+                        }}>
+                            We are seamless connecting you with the finest salons and stylists for an unmatched experience.
                         </Typography>
                     </MotionBox>
                 </Container>
@@ -102,34 +126,45 @@ const About: React.FC = () => {
 
             {/* Stats Section */}
             <Container
-                maxWidth={false}
+                maxWidth="lg"
                 className="stats-section"
-                disableGutters
                 sx={{
                     mt: -8,
                     position: 'relative',
                     zIndex: 10,
-                    mb: 8,
+                    mb: 10,
                 }}
             >
-                <Grid container spacing={2} sx={{ px: 1 }}>
+                <Grid container spacing={3}>
                     {stats.map((stat, index) => (
-                        <Grid size={{ xs: 12, sm: 6, md: 3 }} key={index}>
+                        <Grid size={{ xs: 6, md: 3 }} key={index}>
                             <MotionCard
-                                initial={{ opacity: 0, y: 20 }}
+                                initial={{ opacity: 0, y: 30 }}
                                 whileInView={{ opacity: 1, y: 0 }}
-                                transition={{ delay: index * 0.1 }}
+                                transition={{ delay: index * 0.1, duration: 0.5 }}
                                 viewport={{ once: true }}
-                                className="stat-card"
+                                className="stat-card-about"
+                                elevation={0}
                             >
-                                <CardContent sx={{ textAlign: 'center' }}>
-                                    <Box className="stat-icon" sx={{ color: stat.color, mb: 2 }}>
-                                        {stat.icon}
+                                <CardContent sx={{ textAlign: 'center', p: 3 }}>
+                                    <Box className="stat-icon" sx={{
+                                        color: stat.color,
+                                        mb: 2,
+                                        bgcolor: `${stat.color}15`,
+                                        width: 60,
+                                        height: 60,
+                                        borderRadius: '50%',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        mx: 'auto'
+                                    }}>
+                                        {React.cloneElement(stat.icon as React.ReactElement, { sx: { fontSize: 30 } })}
                                     </Box>
-                                    <Typography variant="h3" sx={{ fontWeight: 800, color: stat.color }}>
+                                    <Typography variant="h3" sx={{ fontWeight: 800, color: 'text.primary', mb: 0.5 }}>
                                         {stat.value}
                                     </Typography>
-                                    <Typography variant="body1" color="text.secondary">
+                                    <Typography variant="body2" color="text.secondary" fontWeight={500}>
                                         {stat.label}
                                     </Typography>
                                 </CardContent>
@@ -139,61 +174,83 @@ const About: React.FC = () => {
                 </Grid>
             </Container>
 
-
             {/* Mission Section */}
-            <Container maxWidth="lg" sx={{ py: 8 }}>
-                <Grid container spacing={6} alignItems="center">
+            <Container maxWidth="lg" sx={{ py: 4, mb: 8 }}>
+                <Grid container spacing={8} alignItems="center">
                     <Grid size={{ xs: 12, md: 6 }}>
                         <MotionBox
-                            initial={{ opacity: 0, x: -20 }}
+                            initial={{ opacity: 0, x: -30 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
+                            transition={{ duration: 0.6 }}
                         >
-                            <Chip label="Our Mission" color="primary" sx={{ mb: 2, fontWeight: 700 }} />
-                            <Typography variant="h2" gutterBottom sx={{ fontSize: { xs: '1.75rem', sm: '2.25rem', md: '2.75rem' } }}>
-                                Making Premium Grooming Accessible
+                            <Typography variant="overline" color="primary" sx={{ fontWeight: 700, letterSpacing: 2 }}>
+                                OUR MISSION
                             </Typography>
-                            <Typography variant="body1" paragraph color="text.secondary" sx={{ fontSize: { xs: '0.95rem', sm: '1rem', md: '1.1rem' }, lineHeight: 1.8 }}>
+                            <Typography variant="h2" gutterBottom sx={{ fontWeight: 800, mb: 3 }}>
+                                Making Premium <br />Grooming Accessible
+                            </Typography>
+                            <Typography variant="body1" paragraph color="text.secondary" sx={{ fontSize: '1.1rem', lineHeight: 1.8 }}>
                                 At Styler, we believe everyone deserves access to premium grooming services. We're on a mission
                                 to connect clients with the best salons and stylists, making it easy to book, convenient to visit,
                                 and delightful to experience.
                             </Typography>
-                            <Typography variant="body1" color="text.secondary" sx={{ fontSize: { xs: '0.95rem', sm: '1rem', md: '1.1rem' }, lineHeight: 1.8 }}>
-                                Through our platform, we're empowering local salons while providing customers with transparency,
+                            <Typography variant="body1" color="text.secondary" sx={{ fontSize: '1.1rem', lineHeight: 1.8 }}>
+                                Through our platform, we're empowering local salons with digital tools while providing customers with transparency,
                                 convenience, and confidence in their grooming choices.
                             </Typography>
                         </MotionBox>
                     </Grid>
                     <Grid size={{ xs: 12, md: 6 }}>
-                        <Box
+                        <MotionBox
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.6 }}
                             sx={{
-                                height: { xs: 250, sm: 300, md: 400 },
-                                borderRadius: { xs: 2, md: 4 },
-                                background: 'linear-gradient(135deg, #6366f1 0%, #ec4899 100%)',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                fontSize: { xs: '4rem', sm: '5rem', md: '6rem' },
-                                color: 'white',
+                                height: { xs: 300, md: 500 },
+                                borderRadius: '30px',
+                                backgroundImage: 'url(/images/womens-styling.png)',
+                                backgroundSize: 'cover',
+                                backgroundPosition: 'center',
+                                navigate: 'relative',
+                                boxShadow: '0 20px 60px rgba(0,0,0,0.15)',
+                                overflow: 'hidden'
                             }}
                         >
-                            ✂️
-                        </Box>
+                            <Box sx={{
+                                position: 'absolute',
+                                bottom: 0,
+                                left: 0,
+                                right: 0,
+                                p: 4,
+                                background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent)'
+                            }}>
+                                <Typography variant="h5" color="white" fontWeight={700}>
+                                    "Style is a way to say who you are without having to speak."
+                                </Typography>
+                            </Box>
+                        </MotionBox>
                     </Grid>
                 </Grid>
             </Container>
 
             {/* Values Section */}
-            <Box sx={{ bgcolor: '#f8fafc', py: 8 }}>
+            <Box sx={{ bgcolor: 'white', py: 10, position: 'relative' }}>
                 <Container maxWidth="lg">
-                    <Typography variant="h2" align="center" sx={{ mb: 2, fontSize: { xs: '1.75rem', sm: '2.25rem', md: '2.75rem' } }}>
-                        Our Values
-                    </Typography>
-                    <Typography variant="h6" align="center" color="text.secondary" sx={{ mb: 6, maxWidth: { xs: '100%', md: 700 }, mx: 'auto', fontSize: { xs: '1rem', sm: '1.125rem', md: '1.25rem' }, px: { xs: 2, sm: 0 } }}>
-                        The principles that guide everything we do
-                    </Typography>
+                    <Box sx={{ textAlign: 'center', mb: 8 }}>
+                        <Typography variant="overline" color="secondary" sx={{ fontWeight: 700, letterSpacing: 2 }}>
+                            OUR CORE VALUES
+                        </Typography>
+                        <Typography variant="h2" sx={{ fontWeight: 800, mb: 2 }}>
+                            What Drives Us
+                        </Typography>
+                        <Typography variant="h6" color="text.secondary" sx={{ maxWidth: 600, mx: 'auto' }}>
+                            The principles that guide everything we do at Styler.
+                        </Typography>
+                    </Box>
 
-                    <Grid container spacing={3}>
+                    <Grid container spacing={4}>
                         {values.map((value, index) => (
                             <Grid size={{ xs: 12, sm: 6, md: 3 }} key={index}>
                                 <MotionCard
@@ -202,57 +259,42 @@ const About: React.FC = () => {
                                     whileInView={{ opacity: 1, y: 0 }}
                                     transition={{ delay: index * 0.1 }}
                                     viewport={{ once: true }}
+                                    elevation={0}
                                     sx={{
                                         height: '100%',
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        borderRadius: 3
+                                        borderRadius: '24px',
+                                        bgcolor: '#f8fafc',
+                                        border: '1px solid transparent',
+                                        transition: 'all 0.3s ease'
                                     }}
                                 >
                                     <CardContent sx={{
-                                        flexGrow: 1,
                                         display: 'flex',
                                         flexDirection: 'column',
                                         alignItems: 'center',
                                         textAlign: 'center',
-                                        p: { xs: 3, sm: 3, md: 3.5 }
+                                        p: 4
                                     }}>
                                         <Box
                                             sx={{
-                                                width: { xs: 64, sm: 70, md: 80 },
-                                                height: { xs: 64, sm: 70, md: 80 },
-                                                borderRadius: '50%',
-                                                background: 'linear-gradient(135deg, #6366f1 0%, #ec4899 100%)',
+                                                width: 70,
+                                                height: 70,
+                                                borderRadius: '20px',
+                                                background: 'white',
                                                 display: 'flex',
                                                 alignItems: 'center',
                                                 justifyContent: 'center',
-                                                mb: 2.5,
-                                                fontSize: { xs: '1.75rem', sm: '2rem', md: '2.25rem' },
-                                                color: 'white',
-                                                flexShrink: 0,
+                                                mb: 3,
+                                                color: 'primary.main',
+                                                boxShadow: '0 10px 30px rgba(0,0,0,0.05)'
                                             }}
                                         >
-                                            {value.icon}
+                                            {React.cloneElement(value.icon as React.ReactElement, { sx: { fontSize: 32 } })}
                                         </Box>
-                                        <Typography
-                                            variant="h6"
-                                            gutterBottom
-                                            sx={{
-                                                fontWeight: 700,
-                                                fontSize: { xs: '1.125rem', sm: '1.25rem', md: '1.375rem' },
-                                                mb: 1.5
-                                            }}
-                                        >
+                                        <Typography variant="h6" gutterBottom sx={{ fontWeight: 700 }}>
                                             {value.title}
                                         </Typography>
-                                        <Typography
-                                            variant="body2"
-                                            color="text.secondary"
-                                            sx={{
-                                                fontSize: { xs: '0.875rem', sm: '0.9375rem', md: '1rem' },
-                                                lineHeight: 1.6
-                                            }}
-                                        >
+                                        <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.6 }}>
                                             {value.description}
                                         </Typography>
                                     </CardContent>
@@ -264,13 +306,15 @@ const About: React.FC = () => {
             </Box>
 
             {/* Timeline Section */}
-            <Container maxWidth="lg" sx={{ py: 8 }}>
-                <Typography variant="h2" align="center" sx={{ mb: 2, fontSize: { xs: '1.75rem', sm: '2.25rem', md: '2.75rem' } }}>
-                    Our Journey
-                </Typography>
-                <Typography variant="h6" align="center" color="text.secondary" sx={{ mb: 6, fontSize: { xs: '1rem', sm: '1.125rem', md: '1.25rem' }, px: { xs: 2, sm: 0 } }}>
-                    Growing together towards excellence
-                </Typography>
+            <Container maxWidth="lg" sx={{ py: 10 }}>
+                <Box sx={{ textAlign: 'center', mb: 8 }}>
+                    <Typography variant="overline" color="primary" sx={{ fontWeight: 700, letterSpacing: 2 }}>
+                        HISTORY
+                    </Typography>
+                    <Typography variant="h2" sx={{ fontWeight: 800 }}>
+                        Our Journey
+                    </Typography>
+                </Box>
 
                 <Box
                     className="timeline-container"
@@ -279,12 +323,12 @@ const About: React.FC = () => {
                         '&::before': {
                             content: '""',
                             position: 'absolute',
-                            left: '50%',
-                            transform: 'translateX(-50%)',
-                            width: 4,
+                            left: { xs: 20, md: '50%' },
+                            transform: { xs: 'none', md: 'translateX(-50%)' },
+                            width: 2,
                             height: '100%',
                             background: 'linear-gradient(180deg, #6366f1 0%, #ec4899 100%)',
-                            display: { xs: 'none', md: 'block' },
+                            opacity: 0.3
                         },
                     }}
                 >
@@ -292,34 +336,62 @@ const About: React.FC = () => {
                         <MotionBox
                             key={index}
                             className="timeline-item"
-                            initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            transition={{ delay: index * 0.2 }}
+                            initial={{ opacity: 0, x: 0, y: 30 }}
+                            whileInView={{ opacity: 1, x: 0, y: 0 }}
+                            transition={{ delay: index * 0.1 }}
                             viewport={{ once: true }}
                             sx={{
                                 display: 'flex',
-                                justifyContent: index % 2 === 0 ? 'flex-start' : 'flex-end',
+                                justifyContent: { xs: 'flex-start', md: index % 2 === 0 ? 'flex-start' : 'flex-end' },
                                 mb: 6,
                                 position: 'relative',
+                                pl: { xs: 6, md: 0 }
                             }}
                         >
+                            <Box
+                                sx={{
+                                    position: 'absolute',
+                                    left: { xs: 20, md: '50%' },
+                                    top: 20,
+                                    transform: 'translateX(-50%)',
+                                    width: 16,
+                                    height: 16,
+                                    bgcolor: 'white',
+                                    border: '4px solid #6366f1',
+                                    borderRadius: '50%',
+                                    zIndex: 2
+                                }}
+                            />
+
                             <Card
+                                elevation={0}
                                 sx={{
                                     width: { xs: '100%', md: '45%' },
                                     position: 'relative',
+                                    borderRadius: '20px',
+                                    bgcolor: '#f8fafc',
+                                    border: '1px solid rgba(0,0,0,0.05)',
+                                    mr: { xs: 0, md: index % 2 === 0 ? 4 : 0 },
+                                    ml: { xs: 0, md: index % 2 !== 0 ? 4 : 0 },
                                 }}
                             >
-                                <CardContent sx={{ p: { xs: 2, sm: 2.5, md: 3 } }}>
+                                <CardContent sx={{ p: 4 }}>
                                     <Chip
                                         label={item.year}
                                         color="primary"
                                         size="small"
-                                        sx={{ mb: 2, fontWeight: 700, fontSize: { xs: '0.75rem', sm: '0.8125rem' } }}
+                                        sx={{
+                                            mb: 2,
+                                            fontWeight: 700,
+                                            borderRadius: '8px',
+                                            bgcolor: 'rgba(99, 102, 241, 0.1)',
+                                            color: 'primary.main'
+                                        }}
                                     />
-                                    <Typography variant="h5" gutterBottom sx={{ fontWeight: 700, fontSize: { xs: '1.125rem', sm: '1.25rem', md: '1.5rem' } }}>
+                                    <Typography variant="h5" gutterBottom sx={{ fontWeight: 700 }}>
                                         {item.event}
                                     </Typography>
-                                    <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.875rem', sm: '0.9375rem' } }}>
+                                    <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.6 }}>
                                         {item.description}
                                     </Typography>
                                 </CardContent>
@@ -330,44 +402,65 @@ const About: React.FC = () => {
             </Container>
 
             {/* Team Section */}
-            <Box sx={{ bgcolor: '#f8fafc', py: 8 }}>
+            <Box sx={{ bgcolor: 'white', py: 10, borderTop: '1px solid', borderColor: 'divider' }}>
                 <Container maxWidth="lg">
-                    <Typography variant="h2" align="center" sx={{ mb: 2, fontSize: { xs: '1.75rem', sm: '2.25rem', md: '2.75rem' } }}>
-                        Meet Our Leadership
-                    </Typography>
-                    <Typography variant="h6" align="center" color="text.secondary" sx={{ mb: 6, fontSize: { xs: '1rem', sm: '1.125rem', md: '1.25rem' }, px: { xs: 2, sm: 0 } }}>
-                        Passionate people building the future of grooming
-                    </Typography>
+                    <Box sx={{ textAlign: 'center', mb: 8 }}>
+                        <Typography variant="overline" color="secondary" sx={{ fontWeight: 700, letterSpacing: 2 }}>
+                            LEADERSHIP
+                        </Typography>
+                        <Typography variant="h2" sx={{ fontWeight: 800, mb: 2 }}>
+                            Meet Our Team
+                        </Typography>
+                        <Typography variant="h6" color="text.secondary">
+                            Passionate people building the future of grooming
+                        </Typography>
+                    </Box>
 
                     <Grid container spacing={4} justifyContent="center">
                         {team.map((member, index) => (
                             <Grid size={{ xs: 12, sm: 6, md: 4 }} key={index}>
                                 <MotionCard
                                     className="team-card"
-                                    initial={{ opacity: 0, scale: 0.95 }}
-                                    whileInView={{ opacity: 1, scale: 1 }}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
                                     transition={{ delay: index * 0.1 }}
                                     viewport={{ once: true }}
-                                    sx={{ textAlign: 'center', p: { xs: 2.5, sm: 3, md: 4 } }}
+                                    elevation={0}
+                                    sx={{
+                                        textAlign: 'center',
+                                        p: 4,
+                                        borderRadius: '24px',
+                                        bgcolor: '#f8fafc',
+                                        height: '100%'
+                                    }}
                                 >
-                                    <Avatar
+                                    <Box
                                         sx={{
-                                            width: { xs: 80, sm: 90, md: 100 },
-                                            height: { xs: 80, sm: 90, md: 100 },
-                                            fontSize: { xs: '2rem', sm: '2.25rem', md: '2.5rem' },
+                                            width: 120,
+                                            height: 120,
+                                            borderRadius: '50%',
                                             bgcolor: 'primary.main',
                                             margin: '0 auto 1.5rem',
+                                            overflow: 'hidden',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            color: 'white',
+                                            fontSize: '3rem',
+                                            fontWeight: 700,
+                                            background: 'linear-gradient(135deg, #6366f1 0%, #ec4899 100%)',
+                                            boxShadow: '0 10px 20px rgba(99, 102, 241, 0.3)'
                                         }}
                                     >
                                         {member.avatar}
-                                    </Avatar>
-                                    <Typography variant="h5" gutterBottom sx={{ fontWeight: 700, fontSize: { xs: '1.125rem', sm: '1.25rem', md: '1.5rem' } }}>
+                                    </Box>
+                                    <Typography variant="h5" gutterBottom sx={{ fontWeight: 700 }}>
                                         {member.name}
                                     </Typography>
-                                    <Typography variant="subtitle1" color="primary" gutterBottom sx={{ fontWeight: 600, fontSize: { xs: '0.9375rem', sm: '1rem' } }}>
+                                    <Typography variant="subtitle1" color="primary" gutterBottom sx={{ fontWeight: 600, mb: 2 }}>
                                         {member.role}
                                     </Typography>
-                                    <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.875rem', sm: '0.9375rem' } }}>
+                                    <Typography variant="body2" color="text.secondary">
                                         {member.description}
                                     </Typography>
                                 </MotionCard>
