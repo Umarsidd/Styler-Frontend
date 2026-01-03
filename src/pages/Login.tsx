@@ -300,15 +300,6 @@ const Login: React.FC<LoginProps> = ({ isRegisterMode = false }) => {
                                     endIcon={!loading && <ArrowForwardIcon />}
                                     sx={{
                                         height: 56,
-                                        borderRadius: '16px',
-                                        fontSize: '1.1rem',
-                                        fontWeight: 700,
-                                        textTransform: 'none',
-                                        background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
-                                        boxShadow: '0 10px 25px -5px rgba(79, 70, 229, 0.4)',
-                                        '&:hover': {
-                                            boxShadow: '0 20px 30px -10px rgba(79, 70, 229, 0.5)',
-                                        }
                                     }}
                                 >
                                     {loading ? <CircularProgress size={24} color="inherit" /> : 'Log In'}
@@ -444,15 +435,6 @@ const Login: React.FC<LoginProps> = ({ isRegisterMode = false }) => {
                                     sx={{
                                         mt: 4,
                                         height: 56,
-                                        borderRadius: '16px',
-                                        fontSize: '1.1rem',
-                                        fontWeight: 700,
-                                        textTransform: 'none',
-                                        background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
-                                        boxShadow: '0 10px 25px -5px rgba(79, 70, 229, 0.4)',
-                                        '&:hover': {
-                                            boxShadow: '0 20px 30px -10px rgba(79, 70, 229, 0.5)',
-                                        }
                                     }}
                                 >
                                     {loading ? <CircularProgress size={24} color="inherit" /> : 'Create Account'}

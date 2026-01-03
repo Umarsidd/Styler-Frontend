@@ -312,10 +312,6 @@ const AuthModal: React.FC = () => {
                                         endIcon={!loading && <ArrowForwardIcon />}
                                         sx={{
                                             height: 50,
-                                            borderRadius: '12px',
-                                            fontWeight: 700,
-                                            textTransform: 'none',
-                                            background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
                                         }}
                                     >
                                         {loading ? <CircularProgress size={24} color="inherit" /> : 'Log In'}
@@ -398,10 +394,6 @@ const AuthModal: React.FC = () => {
                                         sx={{
                                             mt: 3,
                                             height: 50,
-                                            borderRadius: '12px',
-                                            fontWeight: 700,
-                                            textTransform: 'none',
-                                            background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
                                         }}
                                     >
                                         {loading ? <CircularProgress size={24} color="inherit" /> : 'Sign Up'}

@@ -131,35 +131,48 @@ const themeOptions: ThemeOptions = {
         '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
         '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
         '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
-        '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
     ],
     components: {
         MuiButton: {
             styleOverrides: {
                 root: {
-                    borderRadius: 12,
-                    padding: '10px 24px',
-                    fontSize: '1rem',
-                    fontWeight: 600,
+                    borderRadius: '50px', // Pill shape
+                    textTransform: 'none',
+                    fontWeight: 700,
+                    letterSpacing: '0.02em',
+                    padding: '12px 28px',
                     boxShadow: 'none',
                     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                    '&:hover': {
-                        boxShadow: '0 4px 12px rgba(99, 102, 241, 0.3)',
-                        transform: 'translateY(-2px)',
-                    },
                 },
                 contained: {
-                    background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+                    background: 'linear-gradient(135deg, #6366f1 0%, #a855f7 100%)', // More vibrant indigo-purple
+                    color: '#ffffff',
+                    boxShadow: '0 10px 20px -10px rgba(99, 102, 241, 0.5)', // Colored shadow
                     '&:hover': {
-                        background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
+                        background: 'linear-gradient(135deg, #4f46e5 0%, #9333ea 100%)',
+                        boxShadow: '0 15px 30px -10px rgba(99, 102, 241, 0.6)',
+                        transform: 'translateY(-2px) scale(1.02)',
+                    },
+                    '&:active': {
+                        transform: 'scale(0.98)',
+                    },
+                },
+                outlined: {
+                    borderWidth: '2px',
+                    borderColor: '#6366f1',
+                    color: '#6366f1',
+                    '&:hover': {
+                        borderWidth: '2px',
+                        background: 'rgba(99, 102, 241, 0.04)',
+                        borderColor: '#4f46e5',
                     },
                 },
                 sizeLarge: {
-                    padding: '14px 32px',
+                    padding: '16px 36px',
                     fontSize: '1.125rem',
                 },
                 sizeSmall: {
-                    padding: '6px 16px',
+                    padding: '8px 20px',
                     fontSize: '0.875rem',
                 },
             },
@@ -167,12 +180,16 @@ const themeOptions: ThemeOptions = {
         MuiCard: {
             styleOverrides: {
                 root: {
-                    borderRadius: 20,
-                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
-                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    borderRadius: 24,
+                    background: '#ffffff',
+                    border: '1px solid rgba(241, 245, 249, 0.5)',
+                    boxShadow: '0 2px 10px rgba(15, 23, 42, 0.03), 0 15px 25px -5px rgba(15, 23, 42, 0.04)', // Soft, layered
+                    overflow: 'visible', // Allow hover effects to pop out if needed, though hidden is usually safer for content. Keeping visible for shadows.
+                    transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)', // Bouncy
                     '&:hover': {
-                        boxShadow: '0 8px 30px rgba(0, 0, 0, 0.12)',
-                        transform: 'translateY(-4px)',
+                        boxShadow: '0 20px 40px -5px rgba(15, 23, 42, 0.1), 0 10px 15px -5px rgba(15, 23, 42, 0.05)',
+                        transform: 'translateY(-6px)',
+                        borderColor: 'rgba(99, 102, 241, 0.2)',
                     },
                 },
             },

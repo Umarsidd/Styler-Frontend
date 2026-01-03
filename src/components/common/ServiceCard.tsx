@@ -16,11 +16,6 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, onClick }) => {
             onClick={onClick}
             sx={{
                 cursor: onClick ? 'pointer' : 'default',
-                transition: 'all 0.3s',
-                '&:hover': {
-                    transform: onClick ? 'translateY(-4px)' : 'none',
-                    boxShadow: onClick ? 4 : 2,
-                },
             }}
         >
             <CardContent>
