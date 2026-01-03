@@ -13,6 +13,7 @@ import {
     ToggleButton,
     InputAdornment,
     CircularProgress,
+    IconButton,
 } from '@mui/material';
 import {
     Person as PersonIcon,
@@ -24,6 +25,9 @@ import {
     ContentCut as ScissorsIcon,
     CalendarMonth as CalendarIcon,
     Store as StoreIcon,
+    Visibility as VisibilityIcon,
+    VisibilityOff as VisibilityOffIcon,
+    ArrowForward as ArrowForwardIcon,
 } from '@mui/icons-material';
 import { motion } from 'framer-motion';
 import { authService } from '../services/authService';
@@ -56,6 +60,8 @@ const Login: React.FC<LoginProps> = ({ isRegisterMode = false }) => {
     const [activeTab, setActiveTab] = useState(isRegisterMode ? 1 : 0);
     const [loading, setLoading] = useState(false);
     const [selectedRole, setSelectedRole] = useState<UserRole>(UserRole.CUSTOMER);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const [loginData, setLoginData] = useState<LoginFormValues>({ email: '', password: '' });
     const [registerData, setRegisterData] = useState<RegisterFormValues>({
@@ -176,29 +182,39 @@ const Login: React.FC<LoginProps> = ({ isRegisterMode = false }) => {
             {/* Left Side - Branding */}
             <Box className="login-left">
                 <MotionBox
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.6 }}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, ease: "easeOut" }}
                     className="login-branding"
                 >
-                    <Box sx={{ mb: 3 }}>
+                    <Box sx={{ mb: 4 }}>
                         <Logo variant="light" size="large" clickable={false} />
                     </Box>
                     <Typography className="login-tagline">
-                        Your premium salon booking platform
+                        Experience the art of grooming with Styler. Check in to check out the best salons near you.
                     </Typography>
+
                     <Box className="login-features">
                         <Box className="login-feature">
                             <Box className="login-feature-icon"><ScissorsIcon /></Box>
-                            <Typography>Expert Stylists</Typography>
+                            <Box>
+                                <Typography fontWeight={700}>Expert Stylists</Typography>
+                                <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.7)' }}>Top-tier professionals</Typography>
+                            </Box>
                         </Box>
                         <Box className="login-feature">
                             <Box className="login-feature-icon"><CalendarIcon /></Box>
-                            <Typography>Easy Booking</Typography>
+                            <Box>
+                                <Typography fontWeight={700}>Easy Booking</Typography>
+                                <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.7)' }}>Schedule in seconds</Typography>
+                            </Box>
                         </Box>
                         <Box className="login-feature">
                             <Box className="login-feature-icon"><StoreIcon /></Box>
-                            <Typography>20+ Locations</Typography>
+                            <Box>
+                                <Typography fontWeight={700}>Premium Salons</Typography>
+                                <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.7)' }}>Curated locations</Typography>
+                            </Box>
                         </Box>
                     </Box>
                 </MotionBox>
@@ -207,114 +223,145 @@ const Login: React.FC<LoginProps> = ({ isRegisterMode = false }) => {
             {/* Right Side - Form */}
             <Box className="login-right">
                 <MotionBox
-                    initial={{ opacity: 0, x: 20 }}
+                    initial={{ opacity: 0, x: 50 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.6 }}
+                    transition={{ duration: 0.6, delay: 0.2 }}
                     className="login-form-container"
                 >
                     <Box className="login-form-header">
-                        <Typography variant="h1">Welcome</Typography>
-                        <Typography variant="body1">Sign in to continue to Styler</Typography>
+                        <Typography variant="h1">Welcome Back</Typography>
+                        <Typography variant="body1">Please enter your details to sign in</Typography>
                     </Box>
 
-                    <Card sx={{ boxShadow: 0 }}>
-                        <Tabs
-                            value={activeTab}
-                            onChange={(_, newValue) => setActiveTab(newValue)}
-                            variant="fullWidth"
-                            sx={{ borderBottom: 1, borderColor: 'divider' }}
-                        >
-                            <Tab icon={<LoginIcon />} label="Login" iconPosition="start" />
-                            <Tab icon={<PersonAddIcon />} label="Sign Up" iconPosition="start" />
-                        </Tabs>
+                    <Tabs
+                        value={activeTab}
+                        onChange={(_, newValue) => setActiveTab(newValue)}
+                        variant="fullWidth"
+                        className="login-tabs"
+                    >
+                        <Tab label="Login" />
+                        <Tab label="Create Account" />
+                    </Tabs>
 
-                        <CardContent sx={{ p: 0, pt: 3, px: { xs: 2, sm: 3 } }}>
-                            {/* Login Tab */}
-                            {activeTab === 0 && (
-                                <Box component="form" onSubmit={handleLoginSubmit} className="login-form">
-                                    <TextField
-                                        fullWidth
-                                        label="Email"
-                                        type="email"
-                                        value={loginData.email}
-                                        onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
-                                        required
-                                        InputProps={{
-                                            startAdornment: (
-                                                <InputAdornment position="start">
-                                                    <EmailIcon />
-                                                </InputAdornment>
-                                            ),
-                                        }}
-                                        sx={{ mb: 2 }}
-                                    />
+                    <CardContent sx={{ p: 0 }}>
+                        {/* Login Tab */}
+                        {activeTab === 0 && (
+                            <Box component="form" onSubmit={handleLoginSubmit} className="login-form">
+                                <TextField
+                                    fullWidth
+                                    label="Email Address"
+                                    type="email"
+                                    value={loginData.email}
+                                    onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
+                                    required
+                                    InputProps={{
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <EmailIcon sx={{ color: '#94a3b8' }} />
+                                            </InputAdornment>
+                                        ),
+                                    }}
+                                    sx={{ mb: 2.5 }}
+                                />
 
-                                    <TextField
-                                        fullWidth
-                                        label="Password"
-                                        type="password"
-                                        value={loginData.password}
-                                        onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
-                                        required
-                                        InputProps={{
-                                            startAdornment: (
-                                                <InputAdornment position="start">
-                                                    <LockIcon />
-                                                </InputAdornment>
-                                            ),
-                                        }}
-                                        sx={{ mb: 3 }}
-                                    />
+                                <TextField
+                                    fullWidth
+                                    label="Password"
+                                    type={showPassword ? 'text' : 'password'}
+                                    value={loginData.password}
+                                    onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
+                                    required
+                                    InputProps={{
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <LockIcon sx={{ color: '#94a3b8' }} />
+                                            </InputAdornment>
+                                        ),
+                                        endAdornment: (
+                                            <InputAdornment position="end">
+                                                <IconButton
+                                                    onClick={() => setShowPassword(!showPassword)}
+                                                    edge="end"
+                                                >
+                                                    {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                                                </IconButton>
+                                            </InputAdornment>
+                                        ),
+                                    }}
+                                    sx={{ mb: 4 }}
+                                />
 
-                                    <Button
-                                        type="submit"
-                                        variant="contained"
-                                        fullWidth
-                                        size="large"
-                                        disabled={loading}
-                                        startIcon={loading ? <CircularProgress size={20} /> : <LoginIcon />}
-                                    >
-                                        {loading ? 'Logging in...' : 'Login'}
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    fullWidth
+                                    size="large"
+                                    disabled={loading}
+                                    endIcon={!loading && <ArrowForwardIcon />}
+                                    sx={{
+                                        height: 56,
+                                        borderRadius: '16px',
+                                        fontSize: '1.1rem',
+                                        fontWeight: 700,
+                                        textTransform: 'none',
+                                        background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
+                                        boxShadow: '0 10px 25px -5px rgba(79, 70, 229, 0.4)',
+                                        '&:hover': {
+                                            boxShadow: '0 20px 30px -10px rgba(79, 70, 229, 0.5)',
+                                        }
+                                    }}
+                                >
+                                    {loading ? <CircularProgress size={24} color="inherit" /> : 'Log In'}
+                                </Button>
+
+                                <Box sx={{ mt: 3, textAlign: 'center' }}>
+                                    <Button sx={{ color: '#64748b', textTransform: 'none', fontWeight: 600 }}>
+                                        Forgot Password?
                                     </Button>
                                 </Box>
-                            )}
+                            </Box>
+                        )}
 
-                            {/* Signup Tab */}
-                            {activeTab === 1 && (
-                                <Box component="form" onSubmit={handleRegisterSubmit} className="login-form">
-                                    {/* Role Selection */}
-                                    <Box className="role-selection" sx={{ mb: 3 }}>
-                                        <Typography variant="body2" sx={{ mb: 2, fontWeight: 600 }}>
-                                            I am a:
-                                        </Typography>
-                                        <ToggleButtonGroup
-                                            value={selectedRole}
-                                            exclusive
-                                            onChange={(_, newRole) => newRole && setSelectedRole(newRole)}
-                                            fullWidth
-                                            sx={{ mb: 2 }}
-                                        >
-                                            <ToggleButton value={UserRole.CUSTOMER}>
-                                                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0.5 }}>
-                                                    <CalendarIcon />
-                                                    <Typography variant="caption">Customer</Typography>
-                                                </Box>
-                                            </ToggleButton>
-                                            <ToggleButton value={UserRole.BARBER}>
-                                                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0.5 }}>
-                                                    <ScissorsIcon />
-                                                    <Typography variant="caption">Barber</Typography>
-                                                </Box>
-                                            </ToggleButton>
-                                            <ToggleButton value={UserRole.SALON_OWNER}>
-                                                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0.5 }}>
-                                                    <StoreIcon />
-                                                    <Typography variant="caption">Owner</Typography>
-                                                </Box>
-                                            </ToggleButton>
-                                        </ToggleButtonGroup>
-                                    </Box>
+                        {/* Signup Tab */}
+                        {activeTab === 1 && (
+                            <Box component="form" onSubmit={handleRegisterSubmit} className="login-form">
+                                <Box sx={{ mb: 3 }}>
+                                    <Typography variant="caption" sx={{ display: 'block', mb: 1.5, fontWeight: 600, color: '#64748b', textAlign: 'center' }}>
+                                        SELECT YOUR ACCOUNT TYPE
+                                    </Typography>
+                                    <ToggleButtonGroup
+                                        value={selectedRole}
+                                        exclusive
+                                        onChange={(_, newRole) => newRole && setSelectedRole(newRole)}
+                                        fullWidth
+                                        className="role-selection-group"
+                                    >
+                                        <ToggleButton value={UserRole.CUSTOMER} className="role-card-btn">
+                                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0.5 }}>
+                                                <CalendarIcon fontSize="small" />
+                                                <Typography variant="body2" fontWeight={600}>Customer</Typography>
+                                            </Box>
+                                        </ToggleButton>
+                                        <ToggleButton value={UserRole.BARBER} className="role-card-btn">
+                                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0.5 }}>
+                                                <ScissorsIcon fontSize="small" />
+                                                <Typography variant="body2" fontWeight={600}>Barber</Typography>
+                                            </Box>
+                                        </ToggleButton>
+                                        <ToggleButton value={UserRole.SALON_OWNER} className="role-card-btn">
+                                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0.5 }}>
+                                                <StoreIcon fontSize="small" />
+                                                <Typography variant="body2" fontWeight={600}>Owner</Typography>
+                                            </Box>
+                                        </ToggleButton>
+                                    </ToggleButtonGroup>
+                                </Box>
 
+                                <Typography variant="caption" sx={{ display: 'block', mb: 1.5, fontWeight: 600, color: '#64748b' }}>
+                                    PERSONAL DETAILS
+                                </Typography>
+
+                                <Box sx={{ display: 'grid', gap: 2.5 }}>
                                     <TextField
                                         fullWidth
                                         label="Full Name"
@@ -322,101 +369,97 @@ const Login: React.FC<LoginProps> = ({ isRegisterMode = false }) => {
                                         onChange={(e) => setRegisterData({ ...registerData, name: e.target.value })}
                                         required
                                         InputProps={{
-                                            startAdornment: (
-                                                <InputAdornment position="start">
-                                                    <PersonIcon />
-                                                </InputAdornment>
-                                            ),
+                                            startAdornment: <InputAdornment position="start"><PersonIcon sx={{ color: '#94a3b8' }} /></InputAdornment>,
                                         }}
-                                        sx={{ mb: 2 }}
                                     />
 
                                     <TextField
                                         fullWidth
-                                        label="Email"
+                                        label="Email Address"
                                         type="email"
                                         value={registerData.email}
                                         onChange={(e) => setRegisterData({ ...registerData, email: e.target.value })}
                                         required
                                         InputProps={{
-                                            startAdornment: (
-                                                <InputAdornment position="start">
-                                                    <EmailIcon />
-                                                </InputAdornment>
-                                            ),
+                                            startAdornment: <InputAdornment position="start"><EmailIcon sx={{ color: '#94a3b8' }} /></InputAdornment>,
                                         }}
-                                        sx={{ mb: 2 }}
                                     />
 
                                     <TextField
                                         fullWidth
-                                        label="Phone"
+                                        label="Phone Number"
                                         value={registerData.phone}
                                         onChange={(e) => setRegisterData({ ...registerData, phone: e.target.value })}
                                         required
                                         inputProps={{ maxLength: 10 }}
                                         InputProps={{
-                                            startAdornment: (
-                                                <InputAdornment position="start">
-                                                    <PhoneIcon />
-                                                </InputAdornment>
-                                            ),
+                                            startAdornment: <InputAdornment position="start"><PhoneIcon sx={{ color: '#94a3b8' }} /></InputAdornment>,
                                         }}
-                                        sx={{ mb: 2 }}
                                     />
 
-                                    <TextField
-                                        fullWidth
-                                        label="Password"
-                                        type="password"
-                                        value={registerData.password}
-                                        onChange={(e) => setRegisterData({ ...registerData, password: e.target.value })}
-                                        required
-                                        InputProps={{
-                                            startAdornment: (
-                                                <InputAdornment position="start">
-                                                    <LockIcon />
-                                                </InputAdornment>
-                                            ),
-                                        }}
-                                        sx={{ mb: 2 }}
-                                    />
-
-                                    <TextField
-                                        fullWidth
-                                        label="Confirm Password"
-                                        type="password"
-                                        value={registerData.confirmPassword}
-                                        onChange={(e) => setRegisterData({ ...registerData, confirmPassword: e.target.value })}
-                                        required
-                                        InputProps={{
-                                            startAdornment: (
-                                                <InputAdornment position="start">
-                                                    <LockIcon />
-                                                </InputAdornment>
-                                            ),
-                                        }}
-                                        sx={{ mb: 3 }}
-                                    />
-
-                                    <Button
-                                        type="submit"
-                                        variant="contained"
-                                        fullWidth
-                                        size="large"
-                                        disabled={loading}
-                                        startIcon={loading ? <CircularProgress size={20} /> : <PersonAddIcon />}
-                                    >
-                                        {loading ? 'Creating Account...' : 'Create Account'}
-                                    </Button>
+                                    <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
+                                        <TextField
+                                            fullWidth
+                                            label="Password"
+                                            type={showPassword ? 'text' : 'password'}
+                                            value={registerData.password}
+                                            onChange={(e) => setRegisterData({ ...registerData, password: e.target.value })}
+                                            required
+                                            InputProps={{
+                                                endAdornment: (
+                                                    <InputAdornment position="end">
+                                                        <IconButton onClick={() => setShowPassword(!showPassword)} edge="end" size="small">
+                                                            {showPassword ? <VisibilityOffIcon fontSize="small" /> : <VisibilityIcon fontSize="small" />}
+                                                        </IconButton>
+                                                    </InputAdornment>
+                                                ),
+                                            }}
+                                        />
+                                        <TextField
+                                            fullWidth
+                                            label="Confirm"
+                                            type={showConfirmPassword ? 'text' : 'password'}
+                                            value={registerData.confirmPassword}
+                                            onChange={(e) => setRegisterData({ ...registerData, confirmPassword: e.target.value })}
+                                            required
+                                            InputProps={{
+                                                endAdornment: (
+                                                    <InputAdornment position="end">
+                                                        <IconButton onClick={() => setShowConfirmPassword(!showConfirmPassword)} edge="end" size="small">
+                                                            {showConfirmPassword ? <VisibilityOffIcon fontSize="small" /> : <VisibilityIcon fontSize="small" />}
+                                                        </IconButton>
+                                                    </InputAdornment>
+                                                ),
+                                            }}
+                                        />
+                                    </Box>
                                 </Box>
-                            )}
-                        </CardContent>
-                    </Card>
 
-                    <Typography variant="caption" color="text.secondary" align="center" sx={{ mt: 3, display: 'block' }}>
-                        By continuing, you agree to our Terms of Service and Privacy Policy
-                    </Typography>
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    fullWidth
+                                    size="large"
+                                    disabled={loading}
+                                    sx={{
+                                        mt: 4,
+                                        height: 56,
+                                        borderRadius: '16px',
+                                        fontSize: '1.1rem',
+                                        fontWeight: 700,
+                                        textTransform: 'none',
+                                        background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
+                                        boxShadow: '0 10px 25px -5px rgba(79, 70, 229, 0.4)',
+                                        '&:hover': {
+                                            boxShadow: '0 20px 30px -10px rgba(79, 70, 229, 0.5)',
+                                        }
+                                    }}
+                                >
+                                    {loading ? <CircularProgress size={24} color="inherit" /> : 'Create Account'}
+                                </Button>
+                            </Box>
+                        )}
+                    </CardContent>
                 </MotionBox>
             </Box>
         </Box>

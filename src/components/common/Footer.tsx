@@ -37,61 +37,6 @@ const Footer: React.FC = () => {
     return (
         <Box component="footer" className="footer">
             <Container maxWidth="lg">
-                <Box className="footer-newsletter">
-                    <Grid container spacing={4} alignItems="center">
-                        <Grid size={{ xs: 12, md: 6 }}>
-                            <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
-                                Stay Updated
-                            </Typography>
-                            <Typography variant="body1" sx={{ color: 'rgba(255,255,255,0.7)' }}>
-                                Subscribe to our newsletter for the latest trends and exclusive offers.
-                            </Typography>
-                        </Grid>
-                        <Grid size={{ xs: 12, md: 6 }}>
-                            <Box component="form" sx={{ display: 'flex', gap: 2 }}>
-                                <TextField
-                                    fullWidth
-                                    placeholder="Enter your email"
-                                    variant="outlined"
-                                    sx={{
-                                        '& .MuiOutlinedInput-root': {
-                                            bgcolor: 'rgba(255,255,255,0.1)',
-                                            borderRadius: '50px',
-                                            color: 'white',
-                                            '& fieldset': { borderColor: 'rgba(255,255,255,0.2)' },
-                                            '&:hover fieldset': { borderColor: 'rgba(255,255,255,0.4)' },
-                                            '&.Mui-focused fieldset': { borderColor: 'white' },
-                                        },
-                                        '& .MuiInputBase-input::placeholder': {
-                                            color: 'rgba(255,255,255,0.5)',
-                                            opacity: 1,
-                                        },
-                                    }}
-                                    InputProps={{
-                                        startAdornment: (
-                                            <InputAdornment position="start">
-                                                <EmailIcon sx={{ color: 'rgba(255,255,255,0.5)' }} />
-                                            </InputAdornment>
-                                        ),
-                                    }}
-                                />
-                                <Button
-                                    variant="contained"
-                                    sx={{
-                                        borderRadius: '50px',
-                                        px: 4,
-                                        bgcolor: 'white',
-                                        color: '#6366f1',
-                                        fontWeight: 700,
-                                        '&:hover': { bgcolor: 'rgba(255,255,255,0.9)' },
-                                    }}
-                                >
-                                    Subscribe
-                                </Button>
-                            </Box>
-                        </Grid>
-                    </Grid>
-                </Box>
 
                 <Grid container spacing={6} sx={{ mb: 6 }}>
                     <Grid size={{ xs: 12, lg: 4 }}>
