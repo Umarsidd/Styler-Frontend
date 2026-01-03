@@ -251,7 +251,7 @@ const CreateSalon: React.FC = () => {
             case 0:
                 return (
                     <Grid container spacing={3}>
-                        <Grid item xs={12}>
+                        <Grid size={{ xs: 12 }}>
                             <TextField
                                 label="Salon Name"
                                 fullWidth
@@ -260,7 +260,7 @@ const CreateSalon: React.FC = () => {
                                 onChange={(e) => handleChange('name', e.target.value)}
                             />
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid size={{ xs: 12 }}>
                             <TextField
                                 label="Description"
                                 fullWidth
@@ -271,7 +271,7 @@ const CreateSalon: React.FC = () => {
                                 placeholder="Describe your salon..."
                             />
                         </Grid>
-                        <Grid item xs={12} sm={6}>
+                        <Grid size={{ xs: 12, sm: 6 }}>
                             <TextField
                                 label="Phone Number"
                                 fullWidth
@@ -281,7 +281,7 @@ const CreateSalon: React.FC = () => {
                                 placeholder="10-digit number"
                             />
                         </Grid>
-                        <Grid item xs={12} sm={6}>
+                        <Grid size={{ xs: 12, sm: 6 }}>
                             <TextField
                                 label="Email (Optional)"
                                 fullWidth
@@ -292,7 +292,7 @@ const CreateSalon: React.FC = () => {
                         </Grid>
 
                         {/* Image Upload Section */}
-                        <Grid item xs={12}>
+                        <Grid size={{ xs: 12 }}>
                             <Typography variant="subtitle2" gutterBottom sx={{ mb: 1 }}>
                                 Salon Images * (Min 1, Max 3)
                             </Typography>
@@ -414,7 +414,7 @@ const CreateSalon: React.FC = () => {
             case 1:
                 return (
                     <Grid container spacing={3}>
-                        <Grid item xs={12}>
+                        <Grid size={{ xs: 12 }}>
                             <TextField
                                 label="Street Address"
                                 fullWidth
@@ -423,7 +423,7 @@ const CreateSalon: React.FC = () => {
                                 onChange={(e) => handleChange('street', e.target.value)}
                             />
                         </Grid>
-                        <Grid item xs={12} sm={6}>
+                        <Grid size={{ xs: 12, sm: 6 }}>
                             <TextField
                                 label="City"
                                 fullWidth
@@ -432,7 +432,7 @@ const CreateSalon: React.FC = () => {
                                 onChange={(e) => handleChange('city', e.target.value)}
                             />
                         </Grid>
-                        <Grid item xs={12} sm={6}>
+                        <Grid size={{ xs: 12, sm: 6 }}>
                             <TextField
                                 label="State"
                                 fullWidth
@@ -441,7 +441,7 @@ const CreateSalon: React.FC = () => {
                                 onChange={(e) => handleChange('state', e.target.value)}
                             />
                         </Grid>
-                        <Grid item xs={12} sm={6}>
+                        <Grid size={{ xs: 12, sm: 6 }}>
                             <TextField
                                 label="Pincode"
                                 fullWidth
@@ -450,7 +450,7 @@ const CreateSalon: React.FC = () => {
                                 onChange={(e) => handleChange('pincode', e.target.value)}
                             />
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid size={{ xs: 12 }}>
                             <Typography variant="subtitle2" gutterBottom sx={{ mb: 2 }}>
                                 Salon Location
                             </Typography>
@@ -472,7 +472,7 @@ const CreateSalon: React.FC = () => {
                         {operatingHours.map((hours, index) => (
                             <Paper key={hours.day} sx={{ p: 2, mb: 2 }}>
                                 <Grid container spacing={2} alignItems="center">
-                                    <Grid item xs={12} sm={3}>
+                                    <Grid size={{ xs: 12, sm: 3 }}>
                                         <Box sx={{ display: 'flex', alignItems: 'center' }}>
                                             <input
                                                 type="checkbox"
@@ -489,7 +489,7 @@ const CreateSalon: React.FC = () => {
                                     </Grid>
                                     {hours.isOpen && (
                                         <>
-                                            <Grid item xs={6} sm={4}>
+                                            <Grid size={{ xs: 6, sm: 4 }}>
                                                 <TextField
                                                     label="Opens"
                                                     type="time"
@@ -502,7 +502,7 @@ const CreateSalon: React.FC = () => {
                                                     InputLabelProps={{ shrink: true }}
                                                 />
                                             </Grid>
-                                            <Grid item xs={6} sm={4}>
+                                            <Grid size={{ xs: 6, sm: 4 }}>
                                                 <TextField
                                                     label="Closes"
                                                     type="time"
@@ -518,7 +518,7 @@ const CreateSalon: React.FC = () => {
                                         </>
                                     )}
                                     {!hours.isOpen && (
-                                        <Grid item xs={12} sm={8}>
+                                        <Grid size={{ xs: 12, sm: 8 }}>
                                             <Typography variant="body2" color="text.secondary">
                                                 Closed
                                             </Typography>

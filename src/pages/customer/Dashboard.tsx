@@ -30,10 +30,10 @@ const CustomerDashboard: React.FC = () => {
 
     const { data, isLoading } = useQuery({
         queryKey: ['customer-appointments'],
-        queryFn: () => appointmentService.getUserAppointments(),
+        queryFn: () => appointmentService.getMyAppointments(),
     });
 
-    const appointments = (data?.data as Appointment[]) || [];
+    const appointments = (data?.data?.data as Appointment[]) || [];
     const upcomingAppointments = appointments.filter(
         (apt) => apt.status === 'confirmed' || apt.status === 'pending'
     );
@@ -63,7 +63,7 @@ const CustomerDashboard: React.FC = () => {
                 {/* Stats */}
                 <Grid container spacing={3} className="dashboard-stats" sx={{ mb: 4 }}>
                     {stats.map((stat, index) => (
-                        <Grid item xs={12} sm={6} md={3} key={index}>
+                        <Grid size={{ xs: 12, sm: 6, md: 3 }} key={index}>
                             <Card className="dashboard-stat-card">
                                 <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                                     <Box

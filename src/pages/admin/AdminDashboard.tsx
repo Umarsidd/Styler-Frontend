@@ -97,7 +97,7 @@ const AdminDashboard: React.FC = () => {
 
             {/* Statistics Cards */}
             <Grid container spacing={3} sx={{ mb: 4 }}>
-                <Grid item xs={12} sm={6} md={4}>
+                <Grid size={{ xs: 12, sm: 6, md: 4 }}>
                     <StatCard
                         title="Total Users"
                         value={stats?.overview.totalUsers || 0}
@@ -107,7 +107,7 @@ const AdminDashboard: React.FC = () => {
                     />
                 </Grid>
 
-                <Grid item xs={12} sm={6} md={4}>
+                <Grid size={{ xs: 12, sm: 6, md: 4 }}>
                     <StatCard
                         title="Total Salons"
                         value={stats?.overview.totalSalons || 0}
@@ -117,7 +117,7 @@ const AdminDashboard: React.FC = () => {
                     />
                 </Grid>
 
-                <Grid item xs={12} sm={6} md={4}>
+                <Grid size={{ xs: 12, sm: 6, md: 4 }}>
                     <StatCard
                         title="Total Barbers"
                         value={stats?.overview.totalBarbers || 0}
@@ -127,7 +127,7 @@ const AdminDashboard: React.FC = () => {
                     />
                 </Grid>
 
-                <Grid item xs={12} sm={6} md={4}>
+                <Grid size={{ xs: 12, sm: 6, md: 4 }}>
                     <StatCard
                         title="Total Appointments"
                         value={stats?.overview.totalAppointments || 0}
@@ -137,7 +137,7 @@ const AdminDashboard: React.FC = () => {
                     />
                 </Grid>
 
-                <Grid item xs={12} sm={6} md={4}>
+                <Grid size={{ xs: 12, sm: 6, md: 4 }}>
                     <StatCard
                         title="Active Appointments"
                         value={stats?.overview.activeAppointments || 0}
@@ -147,7 +147,7 @@ const AdminDashboard: React.FC = () => {
                     />
                 </Grid>
 
-                <Grid item xs={12} sm={6} md={4}>
+                <Grid size={{ xs: 12, sm: 6, md: 4 }}>
                     <StatCard
                         title="Total Revenue"
                         value={`₹${(stats?.overview.totalRevenue || 0).toLocaleString()}`}
@@ -167,7 +167,7 @@ const AdminDashboard: React.FC = () => {
                         </Typography>
                         <Grid container spacing={2}>
                             {Object.entries(stats.usersByRole).map(([role, count]) => (
-                                <Grid item xs={6} sm={4} md={3} key={role}>
+                                <Grid size={{ xs: 6, sm: 4, md: 3 }} key={role}>
                                     <Box sx={{ textAlign: 'center', p: 2 }}>
                                         <Typography variant="h5" sx={{ fontWeight: 700, color: 'primary.main' }}>
                                             {count as number}
@@ -192,7 +192,7 @@ const AdminDashboard: React.FC = () => {
                         </Typography>
                         <Grid container spacing={2}>
                             {Object.entries(stats.appointmentsByStatus).map(([status, count]) => (
-                                <Grid item xs={6} sm={4} md={3} key={status}>
+                                <Grid size={{ xs: 6, sm: 4, md: 3 }} key={status}>
                                     <Box sx={{ textAlign: 'center', p: 2 }}>
                                         <Typography variant="h5" sx={{ fontWeight: 700, color: 'secondary.main' }}>
                                             {count as number}

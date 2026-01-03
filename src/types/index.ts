@@ -89,6 +89,7 @@ export interface User {
     phone?: string;
     name: string;
     role: UserRole;
+    permissions?: string[]; // User-specific permissions for RBAC
     profilePicture?: string;
     coverImage?: string;
     addresses?: Address[];
@@ -127,11 +128,13 @@ export interface Salon {
     phone: string;
     email?: string;
     images: string[];
-    rating: number;
+    rating: number | { average: number; count: number };
     totalReviews: number;
     operatingHours: OperatingHours[];
+    specialties?: string[]; // Salon specialties (e.g., "Haircuts", "Coloring", "Styling")
     ownerId: string;
     isActive: boolean;
+    isOpen?: boolean; // Current open/closed status based on operating hours
     createdAt: string;
     updatedAt: string;
 }
@@ -177,6 +180,7 @@ export interface Appointment {
     appointmentNumber: string;
     customerId: string;
     salonId: string;
+    salon?: Salon; // Populated salon data when expanded from the API
     barberId?: string;
     services: string[];
     scheduledDate: string;

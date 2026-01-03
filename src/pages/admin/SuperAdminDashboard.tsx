@@ -20,7 +20,7 @@ const SuperAdminDashboard: React.FC = () => {
 
                 <Grid container spacing={3}>
                     {stats.map((stat, index) => (
-                        <Grid item xs={12} sm={6} md={3} key={index}>
+                        <Grid size={{ xs: 12, sm: 6, md: 3 }} key={index}>
                             <Card>
                                 <CardContent sx={{ textAlign: 'center' }}>
                                     <Box sx={{ fontSize: 48, color: stat.color, mb: 1 }}>

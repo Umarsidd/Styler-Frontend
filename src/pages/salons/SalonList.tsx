@@ -81,7 +81,7 @@ const SalonList: React.FC = () => {
         }),
     });
 
-    const salons = (data?.data as Salon[]) || [];
+    const salons = data?.data?.data || [];
 
     // Add distance to salons for "nearest" sorting (client-side for geolocation)
     const processedSalons = useMemo(() => {
@@ -147,7 +147,7 @@ const SalonList: React.FC = () => {
                 {/* Search & Filters Card */}
                 <Box className="filters-card">
                     <Grid container spacing={2} alignItems="center">
-                        <Grid item xs={12} md={5}>
+                        <Grid size={{ xs: 12, md: 5 }}>
                             <TextField
                                 fullWidth
                                 placeholder="Search salons, services..."
@@ -171,7 +171,7 @@ const SalonList: React.FC = () => {
                             />
                         </Grid>
 
-                        <Grid item xs={12} sm={6} md={2}>
+                        <Grid size={{ xs: 12, sm: 6, md: 2 }}>
                             <FormControl fullWidth>
                                 <InputLabel>Country</InputLabel>
                                 <Select
@@ -188,7 +188,7 @@ const SalonList: React.FC = () => {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={12} sm={6} md={2}>
+                        <Grid size={{ xs: 12, sm: 6, md: 2 }}>
                             <FormControl fullWidth disabled={!countryFilter}>
                                 <InputLabel>City</InputLabel>
                                 <Select
@@ -204,7 +204,7 @@ const SalonList: React.FC = () => {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={12} sm={6} md={1.5}>
+                        <Grid size={{ xs: 12, sm: 6, md: 1.5 }}>
                             <FormControl fullWidth>
                                 <InputLabel>Sort By</InputLabel>
                                 <Select
@@ -221,7 +221,7 @@ const SalonList: React.FC = () => {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={12} md={1.5}>
+                        <Grid size={{ xs: 12, md: 1.5 }}>
                             <Button
                                 fullWidth
                                 variant="contained"
@@ -297,7 +297,7 @@ const SalonList: React.FC = () => {
                 {isLoading ? (
                     <Grid container spacing={3}>
                         {[1, 2, 3, 4, 5, 6].map((i) => (
-                            <Grid item xs={12} sm={6} md={viewMode === 'grid' ? 4 : 12} key={i}>
+                            <Grid size={{ xs: 12, sm: 6, md: viewMode === 'grid' ? 4 : 12 }} key={i}>
                                 <SalonCardSkeleton />
                             </Grid>
                         ))}
@@ -321,7 +321,7 @@ const SalonList: React.FC = () => {
                 ) : (
                     <Grid container spacing={3}>
                         {processedSalons.map((salon, index) => (
-                            <Grid item xs={12} sm={6} md={viewMode === 'grid' ? 4 : 12} key={salon._id}>
+                            <Grid size={{ xs: 12, sm: 6, md: viewMode === 'grid' ? 4 : 12 }} key={salon._id}>
                                 <MotionBox
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}

@@ -8,7 +8,7 @@ import {
     CircularProgress,
     Card,
     CardContent,
-    Grid,
+    GridLegacy as Grid,
     Chip,
     Avatar,
     Divider,
@@ -464,9 +464,9 @@ const SalonDetails: React.FC = () => {
                                                     ₹{service.price}
                                                 </Typography>
                                                 <Chip
-                                                    label={service.category || 'Service'}
+                                                    label={service.gender}
                                                     size="small"
-                                                    sx={{ bgcolor: '#f0f0ff', color: '#6366f1', fontWeight: 600 }}
+                                                    sx={{ bgcolor: '#f0f0ff', color: '#6366f1', fontWeight: 600, textTransform: 'capitalize' }}
                                                 />
                                             </Box>
 

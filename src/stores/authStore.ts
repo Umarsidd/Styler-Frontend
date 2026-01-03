@@ -12,6 +12,7 @@ interface AuthState {
     setAuth: (user: User, accessToken: string, refreshToken: string) => void;
     setTokens: (accessToken: string, refreshToken: string) => void;
     clearAuth: () => void;
+    logout: () => Promise<void>;
     updateUser: (user: Partial<User>) => void;
     loadProfile: () => Promise<void>;
     changePassword: (currentPassword: string, newPassword: string) => Promise<{ success: boolean }>;
@@ -46,6 +47,23 @@ export const useAuthStore = create<AuthState>()(
                     refreshToken: null,
                     isAuthenticated: false,
                 }),
+
+            logout: async () => {
+                try {
+                    const { default: authService } = await import('../services/authService');
+                    await authService.logout();
+                } catch (error) {
+                    console.error('Failed to logout:', error);
+                } finally {
+                    // Always clear local state, even if the API call fails
+                    set({
+                        user: null,
+                        accessToken: null,
+                        refreshToken: null,
+                        isAuthenticated: false,
+                    });
+                }
+            },
 
             updateUser: (updates) =>
                 set((state) => ({

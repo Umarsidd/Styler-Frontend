@@ -25,7 +25,7 @@ import { Visibility as EyeIcon } from '@mui/icons-material';
 import { DatePicker } from '@mui/x-date-pickers';
 import dayjs, { Dayjs } from 'dayjs';
 import { appointmentService } from '../../services/appointmentService';
-import { Appointment, AppointmentStatus } from '../../types';
+import { Appointment, AppointmentStatus, PaginatedResponse } from '../../types';
 import { formatDate, formatCurrency } from '../../utils/helpers';
 import './MyAppointments.css';
 
@@ -37,13 +37,13 @@ const MyAppointments: React.FC = () => {
     const { data, isLoading } = useQuery({
         queryKey: ['my-appointments', statusFilter, dateFilter],
         queryFn: () =>
-            appointmentService.getUserAppointments({
+            appointmentService.getMyAppointments({
                 status: statusFilter as AppointmentStatus,
                 date: dateFilter?.format('YYYY-MM-DD'),
             }),
     });
 
-    const appointments = (data?.data as Appointment[]) || [];
+    const appointments = (data?.data as PaginatedResponse<Appointment>)?.data || [];
 
     const getStatusColor = (status: AppointmentStatus): 'success' | 'warning' | 'error' | 'info' | 'default' => {
         const colorMap: Record<AppointmentStatus, 'success' | 'warning' | 'error' | 'info' | 'default'> = {

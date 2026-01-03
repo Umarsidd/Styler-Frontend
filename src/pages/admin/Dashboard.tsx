@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Container, Typography, Grid, Card, CardContent } from '@mui/material';
+import { Box, Container, Typography, Card, CardContent, Grid } from '@mui/material';
 import { People as PeopleIcon, Store as StoreIcon, CalendarMonth as CalendarIcon, TrendingUp as TrendingIcon } from '@mui/icons-material';
 import './Dashboard.css';
 
@@ -20,7 +20,7 @@ const Dashboard: React.FC = () => {
 
                 <Grid container spacing={3}>
                     {stats.map((stat, index) => (
-                        <Grid item xs={12} sm={6} md={3} key={index}>
+                        <Grid size={{ xs: 12, sm: 6, md: 3 }} key={index}>
                             <Card>
                                 <CardContent sx={{ textAlign: 'center' }}>
                                     <Box sx={{ fontSize: 48, color: stat.color, mb: 1 }}>

@@ -101,8 +101,8 @@ const AppointmentDetails: React.FC = () => {
 
                 <Card>
                     <CardContent sx={{ p: 4 }}>
-                        <Grid container spacing={3}>
-                            <Grid item xs={12}>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                            <Box>
                                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
                                     <Typography variant="h5">#{appointment.appointmentNumber}</Typography>
                                     <Chip
@@ -110,29 +110,31 @@ const AppointmentDetails: React.FC = () => {
                                         color={getStatusColor(appointment.status)}
                                     />
                                 </Box>
-                            </Grid>
+                            </Box>
 
-                            <Grid item xs={12} sm={6}>
-                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
-                                    <CalendarIcon color="action" />
-                                    <Box>
-                                        <Typography variant="caption" color="text.secondary">Date</Typography>
-                                        <Typography variant="body1">{formatDate(appointment.scheduledDate, 'long')}</Typography>
+                            <Box sx={{ display: 'flex', gap: 3, flexWrap: 'wrap' }}>
+                                <Box sx={{ flex: { xs: '1 1 100%', sm: '1 1 calc(50% - 12px)' } }}>
+                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+                                        <CalendarIcon color="action" />
+                                        <Box>
+                                            <Typography variant="caption" color="text.secondary">Date</Typography>
+                                            <Typography variant="body1">{formatDate(appointment.scheduledDate, 'long')}</Typography>
+                                        </Box>
                                     </Box>
                                 </Box>
-                            </Grid>
 
-                            <Grid item xs={12} sm={6}>
-                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
-                                    <ScheduleIcon color="action" />
-                                    <Box>
-                                        <Typography variant="caption" color="text.secondary">Time</Typography>
-                                        <Typography variant="body1">{appointment.scheduledTime}</Typography>
+                                <Box sx={{ flex: { xs: '1 1 100%', sm: '1 1 calc(50% - 12px)' } }}>
+                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+                                        <ScheduleIcon color="action" />
+                                        <Box>
+                                            <Typography variant="caption" color="text.secondary">Time</Typography>
+                                            <Typography variant="body1">{appointment.scheduledTime}</Typography>
+                                        </Box>
                                     </Box>
                                 </Box>
-                            </Grid>
+                            </Box>
 
-                            <Grid item xs={12}>
+                            <Box>
                                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
                                     <MoneyIcon color="action" />
                                     <Box>
@@ -140,15 +142,15 @@ const AppointmentDetails: React.FC = () => {
                                         <Typography variant="h5" color="primary">{formatCurrency(appointment.totalAmount)}</Typography>
                                     </Box>
                                 </Box>
-                            </Grid>
+                            </Box>
 
                             {appointment.notes && (
-                                <Grid item xs={12}>
+                                <Box>
                                     <Typography variant="caption" color="text.secondary">Notes</Typography>
                                     <Typography variant="body1">{appointment.notes}</Typography>
-                                </Grid>
+                                </Box>
                             )}
-                        </Grid>
+                        </Box>
 
                         {canCancel && (
                             <Box sx={{ mt: 4, pt: 3, borderTop: '1px solid', borderColor: 'divider' }}>

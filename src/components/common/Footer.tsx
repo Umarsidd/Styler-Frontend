@@ -37,7 +37,7 @@ const Footer: React.FC = () => {
         >
             <Container maxWidth="lg">
                 <Grid container spacing={4} sx={{ mb: 6 }}>
-                    <Grid item xs={12} md={4}>
+                    <Grid size={{ xs: 12, md: 4 }}>
                         <Box sx={{ mb: 2 }}>
                             <Logo variant="light" size="medium" clickable={false} />
                         </Box>
@@ -66,7 +66,7 @@ const Footer: React.FC = () => {
                     </Grid>
 
                     {Object.entries(footerLinks).map(([title, links]) => (
-                        <Grid item xs={6} md={2} key={title}>
+                        <Grid size={{ xs: 6, md: 2 }} key={title}>
                             <Typography variant="h6" sx={{ fontWeight: 700, color: '#ffffff', mb: 2, fontSize: '1.1rem' }}>
                                 {title}
                             </Typography>

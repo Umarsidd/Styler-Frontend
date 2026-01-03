@@ -136,14 +136,14 @@ const BookingFlow: React.FC = () => {
         try {
             const appointmentDateTime = selectedDate
                 .hour(selectedTime.hour())
-                .minute(selectedTime.minute())
-                .toISOString();
+                .minute(selectedTime.minute());
 
             await appointmentService.createAppointment({
                 salonId: salonId!,
                 barberId: selectedBarber._id,
-                serviceId: selectedService._id,
-                appointmentDate: appointmentDateTime,
+                services: [selectedService._id], // Array of service IDs
+                scheduledDate: appointmentDateTime.format('YYYY-MM-DD'),
+                scheduledTime: appointmentDateTime.format('HH:mm'),
                 notes,
             });
 
@@ -183,8 +183,8 @@ const BookingFlow: React.FC = () => {
                                 <strong>Date & Time:</strong> {selectedDate?.format('MMM DD, YYYY')} at {selectedTime?.format('hh:mm A')}
                             </Typography>
                         </Box>
-                        <Grid container spacing={2}>
-                            <Grid item xs={12} sm={6}>
+                        <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+                            <Box sx={{ flex: { xs: '1 1 100%', sm: '1 1 calc(50% - 8px)' } }}>
                                 <Button
                                     variant="outlined"
                                     fullWidth
@@ -193,8 +193,8 @@ const BookingFlow: React.FC = () => {
                                 >
                                     View Appointments
                                 </Button>
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
+                            </Box>
+                            <Box sx={{ flex: { xs: '1 1 100%', sm: '1 1 calc(50% - 8px)' } }}>
                                 <Button
                                     variant="contained"
                                     fullWidth
@@ -206,8 +206,8 @@ const BookingFlow: React.FC = () => {
                                 >
                                     Browse Salons
                                 </Button>
-                            </Grid>
-                        </Grid>
+                            </Box>
+                        </Box>
                     </Card>
                 </Container>
             </Box>
@@ -266,7 +266,7 @@ const BookingFlow: React.FC = () => {
 
                 {/* Step Content */}
                 <Grid container spacing={4}>
-                    <Grid item xs={12} md={8}>
+                    <Grid size={{ xs: 12, md: 8 }}>
                         <Card sx={{ borderRadius: 3, boxShadow: '0 4px 12px rgba(0,0,0,0.08)', minHeight: 500 }}>
                             <CardContent sx={{ p: 4 }}>
                                 {/* Step 0: Select Service */}
@@ -277,7 +277,7 @@ const BookingFlow: React.FC = () => {
                                         </Typography>
                                         <Grid container spacing={2}>
                                             {services.map((service) => (
-                                                <Grid item xs={12} key={service._id}>
+                                                <Grid size={{ xs: 12 }} key={service._id}>
                                                     <Card
                                                         onClick={() => setSelectedService(service)}
                                                         sx={{
@@ -293,7 +293,7 @@ const BookingFlow: React.FC = () => {
                                                     >
                                                         <CardContent>
                                                             <Grid container spacing={2} alignItems="center">
-                                                                <Grid item xs>
+                                                                <Grid size="grow">
                                                                     <Typography variant="h6" sx={{ fontWeight: 700 }}>
                                                                         {service.name}
                                                                     </Typography>
@@ -306,7 +306,7 @@ const BookingFlow: React.FC = () => {
                                                                         </Typography>
                                                                     )}
                                                                 </Grid>
-                                                                <Grid item>
+                                                                <Grid size="auto">
                                                                     <Box sx={{ textAlign: 'right' }}>
                                                                         <Typography variant="h5" sx={{ fontWeight: 800, color: '#667eea' }}>
                                                                             ₹{service.price}
@@ -333,7 +333,7 @@ const BookingFlow: React.FC = () => {
                                         </Typography>
                                         <Grid container spacing={3}>
                                             {barbers.map((barber) => (
-                                                <Grid item xs={12} sm={6} key={barber._id}>
+                                                <Grid size={{ xs: 12, sm: 6 }} key={barber._id}>
                                                     <Card
                                                         onClick={() => setSelectedBarber(barber)}
                                                         sx={{
@@ -400,7 +400,7 @@ const BookingFlow: React.FC = () => {
                                             Choose Date & Time
                                         </Typography>
                                         <Grid container spacing={4}>
-                                            <Grid item xs={12} md={6}>
+                                            <Grid size={{ xs: 12, md: 6 }}>
                                                 <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
                                                     Select Date
                                                 </Typography>
@@ -418,7 +418,7 @@ const BookingFlow: React.FC = () => {
                                                     />
                                                 </LocalizationProvider>
                                             </Grid>
-                                            <Grid item xs={12} md={6}>
+                                            <Grid size={{ xs: 12, md: 6 }}>
                                                 <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
                                                     Select Time
                                                 </Typography>
@@ -457,7 +457,7 @@ const BookingFlow: React.FC = () => {
 
                                         <Paper sx={{ p: 3, bgcolor: '#f8f9fa', mb: 3 }}>
                                             <Grid container spacing={3}>
-                                                <Grid item xs={12}>
+                                                <Grid size={{ xs: 12 }}>
                                                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                                                         <Box
                                                             sx={{
@@ -482,11 +482,11 @@ const BookingFlow: React.FC = () => {
                                                     </Typography>
                                                 </Grid>
 
-                                                <Grid item xs={12}>
+                                                <Grid size={{ xs: 12 }}>
                                                     <Divider />
                                                 </Grid>
 
-                                                <Grid item xs={12}>
+                                                <Grid size={{ xs: 12 }}>
                                                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                                                         <Avatar
                                                             sx={{
@@ -506,11 +506,11 @@ const BookingFlow: React.FC = () => {
                                                     </Typography>
                                                 </Grid>
 
-                                                <Grid item xs={12}>
+                                                <Grid size={{ xs: 12 }}>
                                                     <Divider />
                                                 </Grid>
 
-                                                <Grid item xs={12}>
+                                                <Grid size={{ xs: 12 }}>
                                                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                                                         <EventIcon sx={{ fontSize: 40, color: '#667eea' }} />
                                                         <Box>
@@ -526,10 +526,10 @@ const BookingFlow: React.FC = () => {
 
                                                 {notes && (
                                                     <>
-                                                        <Grid item xs={12}>
+                                                        <Grid size={{ xs: 12 }}>
                                                             <Divider />
                                                         </Grid>
-                                                        <Grid item xs={12}>
+                                                        <Grid size={{ xs: 12 }}>
                                                             <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
                                                                 Additional Notes:
                                                             </Typography>
@@ -552,7 +552,7 @@ const BookingFlow: React.FC = () => {
                     </Grid>
 
                     {/* Summary Sidebar */}
-                    <Grid item xs={12} md={4}>
+                    <Grid size={{ xs: 12, md: 4 }}>
                         <Card
                             sx={{
                                 position: 'sticky',

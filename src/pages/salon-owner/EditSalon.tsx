@@ -128,7 +128,20 @@ const EditSalon: React.FC = () => {
         setError(null);
 
         try {
-            await salonService.updateSalon(id, formData);
+            // Add location coordinates to the address
+            // TODO: Replace with actual geocoding or map picker for accurate coordinates
+            const updateData = {
+                ...formData,
+                address: {
+                    ...formData.address,
+                    location: {
+                        type: 'Point' as const,
+                        coordinates: [0, 0] as [number, number], // [longitude, latitude] - default values
+                    },
+                },
+            };
+
+            await salonService.updateSalon(id, updateData);
             setSuccess('Salon updated successfully!');
             setTimeout(() => {
                 navigate(-1);
@@ -213,7 +226,7 @@ const EditSalon: React.FC = () => {
 
                 <Grid container spacing={3}>
                     {/* Basic Information */}
-                    <Grid item xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <Card sx={{ borderRadius: 3, boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }}>
                             <Box
                                 sx={{
@@ -228,7 +241,7 @@ const EditSalon: React.FC = () => {
                             </Box>
                             <CardContent sx={{ p: 4 }}>
                                 <Grid container spacing={3}>
-                                    <Grid item xs={12}>
+                                    <Grid size={{ xs: 12 }}>
                                         <TextField
                                             label="Salon Name"
                                             required
@@ -237,7 +250,7 @@ const EditSalon: React.FC = () => {
                                             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                         />
                                     </Grid>
-                                    <Grid item xs={12}>
+                                    <Grid size={{ xs: 12 }}>
                                         <TextField
                                             label="Description"
                                             multiline
@@ -247,7 +260,7 @@ const EditSalon: React.FC = () => {
                                             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                                         />
                                     </Grid>
-                                    <Grid item xs={12} sm={6}>
+                                    <Grid size={{ xs: 12, sm: 6 }}>
                                         <TextField
                                             label="Phone"
                                             required
@@ -256,7 +269,7 @@ const EditSalon: React.FC = () => {
                                             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                                         />
                                     </Grid>
-                                    <Grid item xs={12} sm={6}>
+                                    <Grid size={{ xs: 12, sm: 6 }}>
                                         <TextField
                                             label="Email"
                                             type="email"
@@ -265,7 +278,7 @@ const EditSalon: React.FC = () => {
                                             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                         />
                                     </Grid>
-                                    <Grid item xs={12}>
+                                    <Grid size={{ xs: 12 }}>
                                         <FormControlLabel
                                             control={
                                                 <Switch
@@ -283,7 +296,7 @@ const EditSalon: React.FC = () => {
                     </Grid>
 
                     {/* Address */}
-                    <Grid item xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <Card sx={{ borderRadius: 3, boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }}>
                             <Box
                                 sx={{
@@ -298,7 +311,7 @@ const EditSalon: React.FC = () => {
                             </Box>
                             <CardContent sx={{ p: 4 }}>
                                 <Grid container spacing={3}>
-                                    <Grid item xs={12}>
+                                    <Grid size={{ xs: 12 }}>
                                         <TextField
                                             label="Street Address"
                                             required
@@ -310,7 +323,7 @@ const EditSalon: React.FC = () => {
                                             })}
                                         />
                                     </Grid>
-                                    <Grid item xs={12} sm={4}>
+                                    <Grid size={{ xs: 12, sm: 4 }}>
                                         <TextField
                                             label="City"
                                             required
@@ -322,7 +335,7 @@ const EditSalon: React.FC = () => {
                                             })}
                                         />
                                     </Grid>
-                                    <Grid item xs={12} sm={4}>
+                                    <Grid size={{ xs: 12, sm: 4 }}>
                                         <TextField
                                             label="State"
                                             required
@@ -334,7 +347,7 @@ const EditSalon: React.FC = () => {
                                             })}
                                         />
                                     </Grid>
-                                    <Grid item xs={12} sm={4}>
+                                    <Grid size={{ xs: 12, sm: 4 }}>
                                         <TextField
                                             label="Pincode"
                                             required
@@ -352,7 +365,7 @@ const EditSalon: React.FC = () => {
                     </Grid>
 
                     {/* Operating Hours */}
-                    <Grid item xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <Card sx={{ borderRadius: 3, boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }}>
                             <Box
                                 sx={{
@@ -368,15 +381,15 @@ const EditSalon: React.FC = () => {
                             <CardContent sx={{ p: 4 }}>
                                 <Grid container spacing={2}>
                                     {formData.operatingHours.map((hours, index) => (
-                                        <Grid item xs={12} key={hours.day}>
+                                        <Grid size={{ xs: 12 }} key={hours.day}>
                                             <Paper variant="outlined" sx={{ p: 2 }}>
                                                 <Grid container spacing={2} alignItems="center">
-                                                    <Grid item xs={12} sm={3}>
+                                                    <Grid size={{ xs: 12, sm: 3 }}>
                                                         <Typography variant="body1" sx={{ fontWeight: 600 }}>
                                                             {hours.day}
                                                         </Typography>
                                                     </Grid>
-                                                    <Grid item xs={12} sm={2}>
+                                                    <Grid size={{ xs: 12, sm: 2 }}>
                                                         <FormControlLabel
                                                             control={
                                                                 <Switch
@@ -390,7 +403,7 @@ const EditSalon: React.FC = () => {
                                                     </Grid>
                                                     {hours.isOpen && (
                                                         <>
-                                                            <Grid item xs={6} sm={3}>
+                                                            <Grid size={{ xs: 6, sm: 3 }}>
                                                                 <TextField
                                                                     label="Open Time"
                                                                     type="time"
@@ -400,7 +413,7 @@ const EditSalon: React.FC = () => {
                                                                     InputLabelProps={{ shrink: true }}
                                                                 />
                                                             </Grid>
-                                                            <Grid item xs={6} sm={3}>
+                                                            <Grid size={{ xs: 6, sm: 3 }}>
                                                                 <TextField
                                                                     label="Close Time"
                                                                     type="time"
@@ -422,7 +435,7 @@ const EditSalon: React.FC = () => {
                     </Grid>
 
                     {/* Images */}
-                    <Grid item xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <Card sx={{ borderRadius: 3, boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }}>
                             <Box
                                 sx={{
@@ -438,7 +451,7 @@ const EditSalon: React.FC = () => {
                             <CardContent sx={{ p: 4 }}>
                                 <Box sx={{ mb: 3 }}>
                                     <Grid container spacing={2}>
-                                        <Grid item xs>
+                                        <Grid size="grow">
                                             <TextField
                                                 label="Image URL"
                                                 fullWidth
@@ -447,7 +460,7 @@ const EditSalon: React.FC = () => {
                                                 placeholder="https://example.com/image.jpg"
                                             />
                                         </Grid>
-                                        <Grid item>
+                                        <Grid size="auto">
                                             <Button
                                                 variant="contained"
                                                 startIcon={<AddIcon />}
@@ -462,7 +475,7 @@ const EditSalon: React.FC = () => {
 
                                 <Grid container spacing={2}>
                                     {formData.images.map((img, index) => (
-                                        <Grid item xs={12} sm={6} md={4} key={index}>
+                                        <Grid size={{ xs: 12, sm: 6, md: 4 }} key={index}>
                                             <Paper
                                                 sx={{
                                                     position: 'relative',
