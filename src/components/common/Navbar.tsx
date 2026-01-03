@@ -114,7 +114,7 @@ const Navbar: React.FC = () => {
     const drawer = (
         <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', bgcolor: 'background.paper' }}>
             <Box sx={{ p: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid', borderColor: 'divider' }}>
-                <Logo size="medium" variant="image" clickable={false} />
+                <Logo size="medium" variant="default" clickable={false} />
                 <IconButton onClick={handleDrawerToggle} size="small">
                     <CloseIcon />
                 </IconButton>
@@ -221,7 +221,7 @@ const Navbar: React.FC = () => {
             >
                 <Container maxWidth={false} sx={{ maxWidth: 1400 }}>
                     <Toolbar disableGutters sx={{ height: scrolled ? 70 : 80, transition: 'all 0.3s ease' }}>
-                        <Logo size={isMobile ? "small" : "medium"} variant="image" />
+                        <Logo size={isMobile ? "small" : "medium"} variant="default" />
 
                         {isMobile ? (
                             <IconButton

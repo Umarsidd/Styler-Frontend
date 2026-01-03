@@ -136,7 +136,7 @@ function AppContent() {
                 {/* Public Routes */}
                 <Route path="/" element={<Layout><Home /></Layout>} />
                 <Route path="/about" element={<Layout><About /></Layout>} />
-                <Route path="/login" element={<Layout showFooter={false}><Login /></Layout>} />
+                <Route path="/login" element={<Layout showFooter={false} showNavbar={false}><Login /></Layout>} />
                 <Route path="/services" element={<Layout><Services /></Layout>} />
                 <Route path="/services/:id" element={<Layout><ServiceDetails /></Layout>} />
 

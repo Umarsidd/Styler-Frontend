@@ -28,7 +28,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onClose, variant }) => {
     const drawerContent = (
         <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
             <Box sx={{ p: 3, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Logo size="medium" variant="image" />
+                <Logo size="medium" variant="default" />
             </Box>
 
             <Box sx={{ mb: 2, px: 2 }}>
