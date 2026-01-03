@@ -34,10 +34,28 @@ interface Stat {
     icon: React.ReactNode;
 }
 
+import { strapiService } from '../services/strapiService';
+
+// ... existing imports ...
+
 const Home: React.FC = () => {
     const navigate = useNavigate();
     const { user } = useAuth();
     const { isAuthenticated, user: authUser } = useAuthStore();
+
+    // Strapi Data State
+    const [heroData, setHeroData] = useState<any>(null);
+
+    // Fetch Strapi Data
+    useEffect(() => {
+        const fetchStrapiData = async () => {
+            const data = await strapiService.getHomePageData();
+            if (data && data.data) {
+                setHeroData(data.data.attributes);
+            }
+        };
+        fetchStrapiData();
+    }, []);
 
     // Redirect professionals to their dashboard
     useEffect(() => {
@@ -136,10 +154,28 @@ const Home: React.FC = () => {
         { step: '4', title: 'Get Styled', description: 'Enjoy premium grooming experience' },
     ];
 
+    const getHeroTitle = () => {
+        if (heroData?.heroTitle) {
+            return <span dangerouslySetInnerHTML={{ __html: heroData.heroTitle }} />;
+        }
+        return (
+            <>
+                Elevate Your <br />
+                <span style={{
+                    background: 'linear-gradient(to right, #a78bfa, #f472b6)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent'
+                }}>Style & Confidence</span>
+            </>
+        );
+    };
+
     return (
         <Box className="home-page">
             {/* Hero Section */}
-            <Box className="hero-section">
+            <Box className="hero-section" sx={{
+                backgroundImage: heroData?.heroImage?.data ? `url(${strapiService.getImageUrl(heroData.heroImage)})` : undefined
+            }}>
                 <Box className="hero-overlay" />
                 <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 2 }}>
                     <MotionBox
@@ -162,7 +198,7 @@ const Home: React.FC = () => {
                             }}>
                                 <StarIcon sx={{ color: '#fbbf24', fontSize: '1rem' }} />
                                 <Typography variant="caption" sx={{ color: 'white', fontWeight: 600, letterSpacing: 0.5 }}>
-                                    #1 RATED GROOMING PLATFORM
+                                    {heroData?.badgeText || '#1 RATED GROOMING PLATFORM'}
                                 </Typography>
                             </Box>
                         </Box>
@@ -175,12 +211,7 @@ const Home: React.FC = () => {
                             lineHeight: 1.1,
                             textShadow: '0 4px 60px rgba(0,0,0,0.5)'
                         }}>
-                            Elevate Your <br />
-                            <span style={{
-                                background: 'linear-gradient(to right, #a78bfa, #f472b6)',
-                                WebkitBackgroundClip: 'text',
-                                WebkitTextFillColor: 'transparent'
-                            }}>Style & Confidence</span>
+                            {getHeroTitle()}
                         </Typography>
 
                         <Typography variant="h5" sx={{
@@ -192,7 +223,7 @@ const Home: React.FC = () => {
                             lineHeight: 1.6,
                             fontWeight: 400
                         }}>
-                            Discover and book appointments with the city's finest salons and expert stylists. Premium grooming, redefined.
+                            {heroData?.heroSubtitle || "Discover and book appointments with the city's finest salons and expert stylists. Premium grooming, redefined."}
                         </Typography>
 
                         <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>

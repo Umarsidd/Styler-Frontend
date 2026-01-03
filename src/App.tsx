@@ -15,6 +15,7 @@ import { UserRole } from './types';
 // Pages
 import Home from './pages/Home';
 import About from './pages/About';
+import Blog from './pages/Blog';
 import Login from './pages/Login';
 import Services from './pages/Services';
 import ServiceDetails from './pages/ServiceDetails';
@@ -141,6 +142,7 @@ function AppContent() {
                 {/* Public Routes */}
                 <Route path="/" element={<Layout><Home /></Layout>} />
                 <Route path="/about" element={<Layout><About /></Layout>} />
+                <Route path="/blog" element={<Layout><Blog /></Layout>} />
                 <Route path="/login" element={<Layout showFooter={false} showNavbar={false}><Login /></Layout>} />
                 <Route path="/services" element={<Layout><Services /></Layout>} />
                 <Route path="/services/:id" element={<Layout><ServiceDetails /></Layout>} />
