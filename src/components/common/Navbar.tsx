@@ -36,6 +36,7 @@ import {
     Close as CloseIcon
 } from '@mui/icons-material';
 import { useAuthStore } from '../../stores/authStore';
+import { useUIStore } from '../../stores/uiStore';
 import Logo from './Logo';
 import './Navbar.css';
 
@@ -188,7 +189,10 @@ const Navbar: React.FC = () => {
                         fullWidth
                         variant="contained"
                         size="large"
-                        onClick={() => { navigate('/login'); handleDrawerToggle(); }}
+                        onClick={() => {
+                            handleDrawerToggle();
+                            useUIStore.getState().openLoginModal();
+                        }}
                         sx={{
                             py: 1.5,
                             fontWeight: 700,
@@ -378,7 +382,7 @@ const Navbar: React.FC = () => {
                                     ) : (
                                         <Button
                                             variant="contained"
-                                            onClick={() => navigate('/login')}
+                                            onClick={() => useUIStore.getState().openLoginModal()}
                                             sx={{
                                                 px: 4,
                                                 py: 1.2,

@@ -6,6 +6,7 @@ import { RBACProvider } from './context/RBACContext';
 import Navbar from './components/common/Navbar';
 import Footer from './components/common/Footer';
 import ProtectedRoute from './components/auth/ProtectedRoute';
+import AuthModal from './components/auth/AuthModal';
 import ErrorBoundary from './components/common/ErrorBoundary';
 import DashboardLayout from './components/layout/DashboardLayout';
 import { useAuthStore } from './stores/authStore';
@@ -130,8 +131,11 @@ function AppContent() {
     //     };
     // }, []);
 
+
+
     return (
         <Router>
+            <AuthModal />
             <Routes>
                 {/* Public Routes */}
                 <Route path="/" element={<Layout><Home /></Layout>} />
