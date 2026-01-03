@@ -1,10 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Container, Typography, Card, CardContent, Box, Button, Chip, Grid } from '@mui/material';
+
 import {
-    ContentCut as ScissorsIcon,
-    Face as FaceIcon,
-    Spa as SpaIcon,
-    Palette as PaletteIcon,
     StarRate as StarIcon,
     CheckCircle as CheckIcon,
     Schedule as TimeIcon,
@@ -13,6 +10,7 @@ import {
 } from '@mui/icons-material';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { servicesData } from '../data/services';
 import './Services.css';
 
 const MotionBox = motion(Box);
@@ -21,44 +19,7 @@ const MotionCard = motion(Card);
 const Services: React.FC = () => {
     const navigate = useNavigate();
 
-    const services = [
-        {
-            icon: <ScissorsIcon />,
-            title: 'Hair Cutting & Styling',
-            description: 'Expert cuts and modern styles tailored to your personality',
-            price: 'From ₹500',
-            duration: '45 min',
-            popular: true,
-            features: ['Consultation', 'Wash & Dry', 'Styling'],
-        },
-        {
-            icon: <FaceIcon />,
-            title: 'Beard Grooming',
-            description: 'Professional beard trimming, shaping, and grooming',
-            price: 'From ₹300',
-            duration: '30 min',
-            popular: true,
-            features: ['Trim & Shape', 'Hot Towel', 'Aftercare'],
-        },
-        {
-            icon: <PaletteIcon />,
-            title: 'Hair Coloring',
-            description: 'Premium coloring with top-quality products',
-            price: 'From ₹2000',
-            duration: '120 min',
-            popular: false,
-            features: ['Color Consultation', 'Application', 'Treatment'],
-        },
-        {
-            icon: <SpaIcon />,
-            title: 'Spa & Facial',
-            description: 'Relaxing spa treatments for glowing skin',
-            price: 'From ₹1500',
-            duration: '60 min',
-            popular: false,
-            features: ['Deep Cleanse', 'Massage', 'Mask'],
-        },
-    ];
+
 
     const benefits = [
         { icon: <StarIcon />, title: 'Expert Professionals', description: 'Certified stylists with 5+ years experience' },
@@ -138,7 +99,7 @@ const Services: React.FC = () => {
                 </Typography>
 
                 <Grid container spacing={4}>
-                    {services.map((service, index) => (
+                    {servicesData.map((service, index) => (
                         <Grid size={{ xs: 12, sm: 12, md: 4 }} key={index}>
                             <Card
                                 className="service-detail-card"
@@ -146,7 +107,14 @@ const Services: React.FC = () => {
                                     height: '100%',
                                     position: 'relative',
                                     overflow: 'visible',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.3s ease',
+                                    '&:hover': {
+                                        transform: 'translateY(-8px)',
+                                        boxShadow: '0 12px 24px rgba(0,0,0,0.1)'
+                                    }
                                 }}
+                                onClick={() => navigate(`/services/${service.slug}`)}
                             >
                                 {service.popular && (
                                     <Chip
@@ -178,13 +146,13 @@ const Services: React.FC = () => {
                                             color: 'white',
                                         }}
                                     >
-                                        {service.icon}
+                                        {React.cloneElement(service.icon as React.ReactElement, { sx: { fontSize: 40, color: 'white' } })}
                                     </Box>
                                     <Typography variant="h5" gutterBottom sx={{ fontWeight: 700 }}>
                                         {service.title}
                                     </Typography>
                                     <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                                        {service.description}
+                                        {service.shortDescription}
                                     </Typography>
                                     <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
                                         <Typography variant="h6" color="primary" sx={{ fontWeight: 700 }}>
@@ -194,14 +162,24 @@ const Services: React.FC = () => {
                                             {service.duration}
                                         </Typography>
                                     </Box>
-                                    <Box sx={{ textAlign: 'left' }}>
-                                        {service.features.map((feature, idx) => (
+                                    <Box sx={{ textAlign: 'left', mb: 2 }}>
+                                        {service.features.slice(0, 3).map((feature, idx) => (
                                             <Box key={idx} sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
                                                 <CheckIcon sx={{ fontSize: 16, color: 'success.main' }} />
                                                 <Typography variant="body2">{feature}</Typography>
                                             </Box>
                                         ))}
                                     </Box>
+                                    <Button
+                                        variant="outlined"
+                                        fullWidth
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            navigate(`/services/${service.slug}`);
+                                        }}
+                                    >
+                                        View Details
+                                    </Button>
                                 </CardContent>
                             </Card>
                         </Grid>

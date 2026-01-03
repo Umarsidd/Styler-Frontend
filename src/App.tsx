@@ -16,6 +16,7 @@ import Home from './pages/Home';
 import About from './pages/About';
 import Login from './pages/Login';
 import Services from './pages/Services';
+import ServiceDetails from './pages/ServiceDetails';
 import Profile from './pages/Profile';
 import Unauthorized from './pages/Unauthorized';
 
@@ -137,6 +138,7 @@ function AppContent() {
                 <Route path="/about" element={<Layout><About /></Layout>} />
                 <Route path="/login" element={<Layout showFooter={false}><Login /></Layout>} />
                 <Route path="/services" element={<Layout><Services /></Layout>} />
+                <Route path="/services/:id" element={<Layout><ServiceDetails /></Layout>} />
 
                 {/* Salon Discovery Routes */}
                 <Route path="/salons" element={<Layout><SalonList /></Layout>} />

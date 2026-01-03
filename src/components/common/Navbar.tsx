@@ -16,7 +16,8 @@ import {
     List,
     ListItem,
     ListItemButton,
-    ListItemText
+    ListItemText,
+    ListItemIcon
 } from '@mui/material';
 import {
     Menu as MenuIcon,
@@ -94,19 +95,99 @@ const Navbar: React.FC = () => {
     const navLinks = getNavLinksForRole();
 
     const drawer = (
-        <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center', pt: 2 }}>
-            <Box sx={{ my: 2 }}>
+        <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center', height: '100%', display: 'flex', flexDirection: 'column' }}>
+            <Box sx={{ py: 3, display: 'flex', flexDirection: 'column', alignItems: 'center', borderBottom: '1px solid', borderColor: 'divider', bgcolor: 'background.paper' }}>
                 <Logo size="medium" variant="image" clickable={false} />
             </Box>
-            <List>
-                {navLinks.map((item) => (
-                    <ListItem key={item.path} disablePadding>
-                        <ListItemButton component={Link} to={item.path} sx={{ textAlign: 'center' }}>
-                            <ListItemText primary={item.label} />
-                        </ListItemButton>
-                    </ListItem>
-                ))}
-            </List>
+
+            <Box sx={{ flex: 1, overflowY: 'auto', py: 2 }}>
+                <List>
+                    {navLinks.map((item) => (
+                        <ListItem key={item.path} disablePadding sx={{ mb: 1 }}>
+                            <ListItemButton
+                                component={Link}
+                                to={item.path}
+                                sx={{
+                                    mx: 2,
+                                    borderRadius: 2,
+                                    '&.active': { bgcolor: 'primary.lighter', color: 'primary.main' },
+                                    '&:hover': { bgcolor: 'action.hover' }
+                                }}
+                            >
+                                <ListItemIcon sx={{ minWidth: 40, color: 'inherit' }}>
+                                    {item.icon}
+                                </ListItemIcon>
+                                <ListItemText
+                                    primary={item.label}
+                                    primaryTypographyProps={{ fontWeight: 600, fontSize: '0.95rem' }}
+                                />
+                            </ListItemButton>
+                        </ListItem>
+                    ))}
+                </List>
+            </Box>
+
+            <Box sx={{ p: 2, borderTop: '1px solid', borderColor: 'divider', bgcolor: 'background.default' }}>
+                {isAuthenticated && user ? (
+                    <>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2, p: 1.5, bgcolor: 'background.paper', borderRadius: 2, boxShadow: 1 }}>
+                            <Avatar
+                                src={user.profilePicture}
+                                alt={user.name}
+                                sx={{ width: 40, height: 40, bgcolor: 'primary.main', fontWeight: 700 }}
+                            >
+                                {user.name?.charAt(0).toUpperCase()}
+                            </Avatar>
+                            <Box sx={{ textAlign: 'left', overflow: 'hidden' }}>
+                                <Typography variant="subtitle2" sx={{ fontWeight: 700, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                    {user.name}
+                                </Typography>
+                                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                    {user.email}
+                                </Typography>
+                            </Box>
+                        </Box>
+                        <List disablePadding>
+                            <ListItem disablePadding sx={{ mb: 1 }}>
+                                <ListItemButton component={Link} to="/profile" sx={{ borderRadius: 2 }}>
+                                    <ListItemIcon sx={{ minWidth: 40 }}><PersonIcon fontSize="small" /></ListItemIcon>
+                                    <ListItemText primary="Profile" primaryTypographyProps={{ variant: 'body2', fontWeight: 500 }} />
+                                </ListItemButton>
+                            </ListItem>
+                            <ListItem disablePadding sx={{ mb: 1 }}>
+                                <ListItemButton component={Link} to="/settings" sx={{ borderRadius: 2 }}>
+                                    <ListItemIcon sx={{ minWidth: 40 }}><SettingsIcon fontSize="small" /></ListItemIcon>
+                                    <ListItemText primary="Settings" primaryTypographyProps={{ variant: 'body2', fontWeight: 500 }} />
+                                </ListItemButton>
+                            </ListItem>
+                            <ListItem disablePadding>
+                                <ListItemButton
+                                    onClick={handleLogout}
+                                    sx={{
+                                        borderRadius: 2,
+                                        color: 'error.main',
+                                        '&:hover': { bgcolor: 'error.lighter' },
+                                        '& .MuiListItemIcon-root': { color: 'error.main' }
+                                    }}
+                                >
+                                    <ListItemIcon sx={{ minWidth: 40 }}><LogoutIcon fontSize="small" /></ListItemIcon>
+                                    <ListItemText primary="Logout" primaryTypographyProps={{ variant: 'body2', fontWeight: 600 }} />
+                                </ListItemButton>
+                            </ListItem>
+                        </List>
+                    </>
+                ) : (
+                    <Button
+                        fullWidth
+                        variant="contained"
+                        size="large"
+                        onClick={() => navigate('/login')}
+                        sx={{ py: 1.5, fontWeight: 700, borderRadius: 2 }}
+                    >
+                        Login / Sign Up
+                    </Button>
+                )}
+            </Box>
         </Box>
     );
 
@@ -174,7 +255,11 @@ const Navbar: React.FC = () => {
                                 {isAuthenticated ? (
                                     <>
                                         <IconButton onClick={handleMenu}>
-                                            <Avatar sx={{ width: 36, height: 36, bgcolor: '#f59e0b' }}>
+                                            <Avatar
+                                                src={user?.profilePicture}
+                                                alt={user?.name}
+                                                sx={{ width: 36, height: 36, bgcolor: '#f59e0b' }}
+                                            >
                                                 {user?.name?.charAt(0).toUpperCase()}
                                             </Avatar>
                                         </IconButton>
@@ -185,25 +270,15 @@ const Navbar: React.FC = () => {
                                             transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                                             anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                                             PaperProps={{
-                                                elevation: 3,
+                                                elevation: 0,
                                                 sx: {
-                                                    mt: 1.5,
-                                                    minWidth: 220,
-                                                    borderRadius: 2,
-                                                    overflow: 'visible',
-                                                    filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.15))',
-                                                    '&:before': {
-                                                        content: '""',
-                                                        display: 'block',
-                                                        position: 'absolute',
-                                                        top: 0,
-                                                        right: 14,
-                                                        width: 10,
-                                                        height: 10,
-                                                        bgcolor: 'background.paper',
-                                                        transform: 'translateY(-50%) rotate(45deg)',
-                                                        zIndex: 0,
-                                                    },
+                                                    mt: 1,
+                                                    minWidth: 240,
+                                                    borderRadius: 3,
+                                                    overflow: 'hidden',
+                                                    boxShadow: '0 10px 40px -10px rgba(0,0,0,0.15)',
+                                                    border: '1px solid',
+                                                    borderColor: 'divider',
                                                 },
                                             }}
                                         >
