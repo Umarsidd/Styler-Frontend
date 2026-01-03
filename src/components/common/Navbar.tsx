@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import {
     AppBar,
     Toolbar,
@@ -17,7 +17,9 @@ import {
     ListItem,
     ListItemButton,
     ListItemText,
-    ListItemIcon
+    ListItemIcon,
+    Divider,
+    Container
 } from '@mui/material';
 import {
     Menu as MenuIcon,
@@ -27,6 +29,11 @@ import {
     ContentCut as ContentCutIcon,
     LocationOn as LocationOnIcon,
     Info as InfoIcon,
+    Dashboard as DashboardIcon,
+    CalendarMonth as CalendarIcon,
+    Store as StoreIcon,
+    ChevronRight as ChevronRightIcon,
+    Close as CloseIcon
 } from '@mui/icons-material';
 import { useAuthStore } from '../../stores/authStore';
 import Logo from './Logo';
@@ -34,9 +41,19 @@ import './Navbar.css';
 
 const Navbar: React.FC = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
     const { user, isAuthenticated, clearAuth } = useAuthStore();
+    const [scrolled, setScrolled] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            setScrolled(window.scrollY > 20);
+        };
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -63,31 +80,31 @@ const Navbar: React.FC = () => {
     const getNavLinksForRole = () => {
         if (!isAuthenticated || !user) {
             return [
-                { label: 'Find Salons', path: '/salons', icon: <LocationOnIcon sx={{ fontSize: 18, mr: 0.5 }} /> },
-                { label: 'Services', path: '/services', icon: <ContentCutIcon sx={{ fontSize: 18, mr: 0.5 }} /> },
-                { label: 'About', path: '/about', icon: <InfoIcon sx={{ fontSize: 18, mr: 0.5 }} /> },
+                { label: 'Find Salons', path: '/salons', icon: <LocationOnIcon /> },
+                { label: 'Services', path: '/services', icon: <ContentCutIcon /> },
+                { label: 'About', path: '/about', icon: <InfoIcon /> },
             ];
         }
 
         switch (user.role) {
             case 'barber':
                 return [
-                    { label: 'Dashboard', path: '/barber/dashboard', icon: <PersonIcon sx={{ fontSize: 18, mr: 0.5 }} /> },
-                    { label: 'My Appointments', path: '/barber/appointments', icon: <SettingsIcon sx={{ fontSize: 18, mr: 0.5 }} /> },
-                    { label: 'My Schedule', path: '/barber/schedule', icon: <InfoIcon sx={{ fontSize: 18, mr: 0.5 }} /> },
+                    { label: 'Dashboard', path: '/barber/dashboard', icon: <DashboardIcon /> },
+                    { label: 'Appointments', path: '/barber/appointments', icon: <CalendarIcon /> },
+                    { label: 'Schedule', path: '/barber/schedule', icon: <InfoIcon /> },
                 ];
             case 'salon_owner':
                 return [
-                    { label: 'Dashboard', path: '/salon-owner/dashboard', icon: <PersonIcon sx={{ fontSize: 18, mr: 0.5 }} /> },
-                    { label: 'My Salons', path: '/salons-owner/my-salons', icon: <LocationOnIcon sx={{ fontSize: 18, mr: 0.5 }} /> },
-                    { label: 'Barbers', path: '/salon-owner/barbers', icon: <ContentCutIcon sx={{ fontSize: 18, mr: 0.5 }} /> },
+                    { label: 'Dashboard', path: '/salon-owner/dashboard', icon: <DashboardIcon /> },
+                    { label: 'My Salons', path: '/salons-owner/my-salons', icon: <StoreIcon /> },
+                    { label: 'Barbers', path: '/salon-owner/barbers', icon: <ContentCutIcon /> },
                 ];
             case 'customer':
             default:
                 return [
-                    { label: 'Find Salons', path: '/salons', icon: <LocationOnIcon sx={{ fontSize: 18, mr: 0.5 }} /> },
-                    { label: 'Services', path: '/services', icon: <ContentCutIcon sx={{ fontSize: 18, mr: 0.5 }} /> },
-                    { label: 'About', path: '/about', icon: <InfoIcon sx={{ fontSize: 18, mr: 0.5 }} /> },
+                    { label: 'Find Salons', path: '/salons', icon: <LocationOnIcon /> },
+                    { label: 'Services', path: '/services', icon: <ContentCutIcon /> },
+                    { label: 'About', path: '/about', icon: <InfoIcon /> },
                 ];
         }
     };
@@ -95,94 +112,89 @@ const Navbar: React.FC = () => {
     const navLinks = getNavLinksForRole();
 
     const drawer = (
-        <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center', height: '100%', display: 'flex', flexDirection: 'column' }}>
-            <Box sx={{ py: 3, display: 'flex', flexDirection: 'column', alignItems: 'center', borderBottom: '1px solid', borderColor: 'divider', bgcolor: 'background.paper' }}>
+        <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', bgcolor: 'background.paper' }}>
+            <Box sx={{ p: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid', borderColor: 'divider' }}>
                 <Logo size="medium" variant="image" clickable={false} />
+                <IconButton onClick={handleDrawerToggle} size="small">
+                    <CloseIcon />
+                </IconButton>
             </Box>
 
             <Box sx={{ flex: 1, overflowY: 'auto', py: 2 }}>
-                <List>
-                    {navLinks.map((item) => (
-                        <ListItem key={item.path} disablePadding sx={{ mb: 1 }}>
-                            <ListItemButton
-                                component={Link}
-                                to={item.path}
-                                sx={{
-                                    mx: 2,
-                                    borderRadius: 2,
-                                    '&.active': { bgcolor: 'primary.lighter', color: 'primary.main' },
-                                    '&:hover': { bgcolor: 'action.hover' }
-                                }}
-                            >
-                                <ListItemIcon sx={{ minWidth: 40, color: 'inherit' }}>
-                                    {item.icon}
-                                </ListItemIcon>
-                                <ListItemText
-                                    primary={item.label}
-                                    primaryTypographyProps={{ fontWeight: 600, fontSize: '0.95rem' }}
-                                />
-                            </ListItemButton>
-                        </ListItem>
-                    ))}
+                <List sx={{ px: 2 }}>
+                    {navLinks.map((item) => {
+                        const isActive = location.pathname === item.path;
+                        return (
+                            <ListItem key={item.path} disablePadding sx={{ mb: 1 }}>
+                                <ListItemButton
+                                    component={Link}
+                                    to={item.path}
+                                    onClick={handleDrawerToggle}
+                                    sx={{
+                                        borderRadius: 3,
+                                        bgcolor: isActive ? 'primary.lighter' : 'transparent',
+                                        color: isActive ? 'primary.main' : 'text.primary',
+                                        '&:hover': { bgcolor: isActive ? 'primary.lighter' : 'rgba(0,0,0,0.04)' },
+                                    }}
+                                >
+                                    <ListItemIcon sx={{ minWidth: 40, color: isActive ? 'primary.main' : 'text.secondary' }}>
+                                        {React.cloneElement(item.icon as React.ReactElement, { fontSize: 'small' })}
+                                    </ListItemIcon>
+                                    <ListItemText
+                                        primary={item.label}
+                                        primaryTypographyProps={{ fontWeight: isActive ? 700 : 500 }}
+                                    />
+                                    {isActive && <ChevronRightIcon sx={{ fontSize: 16 }} />}
+                                </ListItemButton>
+                            </ListItem>
+                        );
+                    })}
                 </List>
             </Box>
 
-            <Box sx={{ p: 2, borderTop: '1px solid', borderColor: 'divider', bgcolor: 'background.default' }}>
+            <Box sx={{ p: 3, bgcolor: 'background.default', borderTop: '1px solid', borderColor: 'divider' }}>
                 {isAuthenticated && user ? (
-                    <>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2, p: 1.5, bgcolor: 'background.paper', borderRadius: 2, boxShadow: 1 }}>
+                    <Box>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
                             <Avatar
                                 src={user.profilePicture}
                                 alt={user.name}
-                                sx={{ width: 40, height: 40, bgcolor: 'primary.main', fontWeight: 700 }}
+                                sx={{ width: 48, height: 48, bgcolor: 'primary.main', fontWeight: 700, boxShadow: 2 }}
                             >
                                 {user.name?.charAt(0).toUpperCase()}
                             </Avatar>
-                            <Box sx={{ textAlign: 'left', overflow: 'hidden' }}>
-                                <Typography variant="subtitle2" sx={{ fontWeight: 700, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                            <Box sx={{ overflow: 'hidden' }}>
+                                <Typography variant="subtitle1" noWrap sx={{ fontWeight: 700 }}>
                                     {user.name}
                                 </Typography>
-                                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                <Typography variant="caption" color="text.secondary" noWrap sx={{ display: 'block' }}>
                                     {user.email}
                                 </Typography>
                             </Box>
                         </Box>
-                        <List disablePadding>
-                            <ListItem disablePadding sx={{ mb: 1 }}>
-                                <ListItemButton component={Link} to="/profile" sx={{ borderRadius: 2 }}>
-                                    <ListItemIcon sx={{ minWidth: 40 }}><PersonIcon fontSize="small" /></ListItemIcon>
-                                    <ListItemText primary="Profile" primaryTypographyProps={{ variant: 'body2', fontWeight: 500 }} />
-                                </ListItemButton>
-                            </ListItem>
-                            <ListItem disablePadding sx={{ mb: 1 }}>
-                                <ListItemButton component={Link} to="/settings" sx={{ borderRadius: 2 }}>
-                                    <ListItemIcon sx={{ minWidth: 40 }}><SettingsIcon fontSize="small" /></ListItemIcon>
-                                    <ListItemText primary="Settings" primaryTypographyProps={{ variant: 'body2', fontWeight: 500 }} />
-                                </ListItemButton>
-                            </ListItem>
-                            <ListItem disablePadding>
-                                <ListItemButton
-                                    onClick={handleLogout}
-                                    sx={{
-                                        borderRadius: 2,
-                                        color: 'error.main',
-                                        '&:hover': { bgcolor: 'error.lighter' },
-                                        '& .MuiListItemIcon-root': { color: 'error.main' }
-                                    }}
-                                >
-                                    <ListItemIcon sx={{ minWidth: 40 }}><LogoutIcon fontSize="small" /></ListItemIcon>
-                                    <ListItemText primary="Logout" primaryTypographyProps={{ variant: 'body2', fontWeight: 600 }} />
-                                </ListItemButton>
-                            </ListItem>
-                        </List>
-                    </>
+                        <Button
+                            fullWidth
+                            variant="outlined"
+                            color="inherit"
+                            startIcon={<LogoutIcon />}
+                            onClick={handleLogout}
+                            sx={{ borderRadius: 2, borderColor: 'divider', textTransform: 'none' }}
+                        >
+                            Log Out
+                        </Button>
+                    </Box>
                 ) : (
                     <Button
                         fullWidth
                         variant="contained"
                         size="large"
-                        onClick={() => navigate('/login')}
-                        sx={{ py: 1.5, fontWeight: 700, borderRadius: 2 }}
+                        onClick={() => { navigate('/login'); handleDrawerToggle(); }}
+                        sx={{
+                            py: 1.5,
+                            fontWeight: 700,
+                            borderRadius: '50px',
+                            boxShadow: '0 4px 14px 0 rgba(99, 102, 241, 0.39)'
+                        }}
                     >
                         Login / Sign Up
                     </Button>
@@ -193,170 +205,212 @@ const Navbar: React.FC = () => {
 
     return (
         <>
-            <AppBar position="sticky" sx={{ backgroundColor: 'rgba(255, 255, 255, 0.95)', backdropFilter: 'blur(10px)', boxShadow: '0 2px 20px rgba(0, 0, 0, 0.08)', borderBottom: '1px solid rgba(0, 0, 0, 0.05)' }}>
-                <Toolbar sx={{ maxWidth: 1400, width: '100%', mx: 'auto', px: { xs: 2, md: 3 } }}>
-                    <Logo size="medium" variant="image" />
+            <AppBar
+                position="fixed"
+                color="inherit"
+                className={scrolled ? 'navbar scrolled' : 'navbar'}
+                elevation={0}
+                sx={{
+                    bgcolor: scrolled ? 'rgba(255, 255, 255, 0.8)' : 'transparent',
+                    backdropFilter: scrolled ? 'blur(20px)' : 'none',
+                    borderBottom: scrolled ? '1px solid' : '1px solid',
+                    borderColor: scrolled ? 'rgba(0,0,0,0.05)' : 'transparent',
+                    transition: 'all 0.3s ease',
+                    width: '100%',
+                }}
+            >
+                <Container maxWidth={false} sx={{ maxWidth: 1400 }}>
+                    <Toolbar disableGutters sx={{ height: scrolled ? 70 : 80, transition: 'all 0.3s ease' }}>
+                        <Logo size={isMobile ? "small" : "medium"} variant="image" />
 
-                    {isMobile ? (
-                        <IconButton
-                            color="inherit"
-                            aria-label="open drawer"
-                            edge="start"
-                            onClick={handleDrawerToggle}
-                            sx={{ ml: 'auto', color: '#495057' }}
-                        >
-                            <MenuIcon />
-                        </IconButton>
-                    ) : (
-                        <>
-                            <Box sx={{ display: 'flex', gap: 3, flex: 1, justifyContent: 'center' }}>
-                                {navLinks.map((item) => (
-                                    <Button
-                                        key={item.path}
-                                        component={Link}
-                                        to={item.path}
-                                        disableRipple
-                                        startIcon={item.icon}
-                                        sx={{
-                                            color: '#495057',
-                                            fontWeight: 600,
-                                            position: 'relative',
-                                            textTransform: 'none',
-                                            '&::after': {
-                                                content: '""',
-                                                position: 'absolute',
-                                                bottom: 0,
-                                                left: 0,
-                                                width: 0,
-                                                height: 2,
-                                                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                                                transition: 'width 0.3s',
-                                            },
-                                            '&:hover': {
-                                                backgroundColor: 'transparent',
-                                                color: '#667eea',
-                                                border: 'none',
-                                                outline: 'none',
-                                                boxShadow: 'none',
-                                                '&::after': { width: '100%' },
-                                            },
-                                            '&:focus': {
-                                                outline: 'none',
-                                                boxShadow: 'none',
-                                            },
-                                        }}
-                                    >
-                                        {item.label}
-                                    </Button>
-                                ))}
-                            </Box>
-
-                            <Box sx={{ display: 'flex', gap: 1 }}>
-                                {isAuthenticated ? (
-                                    <>
-                                        <IconButton onClick={handleMenu}>
-                                            <Avatar
-                                                src={user?.profilePicture}
-                                                alt={user?.name}
-                                                sx={{ width: 36, height: 36, bgcolor: '#f59e0b' }}
+                        {isMobile ? (
+                            <IconButton
+                                color="inherit"
+                                aria-label="open drawer"
+                                edge="end"
+                                onClick={handleDrawerToggle}
+                                sx={{ ml: 'auto', color: 'text.primary' }}
+                            >
+                                <MenuIcon />
+                            </IconButton>
+                        ) : (
+                            <>
+                                <Box sx={{ display: 'flex', gap: 1, mx: 'auto', p: 0.5, bgcolor: scrolled ? 'rgba(0,0,0,0.03)' : 'rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)', borderRadius: '50px', border: '1px solid rgba(255,255,255,0.2)' }}>
+                                    {navLinks.map((item) => {
+                                        const isActive = location.pathname === item.path;
+                                        return (
+                                            <Button
+                                                key={item.path}
+                                                component={Link}
+                                                to={item.path}
+                                                disableRipple
+                                                startIcon={item.icon}
+                                                sx={{
+                                                    color: isActive ? 'white' : (scrolled ? 'text.secondary' : 'rgba(255,255,255,0.9)'), // Adjust link color for dark/light bg if needed, simplified here
+                                                    fontWeight: 600,
+                                                    px: 3,
+                                                    py: 1,
+                                                    borderRadius: '30px',
+                                                    textTransform: 'none',
+                                                    bgcolor: isActive ? 'primary.main' : 'transparent',
+                                                    transition: 'all 0.3s ease',
+                                                    '&:hover': {
+                                                        bgcolor: isActive ? 'primary.dark' : 'rgba(255,255,255,0.1)',
+                                                        color: isActive ? 'white' : 'primary.main'
+                                                    },
+                                                    // Quick fix for when navbar is transparent over dark hero -> text should be white if not ignored by scroll
+                                                    // But here we set color dynamically based on use case. For now simplifying.
+                                                    // Better logic: if simple scrolled, dark text. If header transparent, depends on page.
+                                                    // For this snippet, assuming mostly light theme except hero.
+                                                }}
+                                                className={`nav-item ${isActive ? 'active' : ''}`}
                                             >
-                                                {user?.name?.charAt(0).toUpperCase()}
-                                            </Avatar>
-                                        </IconButton>
-                                        <Menu
-                                            anchorEl={anchorEl}
-                                            open={Boolean(anchorEl)}
-                                            onClose={handleClose}
-                                            transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-                                            anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-                                            PaperProps={{
-                                                elevation: 0,
-                                                sx: {
-                                                    mt: 1,
-                                                    minWidth: 240,
-                                                    borderRadius: 3,
-                                                    overflow: 'hidden',
-                                                    boxShadow: '0 10px 40px -10px rgba(0,0,0,0.15)',
-                                                    border: '1px solid',
-                                                    borderColor: 'divider',
-                                                },
+                                                {item.label}
+                                            </Button>
+                                        );
+                                    })}
+                                </Box>
+
+                                <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                                    {isAuthenticated ? (
+                                        <>
+                                            <IconButton
+                                                onClick={handleMenu}
+                                                sx={{
+                                                    p: 0.5,
+                                                    border: '2px solid',
+                                                    borderColor: 'rgba(255,255,255,0.2)',
+                                                    transition: 'all 0.2s',
+                                                    '&:hover': { borderColor: 'primary.main' }
+                                                }}
+                                            >
+                                                <Avatar
+                                                    src={user?.profilePicture}
+                                                    alt={user?.name}
+                                                    sx={{ width: 40, height: 40, bgcolor: 'primary.main', fontWeight: 700 }}
+                                                >
+                                                    {user?.name?.charAt(0).toUpperCase()}
+                                                </Avatar>
+                                            </IconButton>
+                                            <Menu
+                                                anchorEl={anchorEl}
+                                                open={Boolean(anchorEl)}
+                                                onClose={handleClose}
+                                                transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                                                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                                                PaperProps={{
+                                                    elevation: 0,
+                                                    sx: {
+                                                        mt: 1.5,
+                                                        width: 320,
+                                                        borderRadius: '32px',
+                                                        overflow: 'hidden',
+                                                        boxShadow: '0 20px 60px -10px rgba(0,0,0,0.15)',
+                                                        border: '1px solid',
+                                                        borderColor: 'rgba(0,0,0,0.05)',
+                                                    },
+                                                }}
+                                            >
+                                                <Box sx={{ px: 4, pt: 4, pb: 3, bgcolor: '#f8fafc' }}>
+                                                    <Typography variant="h6" sx={{ fontWeight: 800, color: '#1e293b', fontSize: '1.25rem' }}>
+                                                        {user?.name || 'John Doe'}
+                                                    </Typography>
+                                                    <Typography variant="body2" sx={{ color: '#64748b', mt: 0.5, fontWeight: 500 }}>
+                                                        {user?.email || 'customer@example.com'}
+                                                    </Typography>
+                                                </Box>
+
+                                                <Box sx={{ p: 2, bgcolor: 'white' }}>
+                                                    <MenuItem
+                                                        onClick={() => { navigate('/profile'); handleClose(); }}
+                                                        sx={{
+                                                            py: 2,
+                                                            px: 2,
+                                                            borderRadius: '16px',
+                                                            mb: 0.5,
+                                                            '&:hover': {
+                                                                bgcolor: '#f1f5f9',
+                                                                '& .MuiSvgIcon-root': { color: '#6366f1' },
+                                                            },
+                                                            transition: 'all 0.2s',
+                                                        }}
+                                                    >
+                                                        <PersonIcon sx={{ mr: 2, color: '#64748b', transition: 'color 0.2s' }} />
+                                                        <Typography variant="body1" sx={{ fontWeight: 600, color: '#334155' }}>Profile</Typography>
+                                                    </MenuItem>
+
+                                                    <MenuItem
+                                                        onClick={() => { navigate('/settings'); handleClose(); }}
+                                                        sx={{
+                                                            py: 2,
+                                                            px: 2,
+                                                            borderRadius: '16px',
+                                                            mb: 2,
+                                                            '&:hover': {
+                                                                bgcolor: '#f1f5f9',
+                                                                '& .MuiSvgIcon-root': { color: '#6366f1' },
+                                                            },
+                                                            transition: 'all 0.2s',
+                                                        }}
+                                                    >
+                                                        <SettingsIcon sx={{ mr: 2, color: '#64748b', transition: 'color 0.2s' }} />
+                                                        <Typography variant="body1" sx={{ fontWeight: 600, color: '#334155' }}>Settings</Typography>
+                                                    </MenuItem>
+
+                                                    <MenuItem
+                                                        onClick={handleLogout}
+                                                        sx={{
+                                                            py: 2,
+                                                            px: 2,
+                                                            borderRadius: '16px',
+                                                            '&:hover': {
+                                                                bgcolor: '#fef2f2',
+                                                            },
+                                                            transition: 'all 0.2s',
+                                                        }}
+                                                    >
+                                                        <LogoutIcon sx={{ mr: 2, color: '#ef4444' }} />
+                                                        <Typography variant="body1" sx={{ fontWeight: 600, color: '#ef4444' }}>Logout</Typography>
+                                                    </MenuItem>
+                                                </Box>
+                                            </Menu>
+                                        </>
+                                    ) : (
+                                        <Button
+                                            variant="contained"
+                                            onClick={() => navigate('/login')}
+                                            sx={{
+                                                px: 4,
+                                                py: 1.2,
+                                                borderRadius: '50px',
+                                                fontWeight: 700,
+                                                textTransform: 'none',
+                                                boxShadow: '0 8px 20px -4px rgba(99, 102, 241, 0.5)',
+                                                '&:hover': {
+                                                    transform: 'translateY(-2px)',
+                                                    boxShadow: '0 12px 24px -4px rgba(99, 102, 241, 0.6)',
+                                                }
                                             }}
                                         >
-                                            <Box sx={{ px: 2, py: 1.5, borderBottom: '1px solid', borderColor: 'divider' }}>
-                                                <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'text.primary' }}>
-                                                    {user?.name || 'User'}
-                                                </Typography>
-                                                <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                                                    {user?.email || ''}
-                                                </Typography>
-                                            </Box>
-                                            <MenuItem
-                                                onClick={() => { navigate('/profile'); handleClose(); }}
-                                                sx={{
-                                                    py: 1.5,
-                                                    px: 2,
-                                                    '&:hover': {
-                                                        bgcolor: 'primary.lighter',
-                                                        '& .MuiSvgIcon-root': { color: 'primary.main' },
-                                                    },
-                                                }}
-                                            >
-                                                <PersonIcon sx={{ mr: 1.5, fontSize: 20, color: 'text.secondary' }} />
-                                                <Typography variant="body2">Profile</Typography>
-                                            </MenuItem>
-                                            <MenuItem
-                                                onClick={() => { navigate('/settings'); handleClose(); }}
-                                                sx={{
-                                                    py: 1.5,
-                                                    px: 2,
-                                                    '&:hover': {
-                                                        bgcolor: 'primary.lighter',
-                                                        '& .MuiSvgIcon-root': { color: 'primary.main' },
-                                                    },
-                                                }}
-                                            >
-                                                <SettingsIcon sx={{ mr: 1.5, fontSize: 20, color: 'text.secondary' }} />
-                                                <Typography variant="body2">Settings</Typography>
-                                            </MenuItem>
-                                            <Box sx={{ borderTop: '1px solid', borderColor: 'divider', mt: 0.5 }} />
-                                            <MenuItem
-                                                onClick={handleLogout}
-                                                sx={{
-                                                    py: 1.5,
-                                                    px: 2,
-                                                    color: 'error.main',
-                                                    '&:hover': {
-                                                        bgcolor: 'error.lighter',
-                                                        '& .MuiSvgIcon-root': { color: 'error.dark' },
-                                                    },
-                                                }}
-                                            >
-                                                <LogoutIcon sx={{ mr: 1.5, fontSize: 20 }} />
-                                                <Typography variant="body2">Logout</Typography>
-                                            </MenuItem>
-                                        </Menu>
-                                    </>
-                                ) : (
-                                    <>
-                                        <Button variant="contained" onClick={() => navigate('/login')}>
                                             Get Started
                                         </Button>
-                                    </>
-                                )}
-                            </Box>
-                        </>
-                    )}
-                </Toolbar>
+                                    )}
+                                </Box>
+                            </>
+                        )}
+                    </Toolbar>
+                </Container>
             </AppBar>
 
             <Drawer
                 variant="temporary"
+                anchor="right"
                 open={mobileOpen}
                 onClose={handleDrawerToggle}
                 ModalProps={{ keepMounted: true }}
                 sx={{
                     display: { xs: 'block', md: 'none' },
-                    '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 240 },
+                    '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 280, borderTopLeftRadius: 20, borderBottomLeftRadius: 20 },
                 }}
             >
                 {drawer}

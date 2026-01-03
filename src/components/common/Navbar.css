@@ -1,50 +1,18 @@
 /* Modern Navbar Styles */
 
 .navbar {
-  backdrop-filter: blur(20px);
-  background: rgba(255, 255, 255, 0.9);
-  border-bottom: 1px solid rgba(99, 102, 241, 0.1);
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.navbar.scrolled {
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-}
-
-.nav-link {
+/* Nav Item - Pill Style */
+.nav-item {
   position: relative;
-  color: #64748b;
-  font-weight: 600;
-  transition: all 0.3s ease;
+  overflow: hidden;
 }
 
-.nav-link::after {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 0;
-  width: 0;
-  height: 2px;
-  /* background: linear-gradient(90deg, #6366f1, #ec4899); */
-  transition: width 0.3s ease;
-}
-
-.nav-link:hover,
-.nav-link.active {
-  color: #6366f1;
-}
-
-.nav-link:hover::after,
-.nav-link.active::after {
-  width: 100%;
-}
-
-.user-menu-button {
-  border-radius: 12px;
-  transition: all 0.3s ease;
-}
-
-.user-menu-button:hover {
-  background: rgba(99, 102, 241, 0.1);
-  transform: scale(1.05);
+@media (max-width: 900px) {
+  .navbar {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+  }
 }

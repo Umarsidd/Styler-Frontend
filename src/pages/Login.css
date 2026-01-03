@@ -3,12 +3,13 @@
     min-height: 100vh;
     display: flex;
     overflow: hidden;
+    background: #f8fafc;
 }
 
 /* Left Side - Branding */
 .login-left {
     flex: 1;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
     color: white;
     display: flex;
     flex-direction: column;
@@ -26,19 +27,10 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="3" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grid)"/></svg>');
-    opacity: 0.5;
-    animation: backgroundMove 20s linear infinite;
-}
-
-@keyframes backgroundMove {
-    0% {
-        transform: translate(0, 0);
-    }
-
-    100% {
-        transform: translate(100px, 100px);
-    }
+    background-image:
+        radial-gradient(circle at 20% 150%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% -50%, rgba(255, 255, 255, 0.15) 0%, transparent 50%);
+    pointer-events: none;
 }
 
 .login-branding {
@@ -48,303 +40,198 @@
     max-width: 500px;
 }
 
-.login-logo {
-    font-size: 4rem;
-    font-weight: 900;
-    margin-bottom: 1.5rem;
-    letter-spacing: -0.03em;
-    color: white;
-    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-}
-
 .login-tagline {
-    font-size: 1.5rem;
-    font-weight: 300;
-    line-height: 1.6;
-    color: rgba(255, 255, 255, 0.95);
-    margin-bottom: 2rem;
+    font-size: 1.5rem !important;
+    font-weight: 300 !important;
+    line-height: 1.6 !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+    margin-bottom: 3rem !important;
 }
 
 .login-features {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 2rem;
     margin-top: 3rem;
-    text-align: left;
+    align-items: flex-start;
+    padding-left: 2rem;
 }
 
 .login-feature {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    font-size: 1.1rem;
-    color: rgba(255, 255, 255, 0.9);
+    gap: 1.5rem;
 }
 
 .login-feature-icon {
-    width: 50px;
-    height: 50px;
-    border-radius: 12px;
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
     background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(12px);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.5rem;
-    flex-shrink: 0;
+    color: white;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.login-feature:hover .login-feature-icon {
+    transform: scale(1.05) rotate(-5deg);
+    background: rgba(255, 255, 255, 0.25);
+}
+
+.login-feature p {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: white;
+    margin: 0;
 }
 
 /* Right Side - Form */
 .login-right {
     flex: 1;
-    background: white;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 3rem;
+    padding: 2rem;
+    background: #f8fafc;
+    position: relative;
 }
 
 .login-form-container {
     width: 100%;
-    max-width: 480px;
-    animation: fadeInRight 0.6s ease-out;
+    max-width: 520px;
+    padding: 1rem;
 }
 
 .login-form-header {
     text-align: center;
-    margin-bottom: 3rem;
+    margin-bottom: 2.5rem;
 }
 
 .login-form-header h1 {
-    font-size: 2.5rem;
-    font-weight: 800;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: 0.5rem;
+    font-size: 2.5rem !important;
+    font-weight: 800 !important;
+    color: #1e293b;
+    margin-bottom: 0.5rem !important;
+    letter-spacing: -0.02em;
 }
 
 .login-form-header p {
-    color: #6c757d;
+    color: #64748b;
     font-size: 1.1rem;
 }
 
-/* Role Selection */
-.role-selection {
+/* Modern Tabs */
+.login-tabs {
+    background: #f1f5f9;
+    padding: 6px;
+    border-radius: 16px;
     margin-bottom: 2rem;
-    text-align: center;
 }
 
-.role-selection label {
-    display: block;
+.login-tabs .MuiTab-root {
+    border-radius: 12px;
+    text-transform: none;
     font-weight: 600;
-    color: #212529;
-    margin-bottom: 1rem;
     font-size: 1rem;
+    min-height: 48px;
+    color: #64748b;
+    z-index: 1;
+    transition: all 0.2s ease;
 }
 
-.role-selection .ant-radio-group {
-    width: 100%;
+.login-tabs .Mui-selected {
+    color: #4f46e5 !important;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.login-tabs .MuiTabs-indicator {
+    display: none;
+}
+
+/* Form Elements Overrides */
+.login-form .MuiOutlinedInput-root {
+    border-radius: 12px;
+    background: white;
+    transition: all 0.2s ease;
+}
+
+.login-form .MuiOutlinedInput-root:hover {
+    background: #f8fafc;
+}
+
+.login-form .MuiOutlinedInput-root.Mui-focused {
+    background: white;
+    box-shadow: 0 4px 20px rgba(79, 70, 229, 0.1);
+}
+
+.login-form .MuiInputLabel-root {
+    color: #64748b;
+}
+
+.login-form .MuiInputLabel-root.Mui-focused {
+    color: #4f46e5;
+}
+
+/* Role Selection Cards */
+.role-selection-group {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 0.75rem;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
 }
 
-.role-selection .ant-radio-button-wrapper {
-    height: 48px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 12px;
-    font-weight: 600;
-    font-size: 0.95rem;
-    border: 2px solid #e9ecef;
-    transition: all 0.3s ease;
+.role-card-btn.MuiToggleButton-root {
+    border: 2px solid #e2e8f0;
+    border-radius: 16px !important;
+    padding: 1rem;
+    text-transform: none;
+    background: white;
+    transition: all 0.2s ease;
+    height: auto;
 }
 
-.role-selection .ant-radio-button-wrapper:hover {
-    border-color: #667eea;
-    color: #667eea;
+.role-card-btn.Mui-selected {
+    background: rgba(79, 70, 229, 0.05) !important;
+    border-color: #4f46e5 !important;
+    color: #4f46e5 !important;
 }
 
-.role-selection .ant-radio-button-wrapper-checked {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-color: #667eea;
-    color: white;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-}
-
-.role-selection .ant-radio-button-wrapper-checked:hover {
-    color: white;
-}
-
-/* Form Styling */
-.login-form .ant-form-item-label>label {
-    font-weight: 600;
-    color: #212529;
-    font-size: 1rem;
-}
-
-.login-form .ant-input,
-.login-form .ant-input-password {
-    height: 52px;
-    border-radius: 12px;
-    border: 2px solid #e9ecef;
-    font-size: 1rem;
-    padding: 0 1.25rem;
-    transition: all 0.3s ease;
-}
-
-.login-form .ant-input:hover,
-.login-form .ant-input-password:hover {
-    border-color: #667eea;
-}
-
-.login-form .ant-input:focus,
-.login-form .ant-input-password:focus,
-.login-form .ant-input-password-focused {
-    border-color: #667eea;
-    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
-}
-
-.login-form .ant-input-prefix {
-    color: #6c757d;
-    margin-right: 0.75rem;
-    font-size: 1.1rem;
-}
-
-/* Remember Me & Forgot Password */
-.login-form .ant-form-item-control-input-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.login-form .ant-checkbox-wrapper {
-    font-weight: 500;
-    color: #495057;
-}
-
-.forgot-password {
-    color: #667eea;
-    font-weight: 600;
-    text-decoration: none;
-    transition: all 0.3s ease;
-}
-
-.forgot-password:hover {
-    color: #764ba2;
-    text-decoration: underline;
-}
-
-/* Submit Button */
-.login-form .ant-btn-primary {
-    height: 56px;
-    border-radius: 12px;
-    font-size: 1.1rem;
-    font-weight: 700;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border: none;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.login-form .ant-btn-primary:hover {
+.role-card-btn:hover {
+    border-color: #cbd5e1;
+    background: #f8fafc;
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
 }
 
-.login-form .ant-btn-primary:active {
-    transform: translateY(0);
+.role-card-btn.Mui-selected:hover {
+    background: rgba(79, 70, 229, 0.08) !important;
+    border-color: #4f46e5 !important;
 }
 
-/* Register Link */
-.register-link {
-    text-align: center;
-    margin-top: 2rem;
-    padding-top: 2rem;
-    border-top: 2px solid #f0f0f0;
-}
-
-.register-link p {
-    color: #6c757d;
-    font-size: 1rem;
-    margin: 0;
-}
-
-.register-link a {
-    color: #667eea;
-    font-weight: 700;
-    text-decoration: none;
-    margin-left: 0.5rem;
-    transition: all 0.3s ease;
-}
-
-.register-link a:hover {
-    color: #764ba2;
-    text-decoration: underline;
-}
-
-/* Animations */
-@keyframes fadeInRight {
-    from {
-        opacity: 0;
-        transform: translateX(30px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-/* Responsive Design */
-@media (max-width: 1024px) {
-    .login-left {
-        padding: 2rem;
-    }
-
-    .login-logo {
-        font-size: 3rem;
-    }
-
-    .login-tagline {
-        font-size: 1.25rem;
-    }
-
-    .login-right {
-        padding: 2rem;
-    }
-
-    .login-form-header h1 {
-        font-size: 2rem;
-    }
-}
-
-@media (max-width: 768px) {
+/* Responsive */
+@media (max-width: 900px) {
     .login-page {
         flex-direction: column;
     }
 
     .login-left {
-        min-height: 40vh;
-        padding: 2rem 1.5rem;
+        min-height: 300px;
+        flex: none;
+        padding: 2rem;
     }
 
     .login-left::before {
-        animation: none;
+        background-image: radial-gradient(circle at 50% 100%, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
     }
 
-    .login-logo {
-        font-size: 2.5rem;
-    }
-
-    .login-tagline {
-        font-size: 1.1rem;
-        margin-bottom: 1rem;
+    .login-branding {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 
     .login-features {
@@ -352,69 +239,14 @@
     }
 
     .login-right {
+        flex: 1;
         padding: 2rem 1.5rem;
-    }
-
-    .login-form-container {
-        max-width: 100%;
-    }
-
-    .login-form-header {
-        margin-bottom: 2rem;
-    }
-
-    .login-form-header h1 {
-        font-size: 1.75rem;
-    }
-
-    .login-form-header p {
-        font-size: 1rem;
-    }
-
-    .role-selection .ant-radio-group {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 480px) {
-    .login-left {
-        min-height: 30vh;
-        padding: 1.5rem 1rem;
-    }
-
-    .login-logo {
-        font-size: 2rem;
-    }
-
-    .login-tagline {
-        font-size: 1rem;
-    }
-
-    .login-right {
-        padding: 1.5rem 1rem;
-    }
-
-    .login-form-header h1 {
-        font-size: 1.5rem;
-    }
-
-    .role-selection .ant-radio-group {
-        grid-template-columns: 1fr;
-        gap: 0.5rem;
-    }
-
-    .role-selection .ant-radio-button-wrapper {
-        height: 44px;
-        font-size: 0.9rem;
-    }
-
-    .login-form .ant-input,
-    .login-form .ant-input-password {
-        height: 48px;
-    }
-
-    .login-form .ant-btn-primary {
-        height: 52px;
-        font-size: 1rem;
+        align-items: flex-start;
+        background: white;
+        border-top-left-radius: 32px;
+        border-top-right-radius: 32px;
+        margin-top: -2rem;
+        z-index: 2;
+        box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.05);
     }
 }
