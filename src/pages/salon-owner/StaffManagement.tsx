@@ -40,6 +40,7 @@ import {
 } from '@mui/icons-material';
 import { useBarberStore } from '../../stores/barberStore';
 import { useSalonStore } from '../../stores/salonStore';
+import { useToast } from '../../context/ToastContext';
 import { motion } from 'framer-motion';
 import CountUp from 'react-countup';
 
@@ -58,9 +59,8 @@ const StaffManagement: React.FC = () => {
     const [openAddDialog, setOpenAddDialog] = useState(false);
     const [filterTab, setFilterTab] = useState(0); // 0: All, 1: Pending, 2: Approved
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-    const [success, setSuccess] = useState<string | null>(null);
     const [searchTerm, setSearchTerm] = useState('');
+    const toast = useToast();
 
     const { mySalons: salons, fetchMySalons } = useSalonStore();
     const {
@@ -104,7 +104,6 @@ const StaffManagement: React.FC = () => {
 
     const handleAddStaff = async () => {
         setLoading(true);
-        setError(null);
 
         try {
             // First, check if the user exists in Styler
@@ -112,7 +111,7 @@ const StaffManagement: React.FC = () => {
             const checkResult = await userService.checkUserExists(formData.email, formData.phone);
 
             if (!checkResult.success || !checkResult.data?.exists) {
-                setError('This barber is not registered in Styler. Please ask them to create an account first.');
+                toast.error('This barber is not registered in Styler. Please ask them to create an account first.');
                 setLoading(false);
                 return;
             }
@@ -120,7 +119,7 @@ const StaffManagement: React.FC = () => {
             // If user exists and is a barber, proceed with registration
             const userData = checkResult.data?.user;
             if (userData && userData.role !== 'barber') {
-                setError(`This user is registered as ${userData.role}, not as a barber. Only barbers can be added as staff.`);
+                toast.error(`This user is registered as ${userData.role}, not as a barber. Only barbers can be added as staff.`);
                 setLoading(false);
                 return;
             }
@@ -133,7 +132,7 @@ const StaffManagement: React.FC = () => {
                 experience: formData.experience
             });
 
-            setSuccess('Staff member added successfully!');
+            toast.success('Staff member added successfully!');
             setOpenAddDialog(false);
             setFormData({
                 name: '',
@@ -148,10 +147,8 @@ const StaffManagement: React.FC = () => {
             if (formData.salonId) {
                 fetchSalonBarbers(formData.salonId);
             }
-
-            setTimeout(() => setSuccess(null), 3000);
         } catch (err: any) {
-            setError(err.response?.data?.message || 'Failed to add staff member');
+            toast.error(err.response?.data?.message || 'Failed to add staff member');
         } finally {
             setLoading(false);
         }
@@ -160,26 +157,24 @@ const StaffManagement: React.FC = () => {
     const handleApprove = async (barberId: string) => {
         try {
             await approveBarber(barberId);
-            setSuccess('Staff member approved successfully!');
+            toast.success('Staff member approved successfully!');
             if (formData.salonId) {
                 fetchSalonBarbers(formData.salonId);
             }
-            setTimeout(() => setSuccess(null), 3000);
         } catch (err: any) {
-            setError(err.response?.data?.message || 'Failed to approve staff member');
+            toast.error(err.response?.data?.message || 'Failed to approve staff member');
         }
     };
 
     const handleReject = async (barberId: string) => {
         try {
             await rejectBarber(barberId, 'Rejected by salon owner');
-            setSuccess('Staff member rejected');
+            toast.success('Staff member rejected');
             if (formData.salonId) {
                 fetchSalonBarbers(formData.salonId);
             }
-            setTimeout(() => setSuccess(null), 3000);
         } catch (err: any) {
-            setError(err.response?.data?.message || 'Failed to reject staff member');
+            toast.error(err.response?.data?.message || 'Failed to reject staff member');
         }
     };
 
@@ -189,7 +184,8 @@ const StaffManagement: React.FC = () => {
                 filterTab === 1 ? barber.status === BarberStatus.PENDING :
                     filterTab === 2 ? barber.status === BarberStatus.APPROVED : true;
 
-        const matchesSearch = (barber.userId as any)?.name?.toLowerCase().includes(searchTerm.toLowerCase()) || false;
+        const barberName = (barber.userId as any)?.name || '';
+        const matchesSearch = searchTerm.trim() === '' || barberName.toLowerCase().includes(searchTerm.toLowerCase());
 
         return matchesFilter && matchesSearch;
     });
@@ -225,7 +221,7 @@ const StaffManagement: React.FC = () => {
                             size="large"
                             sx={{
                                 bgcolor: 'white',
-                                color: '#1e293b',
+                                color: 'white',
                                 borderRadius: '50px',
                                 textTransform: 'none',
                                 fontWeight: 700,
@@ -289,16 +285,6 @@ const StaffManagement: React.FC = () => {
             </Box>
 
             <Container maxWidth="xl" sx={{ mt: 4 }}>
-                {(success || error) && (
-                    <Alert
-                        severity={success ? "success" : "error"}
-                        sx={{ mb: 3, borderRadius: '12px' }}
-                        onClose={() => { setSuccess(null); setError(null); }}
-                    >
-                        {success || error}
-                    </Alert>
-                )}
-
                 {/* Filters and Search */}
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3, flexWrap: 'wrap', gap: 2 }}>
                     <Tabs

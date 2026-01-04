@@ -148,10 +148,10 @@ const SalonOwnerSalonDetails: React.FC = () => {
             hours.day.toLowerCase() === currentDay.toLowerCase()
         );
 
-        if (!todayHours || !todayHours.isOpen) return false;
+        if (!todayHours || !todayHours.isOpen || !todayHours.slots || todayHours.slots.length === 0) return false;
 
-        const [openHour, openMin] = todayHours.openTime.split(':').map(Number);
-        const [closeHour, closeMin] = todayHours.closeTime.split(':').map(Number);
+        const [openHour, openMin] = todayHours.slots[0].start.split(':').map(Number);
+        const [closeHour, closeMin] = todayHours.slots[0].end.split(':').map(Number);
 
         const openingTime = openHour * 60 + openMin;
         const closingTime = closeHour * 60 + closeMin;
@@ -439,10 +439,10 @@ const SalonOwnerSalonDetails: React.FC = () => {
                                             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                                                 {salon.operatingHours.map((hours, index) => (
                                                     <Box key={index} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                                        <Typography variant="body2" fontWeight={600} sx={{ width: 100 }}>{hours.day}</Typography>
-                                                        {hours.isOpen ? (
+                                                        <Typography variant="body2" fontWeight={600} sx={{ width: 100, textTransform: 'capitalize' }}>{hours.day}</Typography>
+                                                        {hours.isOpen && hours.slots && hours.slots.length > 0 ? (
                                                             <Chip
-                                                                label={`${hours.openTime} - ${hours.closeTime}`}
+                                                                label={`${hours.slots[0].start} - ${hours.slots[0].end}`}
                                                                 size="small"
                                                                 sx={{ bgcolor: '#f0fdf4', color: '#16a34a', fontWeight: 600, fontSize: '0.75rem' }}
                                                             />

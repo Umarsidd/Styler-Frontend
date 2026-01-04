@@ -114,9 +114,11 @@ export interface Address {
 
 export interface OperatingHours {
     day: string;
-    openTime: string;
-    closeTime: string;
     isOpen: boolean;
+    slots: {
+        start: string;
+        end: string;
+    }[];
 }
 
 export interface Salon {

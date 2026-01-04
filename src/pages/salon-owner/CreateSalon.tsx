@@ -18,7 +18,9 @@ import {
     IconButton,
     Dialog,
     DialogContent,
-    DialogActions
+    DialogActions,
+    MenuItem,
+    Chip
 } from '@mui/material';
 import { Add as AddIcon, Delete as DeleteIcon, Image as ImageIcon, CheckCircle as CheckCircleIcon } from '@mui/icons-material';
 import { useSalonStore } from '../../stores/salonStore';
@@ -32,6 +34,14 @@ interface OperatingHours {
     openTime: string;
     closeTime: string;
     isOpen: boolean;
+}
+
+interface ServiceFormData {
+    name: string;
+    description: string;
+    price: number;
+    duration: number;
+    gender: 'male' | 'female' | 'unisex';
 }
 
 const CreateSalon: React.FC = () => {
@@ -68,7 +78,16 @@ const CreateSalon: React.FC = () => {
         }))
     );
 
-    const steps = ['Basic Information', 'Address & Location', 'Operating Hours'];
+    const [services, setServices] = useState<ServiceFormData[]>([]);
+    const [currentService, setCurrentService] = useState<ServiceFormData>({
+        name: '',
+        description: '',
+        price: 0,
+        duration: 30,
+        gender: 'unisex'
+    });
+
+    const steps = ['Basic Information', 'Address & Location', 'Operating Hours', 'Services'];
 
     const handleChange = (field: string, value: string) => {
         setFormData(prev => ({ ...prev, [field]: value }));
@@ -88,6 +107,40 @@ const CreateSalon: React.FC = () => {
         const updated = [...operatingHours];
         updated[index] = { ...updated[index], [field]: value };
         setOperatingHours(updated);
+    };
+
+    const handleServiceChange = (field: keyof ServiceFormData, value: any) => {
+        setCurrentService(prev => ({ ...prev, [field]: value }));
+        setError(null);
+    };
+
+    const handleAddService = () => {
+        if (!currentService.name.trim()) {
+            setError('Service name is required');
+            return;
+        }
+        if (currentService.price <= 0) {
+            setError('Service price must be greater than 0');
+            return;
+        }
+        if (currentService.duration < 15) {
+            setError('Service duration must be at least 15 minutes');
+            return;
+        }
+
+        setServices(prev => [...prev, currentService]);
+        setCurrentService({
+            name: '',
+            description: '',
+            price: 0,
+            duration: 30,
+            gender: 'unisex'
+        });
+        setError(null);
+    };
+
+    const handleRemoveService = (index: number) => {
+        setServices(prev => prev.filter((_, i) => i !== index));
     };
 
     const validateStep = (step: number): boolean => {
@@ -122,6 +175,9 @@ const CreateSalon: React.FC = () => {
                     setError('At least one day must be open');
                     return false;
                 }
+                return true;
+            case 3:
+                // Services step is optional
                 return true;
             default:
                 return true;
@@ -228,7 +284,24 @@ const CreateSalon: React.FC = () => {
                     latitude: parseFloat(formData.latitude),
                     longitude: parseFloat(formData.longitude)
                 },
-                operatingHours: operatingHours.filter(h => h.isOpen)
+                operatingHours: operatingHours
+                    .filter(h => h.isOpen)
+                    .map(h => ({
+                        day: h.day.toLowerCase(),
+                        isOpen: h.isOpen,
+                        slots: [{
+                            start: h.openTime,
+                            end: h.closeTime
+                        }]
+                    })),
+                services: services.map(s => ({
+                    name: s.name,
+                    description: s.description,
+                    price: s.price,
+                    duration: s.duration,
+                    gender: s.gender,
+                    isActive: true
+                }))
             };
 
             await registerSalon(payload);
@@ -527,6 +600,134 @@ const CreateSalon: React.FC = () => {
                                 </Grid>
                             </Paper>
                         ))}
+                    </Box>
+                );
+
+            case 3:
+                return (
+                    <Box>
+                        <Typography variant="subtitle2" gutterBottom sx={{ mb: 2 }}>
+                            Add services your salon offers (Optional)
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+                            You can skip this step and add services later from your dashboard
+                        </Typography>
+
+                        {/* Current Service Form */}
+                        <Paper sx={{ p: 3, mb: 3, bgcolor: '#f8fafc' }}>
+                            <Grid container spacing={2}>
+                                <Grid size={{ xs: 12, sm: 6 }}>
+                                    <TextField
+                                        label="Service Name"
+                                        fullWidth
+                                        size="small"
+                                        value={currentService.name}
+                                        onChange={(e) => handleServiceChange('name', e.target.value)}
+                                        placeholder="e.g., Haircut, Beard Trim"
+                                    />
+                                </Grid>
+                                <Grid size={{ xs: 12, sm: 6 }}>
+                                    <TextField
+                                        select
+                                        label="Gender"
+                                        fullWidth
+                                        size="small"
+                                        value={currentService.gender}
+                                        onChange={(e) => handleServiceChange('gender', e.target.value)}
+                                    >
+                                        <MenuItem value="male">Male</MenuItem>
+                                        <MenuItem value="female">Female</MenuItem>
+                                        <MenuItem value="unisex">Unisex</MenuItem>
+                                    </TextField>
+                                </Grid>
+                                <Grid size={{ xs: 12 }}>
+                                    <TextField
+                                        label="Description"
+                                        fullWidth
+                                        size="small"
+                                        multiline
+                                        rows={2}
+                                        value={currentService.description}
+                                        onChange={(e) => handleServiceChange('description', e.target.value)}
+                                        placeholder="Brief description of the service"
+                                    />
+                                </Grid>
+                                <Grid size={{ xs: 12, sm: 6 }}>
+                                    <TextField
+                                        label="Price (₹)"
+                                        fullWidth
+                                        size="small"
+                                        type="number"
+                                        value={currentService.price}
+                                        onChange={(e) => handleServiceChange('price', parseFloat(e.target.value) || 0)}
+                                        InputProps={{ inputProps: { min: 0 } }}
+                                    />
+                                </Grid>
+                                <Grid size={{ xs: 12, sm: 6 }}>
+                                    <TextField
+                                        label="Duration (minutes)"
+                                        fullWidth
+                                        size="small"
+                                        type="number"
+                                        value={currentService.duration}
+                                        onChange={(e) => handleServiceChange('duration', parseInt(e.target.value) || 30)}
+                                        InputProps={{ inputProps: { min: 15, step: 15 } }}
+                                    />
+                                </Grid>
+                                <Grid size={{ xs: 12 }}>
+                                    <Button
+                                        variant="outlined"
+                                        onClick={handleAddService}
+                                        startIcon={<AddIcon />}
+                                        fullWidth
+                                        sx={{ borderRadius: '8px' }}
+                                    >
+                                        Add Service
+                                    </Button>
+                                </Grid>
+                            </Grid>
+                        </Paper>
+
+                        {/* Added Services List */}
+                        {services.length > 0 && (
+                            <Box>
+                                <Typography variant="subtitle2" gutterBottom sx={{ mb: 2 }}>
+                                    Added Services ({services.length})
+                                </Typography>
+                                <Grid container spacing={2}>
+                                    {services.map((service, index) => (
+                                        <Grid size={{ xs: 12 }} key={index}>
+                                            <Paper sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                <Box sx={{ flex: 1 }}>
+                                                    <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', mb: 0.5 }}>
+                                                        <Typography variant="body1" fontWeight={600}>
+                                                            {service.name}
+                                                        </Typography>
+                                                        <Chip label={service.gender} size="small" sx={{ textTransform: 'capitalize', fontSize: '0.7rem' }} />
+                                                    </Box>
+                                                    {service.description && (
+                                                        <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                                                            {service.description}
+                                                        </Typography>
+                                                    )}
+                                                    <Box sx={{ display: 'flex', gap: 2 }}>
+                                                        <Typography variant="body2" color="primary" fontWeight={600}>
+                                                            ₹{service.price}
+                                                        </Typography>
+                                                        <Typography variant="body2" color="text.secondary">
+                                                            {service.duration} mins
+                                                        </Typography>
+                                                    </Box>
+                                                </Box>
+                                                <IconButton onClick={() => handleRemoveService(index)} color="error" size="small">
+                                                    <DeleteIcon />
+                                                </IconButton>
+                                            </Paper>
+                                        </Grid>
+                                    ))}
+                                </Grid>
+                            </Box>
+                        )}
                     </Box>
                 );
 
