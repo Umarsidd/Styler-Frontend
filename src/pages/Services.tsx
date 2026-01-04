@@ -234,10 +234,10 @@ const Services: React.FC = () => {
                                             {pkg.name}
                                         </Typography>
                                         <Box sx={{ my: 4, display: 'flex', alignItems: 'baseline', gap: 1 }}>
-                                            <Typography variant="h3" sx={{ fontWeight: 800, color: 'text.primary' }}>
+                                            <Typography variant="h3" sx={{ fontWeight: 800 }}>
                                                 {pkg.price}
                                             </Typography>
-                                            <Typography variant="h6" sx={{ color: 'text.secondary', textDecoration: 'line-through' }}>
+                                            <Typography variant="h6" sx={{ textDecoration: 'line-through' }}>
                                                 {pkg.original}
                                             </Typography>
                                         </Box>
@@ -339,10 +339,9 @@ const Services: React.FC = () => {
                                     py: 2,
                                     fontSize: '1.1rem',
                                     bgcolor: 'white',
-                                    color: 'primary.main',
                                     fontWeight: 700,
                                     borderRadius: '50px',
-                                    '&:hover': { bgcolor: '#f8fafc', transform: 'translateY(-2px)' },
+                                    '&:hover': { transform: 'translateY(-2px)' },
                                 }}
                             >
                                 Find Nearest Salon

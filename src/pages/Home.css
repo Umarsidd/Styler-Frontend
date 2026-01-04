@@ -92,7 +92,7 @@
 }
 
 .feature-card:hover .feature-icon-box {
-    background: linear-gradient(135deg, #6366f1 0%, #ec4899 100%);
+    background: #4338ca;
     color: white;
     transform: rotate(5deg);
 }

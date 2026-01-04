@@ -43,7 +43,7 @@
 
 .service-icon-wrapper {
     height: 140px;
-    background: linear-gradient(135deg, #6366f1 0%, #ec4899 100%);
+    background: #4338ca;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -76,9 +76,10 @@
 
 .package-card.popular {
     border: 2px solid #6366f1 !important;
-    background: linear-gradient(to bottom, #ffffff, #f5f3ff);
+    background: #4338ca;
     transform: scale(1.02);
     box-shadow: 0 20px 40px rgba(99, 102, 241, 0.1);
+    color: white;
 }
 
 .package-card:hover {
@@ -93,8 +94,8 @@
     position: absolute;
     top: 20px;
     right: 20px;
-    background: linear-gradient(135deg, #6366f1 0%, #ec4899 100%);
-    color: white;
+    background: white;
+    color: #4338ca;
     padding: 6px 16px;
     border-radius: 20px;
     font-size: 0.8rem;

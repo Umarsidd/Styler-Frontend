@@ -119,7 +119,7 @@ const Navbar: React.FC = () => {
 
     const drawer = (
         <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', bgcolor: 'background.default' }}>
-            <Box sx={{ p: 3, display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+            <Box sx={{ p: 3, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Logo size="small" variant="default" clickable={false} />
                 <IconButton onClick={handleDrawerToggle} size="small" sx={{ bgcolor: 'rgba(0,0,0,0.05)' }}>
                     <CloseIcon />
@@ -291,7 +291,7 @@ const Navbar: React.FC = () => {
                                     })}
                                 </Box>
 
-                                <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                                <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', ml: 'auto' }}>
                                     {isAuthenticated ? (
                                         <>
                                             <IconButton
