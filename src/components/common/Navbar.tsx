@@ -232,7 +232,7 @@ const Navbar: React.FC = () => {
                     right: 0
                 }}
             >
-                <Container maxWidth={false} sx={{ maxWidth: 1400 }}>
+                <Container maxWidth={false}>
                     <Toolbar disableGutters sx={{ height: scrolled ? 72 : 90, transition: 'all 0.3s ease' }}>
                         <Logo size={isMobile ? "small" : "medium"} variant="default" />
 
@@ -251,7 +251,9 @@ const Navbar: React.FC = () => {
                                 <Box sx={{
                                     display: 'flex',
                                     gap: 0.5,
-                                    mx: 'auto',
+                                    position: 'absolute',
+                                    left: '50%',
+                                    transform: 'translateX(-50%)',
                                     p: 0.75,
                                     bgcolor: scrolled ? 'rgba(0,0,0,0.03)' : 'rgba(255,255,255,0.9)',
                                     backdropFilter: 'blur(10px)',
@@ -396,7 +398,7 @@ const Navbar: React.FC = () => {
                         )}
                     </Toolbar>
                 </Container>
-            </AppBar>
+            </AppBar >
 
             <Drawer
                 variant="temporary"

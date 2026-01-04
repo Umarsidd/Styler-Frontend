@@ -53,19 +53,19 @@ const About: React.FC = () => {
 
     const team = [
         {
-            name: 'Rahul Sharma',
+            name: 'Ankit Singh',
             role: 'Founder & CEO',
             avatar: 'R',
             description: '15+ years in grooming industry',
         },
         {
-            name: 'Priya Patel',
+            name: 'Mohd Umar Siddiqui',
             role: 'Head of Operations',
             avatar: 'P',
             description: 'Operations excellence expert',
         },
         {
-            name: 'Amit Kumar',
+            name: 'Kunwar Prakash Singh',
             role: 'Technology Lead',
             avatar: 'A',
             description: 'Building seamless experiences',
@@ -218,18 +218,6 @@ const About: React.FC = () => {
                                 overflow: 'hidden'
                             }}
                         >
-                            <Box sx={{
-                                position: 'absolute',
-                                bottom: 0,
-                                left: 0,
-                                right: 0,
-                                p: 4,
-                                background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent)'
-                            }}>
-                                <Typography variant="h5" color="white" fontWeight={700}>
-                                    "Style is a way to say who you are without having to speak."
-                                </Typography>
-                            </Box>
                         </MotionBox>
                     </Grid>
                 </Grid>

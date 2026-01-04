@@ -217,7 +217,7 @@ const Home: React.FC = () => {
                         <Typography variant="h5" sx={{
                             color: 'rgba(255, 255, 255, 0.95)',
                             mb: 5,
-                            maxWidth: 600,
+                            maxWidth: 800,
                             mx: 'auto',
                             fontSize: { xs: '1rem', sm: '1.25rem' },
                             lineHeight: 1.6,
