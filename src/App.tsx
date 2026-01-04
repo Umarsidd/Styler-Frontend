@@ -16,6 +16,8 @@ import { UserRole } from './types';
 import Home from './pages/Home';
 import About from './pages/About';
 import Blog from './pages/Blog';
+import Lookbook from './pages/Lookbook';
+import Contact from './pages/Contact';
 import Login from './pages/Login';
 import Services from './pages/Services';
 import ServiceDetails from './pages/ServiceDetails';

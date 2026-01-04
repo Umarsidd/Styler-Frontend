@@ -22,20 +22,22 @@ import {
     Container
 } from '@mui/material';
 import {
-    Menu as MenuIcon,
-    Person as PersonIcon,
-    Logout as LogoutIcon,
     Settings as SettingsIcon,
-    ContentCut as ContentCutIcon,
-    LocationOn as LocationOnIcon,
-    Info as InfoIcon,
     Dashboard as DashboardIcon,
-    CalendarMonth as CalendarIcon,
     Store as StoreIcon,
-    ChevronRight as ChevronRightIcon,
-    Close as CloseIcon,
+    People as PeopleIcon,
     TrendingUp as TrendingUpIcon,
-    People as PeopleIcon
+    Logout as LogoutIcon,
+    Close as CloseIcon,
+    Menu as MenuIcon,
+    LocationOn as LocationOnIcon,
+    ContentCut as ContentCutIcon,
+    CalendarToday as CalendarIcon,
+    ChevronRight as ChevronRightIcon,
+    Favorite,
+    Email,
+    Person as PersonIcon, // Re-added PersonIcon
+    Info as InfoIcon // Re-added InfoIcon
 } from '@mui/icons-material';
 import { useAuthStore } from '../../stores/authStore';
 import { useUIStore } from '../../stores/uiStore';
@@ -108,9 +110,11 @@ const Navbar: React.FC = () => {
             case 'customer':
             default:
                 return [
-                    { label: 'Find Salons', path: '/salons', icon: <LocationOnIcon /> },
+                    { label: 'Lookbook', path: '/lookbook', icon: <Favorite /> },
                     { label: 'Services', path: '/services', icon: <ContentCutIcon /> },
+                    { label: 'Find Salons', path: '/salons', icon: <LocationOnIcon /> },
                     { label: 'About', path: '/about', icon: <CalendarIcon /> },
+                    { label: 'Contact', path: '/contact', icon: <Email /> },
                 ];
         }
     };
