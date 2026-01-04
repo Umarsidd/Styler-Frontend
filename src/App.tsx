@@ -145,6 +145,8 @@ function AppContent() {
                 <Route path="/" element={<Layout><Home /></Layout>} />
                 <Route path="/about" element={<Layout><About /></Layout>} />
                 <Route path="/blog" element={<Layout><Blog /></Layout>} />
+                <Route path="/lookbook" element={<Layout><Lookbook /></Layout>} />
+                <Route path="/contact" element={<Layout><Contact /></Layout>} />
                 <Route path="/login" element={<Layout showFooter={false} showNavbar={false}><Login /></Layout>} />
                 <Route path="/services" element={<Layout><Services /></Layout>} />
                 <Route path="/services/:id" element={<Layout><ServiceDetails /></Layout>} />
