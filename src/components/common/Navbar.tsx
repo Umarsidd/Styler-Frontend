@@ -110,7 +110,7 @@ const Navbar: React.FC = () => {
                 return [
                     { label: 'Find Salons', path: '/salons', icon: <LocationOnIcon /> },
                     { label: 'Services', path: '/services', icon: <ContentCutIcon /> },
-                    { label: 'My Appointments', path: '/my-appointments', icon: <CalendarIcon /> },
+                    { label: 'About', path: '/about', icon: <CalendarIcon /> },
                 ];
         }
     };
@@ -119,8 +119,8 @@ const Navbar: React.FC = () => {
 
     const drawer = (
         <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', bgcolor: 'background.default' }}>
-            <Box sx={{ p: 3, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <Logo size="medium" variant="default" clickable={false} />
+            <Box sx={{ p: 3, display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+                <Logo size="small" variant="default" clickable={false} />
                 <IconButton onClick={handleDrawerToggle} size="small" sx={{ bgcolor: 'rgba(0,0,0,0.05)' }}>
                     <CloseIcon />
                 </IconButton>
