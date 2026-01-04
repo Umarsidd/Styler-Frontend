@@ -33,7 +33,9 @@ import {
     CalendarMonth as CalendarIcon,
     Store as StoreIcon,
     ChevronRight as ChevronRightIcon,
-    Close as CloseIcon
+    Close as CloseIcon,
+    TrendingUp as TrendingUpIcon,
+    People as PeopleIcon
 } from '@mui/icons-material';
 import { useAuthStore } from '../../stores/authStore';
 import { useUIStore } from '../../stores/uiStore';
@@ -50,7 +52,7 @@ const Navbar: React.FC = () => {
 
     useEffect(() => {
         const handleScroll = () => {
-            setScrolled(window.scrollY > 20);
+            setScrolled(window.scrollY > 10);
         };
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
@@ -93,19 +95,22 @@ const Navbar: React.FC = () => {
                     { label: 'Dashboard', path: '/barber/dashboard', icon: <DashboardIcon /> },
                     { label: 'Appointments', path: '/barber/appointments', icon: <CalendarIcon /> },
                     { label: 'Schedule', path: '/barber/schedule', icon: <InfoIcon /> },
+                    { label: 'Profile', path: '/barber/profile', icon: <PersonIcon /> },
                 ];
             case 'salon_owner':
                 return [
                     { label: 'Dashboard', path: '/salon-owner/dashboard', icon: <DashboardIcon /> },
                     { label: 'My Salons', path: '/salons-owner/my-salons', icon: <StoreIcon /> },
-                    { label: 'Barbers', path: '/salon-owner/barbers', icon: <ContentCutIcon /> },
+                    { label: 'Services', path: '/salon-owner/manage-services', icon: <ContentCutIcon /> },
+                    { label: 'Analytics', path: '/salon-owner/analytics', icon: <TrendingUpIcon /> },
+                    { label: 'Staff', path: '/salon-owner/staff-management', icon: <PeopleIcon /> },
                 ];
             case 'customer':
             default:
                 return [
                     { label: 'Find Salons', path: '/salons', icon: <LocationOnIcon /> },
                     { label: 'Services', path: '/services', icon: <ContentCutIcon /> },
-                    { label: 'About', path: '/about', icon: <InfoIcon /> },
+                    { label: 'My Appointments', path: '/my-appointments', icon: <CalendarIcon /> },
                 ];
         }
     };
@@ -113,39 +118,40 @@ const Navbar: React.FC = () => {
     const navLinks = getNavLinksForRole();
 
     const drawer = (
-        <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', bgcolor: 'background.paper' }}>
-            <Box sx={{ p: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid', borderColor: 'divider' }}>
+        <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', bgcolor: 'background.default' }}>
+            <Box sx={{ p: 3, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Logo size="medium" variant="default" clickable={false} />
-                <IconButton onClick={handleDrawerToggle} size="small">
+                <IconButton onClick={handleDrawerToggle} size="small" sx={{ bgcolor: 'rgba(0,0,0,0.05)' }}>
                     <CloseIcon />
                 </IconButton>
             </Box>
+            <Divider sx={{ opacity: 0.1 }} />
 
             <Box sx={{ flex: 1, overflowY: 'auto', py: 2 }}>
                 <List sx={{ px: 2 }}>
                     {navLinks.map((item) => {
                         const isActive = location.pathname === item.path;
                         return (
-                            <ListItem key={item.path} disablePadding sx={{ mb: 1 }}>
+                            <ListItem key={item.path} disablePadding sx={{ mb: 1.5 }}>
                                 <ListItemButton
                                     component={Link}
                                     to={item.path}
                                     onClick={handleDrawerToggle}
                                     sx={{
-                                        borderRadius: 3,
-                                        bgcolor: isActive ? 'primary.lighter' : 'transparent',
-                                        color: isActive ? 'primary.main' : 'text.primary',
-                                        '&:hover': { bgcolor: isActive ? 'primary.lighter' : 'rgba(0,0,0,0.04)' },
+                                        borderRadius: '12px',
+                                        bgcolor: isActive ? 'primary.main' : 'transparent',
+                                        color: isActive ? 'white' : 'text.primary',
+                                        '&:hover': { bgcolor: isActive ? 'primary.dark' : 'rgba(0,0,0,0.05)' },
                                     }}
                                 >
-                                    <ListItemIcon sx={{ minWidth: 40, color: isActive ? 'primary.main' : 'text.secondary' }}>
+                                    <ListItemIcon sx={{ minWidth: 40, color: isActive ? 'white' : 'text.secondary' }}>
                                         {React.cloneElement(item.icon as React.ReactElement, { fontSize: 'small' })}
                                     </ListItemIcon>
                                     <ListItemText
                                         primary={item.label}
                                         primaryTypographyProps={{ fontWeight: isActive ? 700 : 500 }}
                                     />
-                                    {isActive && <ChevronRightIcon sx={{ fontSize: 16 }} />}
+                                    {isActive && <ChevronRightIcon sx={{ fontSize: 16, color: 'white' }} />}
                                 </ListItemButton>
                             </ListItem>
                         );
@@ -153,19 +159,19 @@ const Navbar: React.FC = () => {
                 </List>
             </Box>
 
-            <Box sx={{ p: 3, bgcolor: 'background.default', borderTop: '1px solid', borderColor: 'divider' }}>
+            <Box sx={{ p: 3, bgcolor: '#f8fafc', borderTop: '1px solid', borderColor: 'divider' }}>
                 {isAuthenticated && user ? (
                     <Box>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
                             <Avatar
                                 src={user.profilePicture}
                                 alt={user.name}
-                                sx={{ width: 48, height: 48, bgcolor: 'primary.main', fontWeight: 700, boxShadow: 2 }}
+                                sx={{ width: 48, height: 48, bgcolor: 'primary.main', fontWeight: 700, boxShadow: 2, border: '2px solid white' }}
                             >
                                 {user.name?.charAt(0).toUpperCase()}
                             </Avatar>
                             <Box sx={{ overflow: 'hidden' }}>
-                                <Typography variant="subtitle1" noWrap sx={{ fontWeight: 700 }}>
+                                <Typography variant="subtitle1" noWrap sx={{ fontWeight: 700, color: '#1e293b' }}>
                                     {user.name}
                                 </Typography>
                                 <Typography variant="caption" color="text.secondary" noWrap sx={{ display: 'block' }}>
@@ -176,10 +182,10 @@ const Navbar: React.FC = () => {
                         <Button
                             fullWidth
                             variant="outlined"
-                            color="inherit"
+                            color="error"
                             startIcon={<LogoutIcon />}
                             onClick={handleLogout}
-                            sx={{ borderRadius: 2, borderColor: 'divider', textTransform: 'none' }}
+                            sx={{ borderRadius: '12px', textTransform: 'none', fontWeight: 600, bgcolor: 'white' }}
                         >
                             Log Out
                         </Button>
@@ -197,7 +203,7 @@ const Navbar: React.FC = () => {
                             py: 1.5,
                             fontWeight: 700,
                             borderRadius: '50px',
-                            boxShadow: '0 4px 14px 0 rgba(99, 102, 241, 0.39)'
+                            boxShadow: '0 8px 20px -4px rgba(99, 102, 241, 0.5)'
                         }}
                     >
                         Login / Sign Up
@@ -216,15 +222,18 @@ const Navbar: React.FC = () => {
                 elevation={0}
                 sx={{
                     bgcolor: scrolled ? 'rgba(255, 255, 255, 0.8)' : 'transparent',
-                    backdropFilter: scrolled ? 'blur(20px)' : 'none',
-                    borderBottom: scrolled ? '1px solid' : '1px solid',
-                    borderColor: scrolled ? 'rgba(0,0,0,0.05)' : 'transparent',
+                    backdropFilter: scrolled ? 'blur(16px)' : 'none',
+                    borderBottom: '1px solid',
+                    borderColor: scrolled ? 'rgba(0,0,0,0.08)' : 'transparent',
                     transition: 'all 0.3s ease',
                     width: '100%',
+                    top: 0,
+                    left: 0,
+                    right: 0
                 }}
             >
                 <Container maxWidth={false} sx={{ maxWidth: 1400 }}>
-                    <Toolbar disableGutters sx={{ height: scrolled ? 70 : 80, transition: 'all 0.3s ease' }}>
+                    <Toolbar disableGutters sx={{ height: scrolled ? 72 : 90, transition: 'all 0.3s ease' }}>
                         <Logo size={isMobile ? "small" : "medium"} variant="default" />
 
                         {isMobile ? (
@@ -233,13 +242,24 @@ const Navbar: React.FC = () => {
                                 aria-label="open drawer"
                                 edge="end"
                                 onClick={handleDrawerToggle}
-                                sx={{ ml: 'auto', color: 'text.primary' }}
+                                sx={{ ml: 'auto', color: 'text.primary', bgcolor: scrolled ? 'rgba(0,0,0,0.05)' : 'white' }}
                             >
                                 <MenuIcon />
                             </IconButton>
                         ) : (
                             <>
-                                <Box sx={{ display: 'flex', gap: 1, mx: 'auto', p: 0.5, bgcolor: scrolled ? 'rgba(0,0,0,0.03)' : 'rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)', borderRadius: '50px', border: '1px solid rgba(255,255,255,0.2)' }}>
+                                <Box sx={{
+                                    display: 'flex',
+                                    gap: 0.5,
+                                    mx: 'auto',
+                                    p: 0.75,
+                                    bgcolor: scrolled ? 'rgba(0,0,0,0.03)' : 'rgba(255,255,255,0.9)',
+                                    backdropFilter: 'blur(10px)',
+                                    borderRadius: '50px',
+                                    border: '1px solid',
+                                    borderColor: scrolled ? 'rgba(0,0,0,0.05)' : 'white',
+                                    boxShadow: scrolled ? 'none' : '0 4px 20px rgba(0,0,0,0.05)'
+                                }}>
                                     {navLinks.map((item) => {
                                         const isActive = location.pathname === item.path;
                                         return (
@@ -250,7 +270,7 @@ const Navbar: React.FC = () => {
                                                 disableRipple
                                                 startIcon={item.icon}
                                                 sx={{
-                                                    color: isActive ? 'white' : (scrolled ? 'text.secondary' : 'rgba(255,255,255,0.9)'), // Adjust link color for dark/light bg if needed, simplified here
+                                                    color: isActive ? 'white' : '#64748b',
                                                     fontWeight: 600,
                                                     px: 3,
                                                     py: 1,
@@ -259,13 +279,9 @@ const Navbar: React.FC = () => {
                                                     bgcolor: isActive ? 'primary.main' : 'transparent',
                                                     transition: 'all 0.3s ease',
                                                     '&:hover': {
-                                                        bgcolor: isActive ? 'primary.dark' : 'rgba(255,255,255,0.1)',
-                                                        color: isActive ? 'white' : 'primary.main'
-                                                    },
-                                                    // Quick fix for when navbar is transparent over dark hero -> text should be white if not ignored by scroll
-                                                    // But here we set color dynamically based on use case. For now simplifying.
-                                                    // Better logic: if simple scrolled, dark text. If header transparent, depends on page.
-                                                    // For this snippet, assuming mostly light theme except hero.
+                                                        bgcolor: isActive ? 'primary.dark' : 'rgba(0,0,0,0.04)',
+                                                        color: isActive ? 'white' : '#1e293b'
+                                                    }
                                                 }}
                                                 className={`nav-item ${isActive ? 'active' : ''}`}
                                             >
@@ -283,15 +299,17 @@ const Navbar: React.FC = () => {
                                                 sx={{
                                                     p: 0.5,
                                                     border: '2px solid',
-                                                    borderColor: 'rgba(255,255,255,0.2)',
+                                                    borderColor: scrolled ? 'transparent' : 'white',
+                                                    bgcolor: scrolled ? 'transparent' : 'white',
+                                                    boxShadow: scrolled ? 'none' : '0 4px 12px rgba(0,0,0,0.05)',
                                                     transition: 'all 0.2s',
-                                                    '&:hover': { borderColor: 'primary.main' }
+                                                    '&:hover': { borderColor: 'primary.main', bgcolor: 'rgba(99, 102, 241, 0.05)' }
                                                 }}
                                             >
                                                 <Avatar
                                                     src={user?.profilePicture}
                                                     alt={user?.name}
-                                                    sx={{ width: 40, height: 40, bgcolor: 'primary.main', fontWeight: 700 }}
+                                                    sx={{ width: 42, height: 42, bgcolor: 'primary.main', fontWeight: 700 }}
                                                 >
                                                     {user?.name?.charAt(0).toUpperCase()}
                                                 </Avatar>
@@ -306,8 +324,8 @@ const Navbar: React.FC = () => {
                                                     elevation: 0,
                                                     sx: {
                                                         mt: 1.5,
-                                                        width: 320,
-                                                        borderRadius: '32px',
+                                                        width: 300,
+                                                        borderRadius: '24px',
                                                         overflow: 'hidden',
                                                         boxShadow: '0 20px 60px -10px rgba(0,0,0,0.15)',
                                                         border: '1px solid',
@@ -315,66 +333,40 @@ const Navbar: React.FC = () => {
                                                     },
                                                 }}
                                             >
-                                                <Box sx={{ px: 4, pt: 4, pb: 3, bgcolor: '#f8fafc' }}>
-                                                    <Typography variant="h6" sx={{ fontWeight: 800, color: '#1e293b', fontSize: '1.25rem' }}>
-                                                        {user?.name || 'John Doe'}
+                                                <Box sx={{ px: 3, pt: 3, pb: 2, bgcolor: '#f8fafc', borderBottom: '1px solid rgba(0,0,0,0.05)' }}>
+                                                    <Typography variant="h6" sx={{ fontWeight: 800, color: '#1e293b', fontSize: '1.1rem' }}>
+                                                        {user?.name || 'User'}
                                                     </Typography>
                                                     <Typography variant="body2" sx={{ color: '#64748b', mt: 0.5, fontWeight: 500 }}>
-                                                        {user?.email || 'customer@example.com'}
+                                                        {user?.email || 'user@example.com'}
                                                     </Typography>
                                                 </Box>
 
-                                                <Box sx={{ p: 2, bgcolor: 'white' }}>
+                                                <Box sx={{ p: 1.5, bgcolor: 'white' }}>
                                                     <MenuItem
                                                         onClick={() => { navigate('/profile'); handleClose(); }}
-                                                        sx={{
-                                                            py: 2,
-                                                            px: 2,
-                                                            borderRadius: '16px',
-                                                            mb: 0.5,
-                                                            '&:hover': {
-                                                                bgcolor: '#f1f5f9',
-                                                                '& .MuiSvgIcon-root': { color: '#6366f1' },
-                                                            },
-                                                            transition: 'all 0.2s',
-                                                        }}
+                                                        sx={{ py: 1.5, px: 2, borderRadius: '12px', mb: 0.5 }}
                                                     >
-                                                        <PersonIcon sx={{ mr: 2, color: '#64748b', transition: 'color 0.2s' }} />
-                                                        <Typography variant="body1" sx={{ fontWeight: 600, color: '#334155' }}>Profile</Typography>
+                                                        <PersonIcon sx={{ mr: 2, color: '#64748b', fontSize: 20 }} />
+                                                        <Typography variant="body2" sx={{ fontWeight: 600, color: '#334155' }}>Profile</Typography>
                                                     </MenuItem>
 
                                                     <MenuItem
                                                         onClick={() => { navigate('/settings'); handleClose(); }}
-                                                        sx={{
-                                                            py: 2,
-                                                            px: 2,
-                                                            borderRadius: '16px',
-                                                            mb: 2,
-                                                            '&:hover': {
-                                                                bgcolor: '#f1f5f9',
-                                                                '& .MuiSvgIcon-root': { color: '#6366f1' },
-                                                            },
-                                                            transition: 'all 0.2s',
-                                                        }}
+                                                        sx={{ py: 1.5, px: 2, borderRadius: '12px', mb: 1.5 }}
                                                     >
-                                                        <SettingsIcon sx={{ mr: 2, color: '#64748b', transition: 'color 0.2s' }} />
-                                                        <Typography variant="body1" sx={{ fontWeight: 600, color: '#334155' }}>Settings</Typography>
+                                                        <SettingsIcon sx={{ mr: 2, color: '#64748b', fontSize: 20 }} />
+                                                        <Typography variant="body2" sx={{ fontWeight: 600, color: '#334155' }}>Settings</Typography>
                                                     </MenuItem>
+
+                                                    <Divider sx={{ my: 1, opacity: 0.5 }} />
 
                                                     <MenuItem
                                                         onClick={handleLogout}
-                                                        sx={{
-                                                            py: 2,
-                                                            px: 2,
-                                                            borderRadius: '16px',
-                                                            '&:hover': {
-                                                                bgcolor: '#fef2f2',
-                                                            },
-                                                            transition: 'all 0.2s',
-                                                        }}
+                                                        sx={{ py: 1.5, px: 2, borderRadius: '12px', '&:hover': { bgcolor: '#fef2f2' } }}
                                                     >
-                                                        <LogoutIcon sx={{ mr: 2, color: '#ef4444' }} />
-                                                        <Typography variant="body1" sx={{ fontWeight: 600, color: '#ef4444' }}>Logout</Typography>
+                                                        <LogoutIcon sx={{ mr: 2, color: '#ef4444', fontSize: 20 }} />
+                                                        <Typography variant="body2" sx={{ fontWeight: 600, color: '#ef4444' }}>Logout</Typography>
                                                     </MenuItem>
                                                 </Box>
                                             </Menu>
@@ -414,7 +406,7 @@ const Navbar: React.FC = () => {
                 ModalProps={{ keepMounted: true }}
                 sx={{
                     display: { xs: 'block', md: 'none' },
-                    '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 280, borderTopLeftRadius: 20, borderBottomLeftRadius: 20 },
+                    '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 280, borderTopLeftRadius: 24, borderBottomLeftRadius: 24 },
                 }}
             >
                 {drawer}
