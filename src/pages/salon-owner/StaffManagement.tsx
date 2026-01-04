@@ -389,11 +389,14 @@ const StaffManagement: React.FC = () => {
                                             boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
                                             mb: 2
                                         }}>
-                                            {(barber.userId as any)?.name?.charAt(0) || 'B'}
+                                            {(barber as any)?.displayName?.charAt(0) || 'B'}
                                         </Avatar>
 
                                         <Typography variant="h6" fontWeight={700} align="center">
-                                            {(barber.userId as any)?.name}
+                                            {(barber as any)?.displayName || 'Staff Member'}
+                                        </Typography>
+                                        <Typography variant="caption" color="text.secondary" align="center" sx={{ display: 'block', mb: 1 }}>
+                                            {salons.find(s => s._id === barber.salonId)?.displayName || salons.find(s => s._id === barber.salonId)?.businessName || 'Salon'}
                                         </Typography>
                                         <Typography variant="body2" color="text.secondary" gutterBottom>
                                             {barber.experience} years experience

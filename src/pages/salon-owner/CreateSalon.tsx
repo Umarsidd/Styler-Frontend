@@ -83,6 +83,7 @@ const CreateSalon: React.FC = () => {
     const [currentService, setCurrentService] = useState<ServiceFormData>({
         name: '',
         description: '',
+        category: 'Haircut',
         price: 0,
         duration: 30,
         gender: 'unisex'
@@ -133,6 +134,7 @@ const CreateSalon: React.FC = () => {
         setCurrentService({
             name: '',
             description: '',
+            category: 'Haircut',
             price: 0,
             duration: 30,
             gender: 'unisex'
@@ -298,6 +300,7 @@ const CreateSalon: React.FC = () => {
                 services: services.map(s => ({
                     name: s.name,
                     description: s.description,
+                    category: s.category,
                     price: s.price,
                     duration: s.duration,
                     gender: s.gender,
@@ -626,6 +629,25 @@ const CreateSalon: React.FC = () => {
                                         onChange={(e) => handleServiceChange('name', e.target.value)}
                                         placeholder="e.g., Haircut, Beard Trim"
                                     />
+                                </Grid>
+                                <Grid size={{ xs: 12, sm: 6 }}>
+                                    <TextField
+                                        select
+                                        label="Category"
+                                        fullWidth
+                                        size="small"
+                                        value={currentService.category}
+                                        onChange={(e) => handleServiceChange('category', e.target.value)}
+                                    >
+                                        <MenuItem value="Haircut">Haircut</MenuItem>
+                                        <MenuItem value="Shaving">Shaving</MenuItem>
+                                        <MenuItem value="Beard">Beard</MenuItem>
+                                        <MenuItem value="Facial">Facial</MenuItem>
+                                        <MenuItem value="Hair Color">Hair Color</MenuItem>
+                                        <MenuItem value="Hair Treatment">Hair Treatment</MenuItem>
+                                        <MenuItem value="Massage">Massage</MenuItem>
+                                        <MenuItem value="Other">Other</MenuItem>
+                                    </TextField>
                                 </Grid>
                                 <Grid size={{ xs: 12, sm: 6 }}>
                                     <TextField
