@@ -39,6 +39,7 @@ interface OperatingHours {
 interface ServiceFormData {
     name: string;
     description: string;
+    category: string;
     price: number;
     duration: number;
     gender: 'male' | 'female' | 'unisex';
