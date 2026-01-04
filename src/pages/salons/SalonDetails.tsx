@@ -343,7 +343,7 @@ const SalonDetails: React.FC = () => {
                         overflow: 'hidden',
                     }}
                 >
-                    <CardContent sx={{ p: 4, background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)', color: 'white' }}>
+                    <CardContent sx={{ p: 4, background: '#4338ca', color: 'white' }}>
                         <Grid container spacing={3} alignItems="center">
                             <Grid item xs={12} md={8}>
                                 <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
@@ -421,7 +421,7 @@ const SalonDetails: React.FC = () => {
                                     >
                                         <Box
                                             sx={{
-                                                background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+                                                background: '#4338ca',
                                                 p: 2.5,
                                                 color: 'white',
                                                 position: 'relative',
@@ -476,7 +476,7 @@ const SalonDetails: React.FC = () => {
                                                 fullWidth
                                                 onClick={() => navigate(`/booking/${salon._id}?service=${service._id}`)}
                                                 sx={{
-                                                    background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+                                                    background: '#4338ca',
                                                     py: 1.5,
                                                     fontWeight: 700,
                                                     fontSize: '1rem',
@@ -542,7 +542,7 @@ const SalonDetails: React.FC = () => {
                                                     sx={{
                                                         width: 120,
                                                         height: 120,
-                                                        background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+                                                        background: '#4338ca',
                                                         fontSize: '3rem',
                                                         boxShadow: '0 8px 24px rgba(99, 102, 241, 0.4)',
                                                         border: '4px solid white',

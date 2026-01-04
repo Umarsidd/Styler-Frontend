@@ -52,7 +52,7 @@ const SalonOwnerDashboard: React.FC = () => {
             icon: <PeopleIcon />,
             value: currentStats.totalStaff,
             label: 'Total Staff',
-            color: '#ec4899',
+            color: '#4338ca',
             increase: '+5%',
             trend: 'up'
         },
@@ -85,10 +85,10 @@ const SalonOwnerDashboard: React.FC = () => {
         },
         {
             title: 'Manage Staff',
-            icon: <PeopleIcon sx={{ fontSize: 40, color: '#ec4899' }} />,
+            icon: <PeopleIcon sx={{ fontSize: 40, color: '#4338ca' }} />,
             description: 'View and manage your team members',
             path: '/salon-owner/staff-management',
-            color: '#ec4899'
+            color: '#4338ca'
         },
         {
             title: 'View Analytics',
@@ -309,7 +309,7 @@ const SalonOwnerDashboard: React.FC = () => {
                                 whileHover={{ scale: 1.02 }}
                                 sx={{
                                     borderRadius: '24px',
-                                    background: 'linear-gradient(135deg, #6366f1 0%, #a855f7 100%)',
+                                    background: '#4338ca',
                                     color: 'white'
                                 }}
                             >

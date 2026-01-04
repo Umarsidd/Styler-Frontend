@@ -647,7 +647,7 @@ const CreateSalon: React.FC = () => {
                         onClick={() => navigate('/salons-owner/my-salons')}
                         sx={{
                             minWidth: 160,
-                            background: 'linear-gradient(45deg, #6366f1 30%, #8b5cf6 90%)',
+                            background: '#4338ca',
                             fontWeight: 600
                         }}
                     >

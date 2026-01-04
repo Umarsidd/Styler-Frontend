@@ -25,7 +25,7 @@ const About: React.FC = () => {
         { value: '20+', label: 'Salon Partners', icon: <PeopleIcon />, color: '#f59e0b' },
         { value: '5K+', label: 'Happy Clients', icon: <StarIcon />, color: '#14b8a6' },
         { value: '150+', label: 'Expert Stylists', icon: <TrophyIcon />, color: '#8b5cf6' },
-        { value: '10K+', label: 'Appointments', icon: <CheckIcon />, color: '#ec4899' },
+        { value: '10K+', label: 'Appointments', icon: <CheckIcon />, color: '#4338ca' },
     ];
 
     const values = [
@@ -327,7 +327,7 @@ const About: React.FC = () => {
                             transform: { xs: 'none', md: 'translateX(-50%)' },
                             width: 2,
                             height: '100%',
-                            background: 'linear-gradient(180deg, #6366f1 0%, #ec4899 100%)',
+                            background: 'linear-gradient(180deg, #6366f1 0%, #4338ca 100%)',
                             opacity: 0.3
                         },
                     }}
@@ -448,7 +448,7 @@ const About: React.FC = () => {
                                             color: 'white',
                                             fontSize: '3rem',
                                             fontWeight: 700,
-                                            background: 'linear-gradient(135deg, #6366f1 0%, #ec4899 100%)',
+                                            background: 'linear-gradient(135deg, #6366f1 0%, #4338ca 100%)',
                                             boxShadow: '0 10px 20px rgba(99, 102, 241, 0.3)'
                                         }}
                                     >

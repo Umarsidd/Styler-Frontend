@@ -8,7 +8,7 @@ const SuperAdminDashboard: React.FC = () => {
         { icon: <PeopleIcon />, value: '5,234', label: 'Total Users', color: '#667eea' },
         { icon: <StoreIcon />, value: '156', label: 'Salons', color: '#f59e0b' },
         { icon: <AdminIcon />, value: '23', label: 'Admins', color: '#10b981' },
-        { icon: <MoneyIcon />, value: '₹5.6L', label: 'Total Revenue', color: '#ec4899' },
+        { icon: <MoneyIcon />, value: '₹5.6L', label: 'Total Revenue', color: '#4338ca' },
     ];
 
     return (

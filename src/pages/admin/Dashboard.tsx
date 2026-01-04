@@ -8,7 +8,7 @@ const Dashboard: React.FC = () => {
         { icon: <PeopleIcon />, value: '1,234', label: 'Total Users', color: '#667eea' },
         { icon: <StoreIcon />, value: '45', label: 'Salons', color: '#f59e0b' },
         { icon: <CalendarIcon />, value: '892', label: 'Appointments', color: '#10b981' },
-        { icon: <TrendingIcon />, value: '₹1.2L', label: 'Revenue', color: '#ec4899' },
+        { icon: <TrendingIcon />, value: '₹1.2L', label: 'Revenue', color: '#4338ca' },
     ];
 
     return (

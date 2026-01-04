@@ -42,7 +42,7 @@ const CustomerDashboard: React.FC = () => {
         { icon: <CalendarIcon />, value: appointments.length, label: 'Total Bookings', color: '#667eea' },
         { icon: <ScheduleIcon />, value: upcomingAppointments.length, label: 'Upcoming', color: '#f59e0b' },
         { icon: <CheckCircleIcon />, value: appointments.filter(a => a.status === 'completed').length, label: 'Completed', color: '#10b981' },
-        { icon: <TrendingUpIcon />, value: appointments.length > 0 ? '100%' : '0%', label: 'Satisfaction', color: '#ec4899' },
+        { icon: <TrendingUpIcon />, value: appointments.length > 0 ? '100%' : '0%', label: 'Satisfaction', color: '#4338ca' },
     ];
 
     if (isLoading) {

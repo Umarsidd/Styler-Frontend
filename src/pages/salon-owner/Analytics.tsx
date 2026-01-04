@@ -228,7 +228,7 @@ const Analytics: React.FC = () => {
                                                     height: 8,
                                                     borderRadius: 4,
                                                     bgcolor: '#f1f5f9',
-                                                    '& .MuiLinearProgress-bar': { bgcolor: index === 0 ? '#6366f1' : index === 1 ? '#8b5cf6' : index === 2 ? '#ec4899' : '#cbd5e1', borderRadius: 4 }
+                                                    '& .MuiLinearProgress-bar': { bgcolor: index === 0 ? '#6366f1' : index === 1 ? '#8b5cf6' : index === 2 ? '#4338ca' : '#cbd5e1', borderRadius: 4 }
                                                 }}
                                             />
                                         </Box>

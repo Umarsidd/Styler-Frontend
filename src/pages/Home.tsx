@@ -73,7 +73,7 @@ const Home: React.FC = () => {
         { count: 20, suffix: '+', title: 'Branches', color: '#f59e0b', icon: <LocationOnIcon /> },
         { count: 5000, suffix: '+', title: 'Happy Clients', color: '#14b8a6', icon: <StarIcon /> },
         { count: 150, suffix: '+', title: 'Expert Stylists', color: '#8b5cf6', icon: <ScissorsIcon /> },
-        { count: 10, suffix: 'K+', title: 'Total Appointments', color: '#ec4899', icon: <CalendarIcon /> },
+        { count: 10, suffix: 'K+', title: 'Total Appointments', color: '#4338ca', icon: <CalendarIcon /> },
     ]);
 
     const features = [

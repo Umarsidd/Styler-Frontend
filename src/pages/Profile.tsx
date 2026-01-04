@@ -197,7 +197,7 @@ const Profile: React.FC = () => {
                         width: '100%',
                         background: user?.coverImage
                             ? `url(${user.coverImage}) center/cover no-repeat`
-                            : 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+                            : '#4338ca',
                         position: 'relative'
                     }}>
                         <input

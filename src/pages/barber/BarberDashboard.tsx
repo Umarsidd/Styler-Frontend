@@ -72,7 +72,7 @@ const BarberDashboard: React.FC = () => {
             icon: <ScissorsIcon />,
             value: currentStats.servicesDone,
             label: 'Services Done',
-            color: '#ec4899',
+            color: '#4338ca',
             bg: 'rgba(236, 72, 153, 0.1)',
             trend: 'Lifetime total'
         },

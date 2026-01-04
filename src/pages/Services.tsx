@@ -104,7 +104,7 @@ const Services: React.FC = () => {
                                 py: 1.8,
                                 fontSize: '1.1rem',
                                 borderRadius: '50px',
-                                background: 'linear-gradient(135deg, #6366f1 0%, #ec4899 100%)',
+                                background: 'linear-gradient(135deg, #6366f1 0%, #4338ca 100%)',
                                 textTransform: 'none',
                                 fontWeight: 700,
                                 boxShadow: '0 10px 30px rgba(99, 102, 241, 0.4)',

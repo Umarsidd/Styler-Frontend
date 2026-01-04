@@ -181,7 +181,7 @@ const SalonList: React.FC = () => {
                                                     textTransform: 'none',
                                                     fontSize: '1rem',
                                                     fontWeight: 600,
-                                                    background: 'linear-gradient(135deg, #6366f1 0%, #ec4899 100%)',
+                                                    background: 'linear-gradient(135deg, #6366f1 0%, #4338ca 100%)',
                                                 }}
                                             >
                                                 {locationLoading ? 'Locating...' : 'Near Me'}

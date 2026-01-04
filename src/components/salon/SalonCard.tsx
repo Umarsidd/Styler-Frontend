@@ -97,7 +97,7 @@ const SalonCard: React.FC<SalonCardProps> = ({ salon, onClick }) => {
                     }}
                     disabled={!isOpen}
                     sx={{
-                        background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+                        background: '#4338ca',
                         fontWeight: 600,
                         py: 1.5,
                         '&:hover': {
