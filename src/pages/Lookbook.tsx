@@ -18,7 +18,7 @@ interface StyleItem {
 const styles: StyleItem[] = [
     {
         id: 1,
-        image: 'https://images.unsplash.com/photo-1560869713-7d0a29430803?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+        image: 'https://images.unsplash.com/photo-1605497788044-5a32c7078486?q=80&w=800&auto=format&fit=crop',
         category: 'Haircut',
         title: 'Modern Fade with Textured Top',
         likes: 124,
@@ -26,7 +26,7 @@ const styles: StyleItem[] = [
     },
     {
         id: 2,
-        image: 'https://images.unsplash.com/photo-1562322140-8baeececf3df?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+        image: 'https://images.unsplash.com/photo-1621605815971-fbc98d694d8d?q=80&w=800&auto=format&fit=crop',
         category: 'Beard',
         title: 'Sharp Line Up & Beard Sculpt',
         likes: 89,
@@ -34,7 +34,7 @@ const styles: StyleItem[] = [
     },
     {
         id: 3,
-        image: 'https://images.unsplash.com/photo-1593702295094-aea8c5c13d7b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+        image: 'https://images.unsplash.com/photo-1593702295094-aea8c5c13d7b?q=80&w=800&auto=format&fit=crop',
         category: 'Haircut',
         title: 'Classic Pompadour',
         likes: 215,
@@ -42,7 +42,7 @@ const styles: StyleItem[] = [
     },
     {
         id: 4,
-        image: 'https://images.unsplash.com/photo-1621605815971-fbc98d694d8d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+        image: 'https://images.unsplash.com/photo-1600948836101-f9ffda59d250?q=80&w=800&auto=format&fit=crop',
         category: 'Color',
         title: 'Platinum Blonde Process',
         likes: 156,
@@ -50,7 +50,7 @@ const styles: StyleItem[] = [
     },
     {
         id: 5,
-        image: 'https://images.unsplash.com/photo-1599351431202-1e0f0137899a?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+        image: 'https://images.unsplash.com/photo-1557862921-37829c790f19?q=80&w=800&auto=format&fit=crop',
         category: 'Beard',
         title: 'Full Beard Grooming',
         likes: 92,
@@ -58,7 +58,7 @@ const styles: StyleItem[] = [
     },
     {
         id: 6,
-        image: 'https://images.unsplash.com/photo-1585747860715-2ba37e788b70?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+        image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?q=80&w=800&auto=format&fit=crop',
         category: 'Facial',
         title: 'Rejuvenating Facial Treatment',
         likes: 67,
